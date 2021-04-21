@@ -20,11 +20,7 @@ class XyoBoundWitnessBodyJson<T: Codable> : XyoBoundWitnessBodyJsonProtocol, Cod
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(addresses, forKey: .addresses)
     try container.encode(hashes, forKey: .hashes)
-    let payloadEncoder = JSONEncoder()
-    payloadEncoder.outputFormatting = .sortedKeys
-    let payloadData = try payloadEncoder.encode(payload)
-    let payloadJson = String(data: payloadData, encoding: .utf8)?.replacingOccurrences(of: "\\\"", with: "\"")
-    try container.encode(payloadJson, forKey: .payload)
+    try container.encode(payload, forKey: .payload)
   }
   
   required init() {}

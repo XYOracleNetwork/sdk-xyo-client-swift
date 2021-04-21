@@ -65,7 +65,7 @@ class BoundWitnessBuilder<T: Codable> {
     let encoder = JSONEncoder()
     encoder.outputFormatting = .sortedKeys
     let data = try encoder.encode(json)
-    let str = String(data: data, encoding: .utf8)!.replacingOccurrences(of: "\\\"", with: "\"")
+    let str = String(data: data, encoding: .utf8)!
     debugPrint("AAAAARRRRRIIIIIEEEEEE: \(str)")
     return str.sha256()
   }
