@@ -1,11 +1,13 @@
 import Foundation
 import Alamofire
-import SwiftyJSON
+
+class XyoArchivistApiStatic {
+  static fileprivate let queue = DispatchQueue(label: "requests.queue", qos: .utility)
+  static fileprivate let mainQueue = DispatchQueue.main
+}
 
 class XyoArchivistApi {
   let config: XyoArchivistApiConfig
-  static fileprivate let queue = DispatchQueue(label: "requests.queue", qos: .utility)
-  static fileprivate let mainQueue = DispatchQueue.main
   private init(_ config: XyoArchivistApiConfig) {
     self.config = config
   }
@@ -16,52 +18,35 @@ class XyoArchivistApi {
     }
   }
 
-  public func postBoundWitnesses(
-    entries: [JSON],
-    closure: @escaping (_ data: [JSON]?, _ error: Error?) -> ()
+  public func postBoundWitnesses<T: Codable>(
+    _ entries: [XyoBoundWitnessJson<T>],
+    _ closure: @escaping (_ count: Int?, _ error: Error?) -> ()
   ) {
     AF.request(
       "\(self.config.apiDomain)/archive/\(self.config.archive)/bw",
       method: .post,
       parameters: entries,
       encoder: JSONParameterEncoder.default
-    ).responseJSON(queue: XyoArchivistApi.queue) { response in
+    ).responseJSON(queue: XyoArchivistApiStatic.queue) { response in
       switch response.result {
       case .failure(let error):
-        XyoArchivistApi.mainQueue.async {
+        XyoArchivistApiStatic.mainQueue.async {
               closure(nil, error)
           }
 
       case .success(let data):
-        XyoArchivistApi.mainQueue.async {
-              closure((data as? [JSON]) ?? [], nil)
+        XyoArchivistApiStatic.mainQueue.async {
+              closure(data as? Int, nil)
           }
       }
     }
   }
 
-  public func postBoundWitness(
-    entries: JSON,
-    closure: @escaping (_ data: [JSON]?, _ error: Error?) -> ()
+  public func postBoundWitness<T: Codable>(
+    _ entry: XyoBoundWitnessJson<T>,
+    _ closure: @escaping (_ count: Int?, _ error: Error?) -> ()
   ) {
-    AF.request(
-      "\(self.config.apiDomain)/archive/\(self.config.archive)/bw",
-      method: .post,
-      parameters: entries,
-      encoder: JSONParameterEncoder.default
-    ).responseJSON(queue: XyoArchivistApi.queue) { response in
-      switch response.result {
-      case .failure(let error):
-        XyoArchivistApi.mainQueue.async {
-              closure(nil, error)
-          }
-
-      case .success(let data):
-        XyoArchivistApi.mainQueue.async {
-              closure((data as? [JSON]) ?? [], nil)
-          }
-      }
-    }
+    self.postBoundWitnesses([entry], closure)
   }
 
   static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApi {

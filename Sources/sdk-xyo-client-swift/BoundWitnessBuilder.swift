@@ -1,5 +1,4 @@
 import Foundation
-import SwiftyJSON
 import CommonCrypto
 
 extension Data{
@@ -38,41 +37,36 @@ public extension String {
 
 @available(iOS 13.0, *)
 @available(OSX 10.15, *)
-class BoundWitnessBuilder {
-  private var body = XyoBoundWitnessBodyJson(fromJson: JSON([]))
-  private var meta = XyoBoundWitnessMetaJson(fromJson: JSON([]))
+class BoundWitnessBuilder<T: Codable> {
+  private var json = XyoBoundWitnessJson<T>()
 
   public func witness(_ address: String, _ previousHash: String? = nil) -> BoundWitnessBuilder {
-    self.body.addresses.append(address)
-    self.body.hashes.append(previousHash)
+    self.json.addresses.append(address)
+    self.json.hashes.append(previousHash)
     return self
   }
   
-  public func payload(_ payload: JSON) -> BoundWitnessBuilder {
-    self.body.payload = payload
+  public func payload(_ payload: T) -> BoundWitnessBuilder {
+    self.json.payload = payload
     return self
   }
   
-  public func hashable() -> JSON {
-    let bodyDictionary = self.body.toDictionary()
-    let bodyJson = JSON(bodyDictionary)
-    return bodyJson
+  public func hashable() -> XyoBoundWitnessBodyJson<T> {
+    return self.json as XyoBoundWitnessBodyJson
   }
 
-  public func build() -> JSON {
-    let metaDictionary = self.meta.toDictionary()
-    let bodyDictionary = self.body.toDictionary()
-    self.meta._hash = BoundWitnessBuilder.hash(self.hashable())
-    return JSON(bodyDictionary.merging(metaDictionary) { (_, new) in new })
+  public func build() throws -> XyoBoundWitnessJson<T> {
+    let hash = try BoundWitnessBuilder.hash(self.hashable())
+    self.json._hash = hash
+    return self.json
   }
 
-  static func sortObject(_ obj: JSON) -> JSON {
-    return obj
-  }
-
-  static func hash(_ json: JSON) -> String {
-    let str = json.rawString(.utf8, options: [.sortedKeys])!.replacingOccurrences(of: "\\\"", with: "\"")
-    print(str)
+  static func hash(_ json: XyoBoundWitnessBodyJson<T>) throws -> String {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = .sortedKeys
+    let data = try encoder.encode(json)
+    let str = String(data: data, encoding: .utf8)!.replacingOccurrences(of: "\\\"", with: "\"")
+    debugPrint("AAAAARRRRRIIIIIEEEEEE: \(str)")
     return str.sha256()
   }
 }
