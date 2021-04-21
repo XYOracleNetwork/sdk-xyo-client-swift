@@ -48,5 +48,5 @@ Made with 🔥and ❄️ by [XYO](https://xyo.network)
 [codeclimate-badge]: https://api.codeclimate.com/v1/badges/0e76349c9541f3866948/maintainability
 [codeclimate-link]: https://codeclimate.com/github/XYOracleNetwork/sdk-xyo-client-swift/maintainability
 
-[snyk-badge]: https://snyk.io/test/github/XYOracleNetwork/sdk-xyo-client-swift/badge.svg?targetFile=package.json
-[snyk-link]: https://snyk.io/test/github/XYOracleNetwork/sdk-xyo-client-swift?targetFile=package.json
+[snyk-badge]: https://snyk.io/test/github/XYOracleNetwork/sdk-xyo-client-swift/badge.svg?targetFile=package.swift
+[snyk-link]: https://snyk.io/test/github/XYOracleNetwork/sdk-xyo-client-swift?targetFile=package.swift
