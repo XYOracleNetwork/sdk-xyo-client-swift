@@ -18,8 +18,8 @@ class XyoArchivistApi {
     }
   }
 
-  public func postBoundWitnesses<T: Codable>(
-    _ entries: [XyoBoundWitnessJson<T>],
+  public func postBoundWitnesses(
+    _ entries: [XyoBoundWitnessJson],
     _ closure: @escaping (_ count: Int?, _ error: Error?) -> ()
   ) {
     AF.request(
@@ -42,8 +42,8 @@ class XyoArchivistApi {
     }
   }
 
-  public func postBoundWitness<T: Codable>(
-    _ entry: XyoBoundWitnessJson<T>,
+  public func postBoundWitness(
+    _ entry: XyoBoundWitnessJson,
     _ closure: @escaping (_ count: Int?, _ error: Error?) -> ()
   ) {
     self.postBoundWitnesses([entry], closure)
