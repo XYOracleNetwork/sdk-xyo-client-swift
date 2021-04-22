@@ -14,6 +14,7 @@
 
 -   [Title](#sdk-xyo-client-swift)
 -   [Description](#description)
+-   [Instructions](#instructions)
 -   [Maintainers](#maintainers)
 -   [License](#license)
 -   [Credits](#credits)
@@ -36,9 +37,6 @@ Made with 🔥and ❄️ by [XYO](https://xyo.network)
 
 [logo]: https://cdn.xy.company/img/brand/XYO_full_colored.png
 
-[npm-badge]: https://img.shields.io/npm/v/@xyo-network/sdk-xyo-client-swift.svg
-[npm-link]: https://www.npmjs.com/package/@xyo-network/sdk-xyo-client-swift
-
 [bch-badge]: https://bettercodehub.com/edge/badge/XYOracleNetwork/sdk-xyo-client-swift?branch=master
 [bch-link]: https://bettercodehub.com/results/XYOracleNetwork/sdk-xyo-client-swift
 
@@ -48,23 +46,27 @@ Made with 🔥and ❄️ by [XYO](https://xyo.network)
 [codeclimate-badge]: https://api.codeclimate.com/v1/badges/d051b36c73cd52e4030a/maintainability
 [codeclimate-link]: https://codeclimate.com/github/XYOracleNetwork/sdk-xyo-client-swift/maintainability
 
-Configure Api
+## Instructions
 
+### Configure Api
+```swift
 let config = XyoArchivistApiConfig("test", "http://localhost:3030/dev")
 let api = XyoArchivistApi.get( XyoArchivistApiConfig("main", "https://archivist.xyo.network"))
-
-Create Bound Witness
-
+```
+### Create Bound Witness
+```swift
 let bw = try BoundWitnessBuilder().payload(<schema>, <payload>).witness("<address>").build()
-
-Send BoundWitness
-
+```
+### Send BoundWitness
+```swift
 try api.postBoundWitness(<bw>) { count, error in
   print("\(count) bound witnesses sent")
 }
+```
 
-Send BoundWitnessBatch
-
+### Send BoundWitnessBatch
+```swift
 try api.postBoundWitnesses([<bw>]) { count, error in
   print("\(count) bound witnesses sent")
 }
+```
