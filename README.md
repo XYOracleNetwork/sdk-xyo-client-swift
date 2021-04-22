@@ -26,7 +26,7 @@ Primary SDK for using the XYO Protocol 2.0 from Swift.  Designed to work in both
 ### Add Package
 ```swift
 dependencies: [
-  .package(url: "https://github.com/XYOracleNetwork/sdk-xyo-client-swift.git", .upToNextMajor(from: "2.0.2")),
+  .package(url: "https://github.com/XYOracleNetwork/sdk-xyo-client-swift.git", .upToNextMajor(from: "2.0.3")),
 ],
 ```
 
