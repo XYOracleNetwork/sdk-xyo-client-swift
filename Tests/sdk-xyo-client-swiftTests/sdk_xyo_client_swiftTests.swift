@@ -41,7 +41,7 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
     let apiExpectation = expectation(description: "API Call")
     let bwJson = try bw.build()
     XCTAssertEqual(bwJson._hash, knownHash)
-    api.postBoundWitness(bwJson) { json, error in
+    try api.postBoundWitness(bwJson) { json, error in
       XCTAssertEqual(error == nil, true)
       XCTAssertEqual(json == 1, true)
       apiExpectation.fulfill()
@@ -58,7 +58,7 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
     let apiExpectation = expectation(description: "API Call")
     let bwJson = try bw.build()
     XCTAssertEqual(bwJson._hash, knownHash)
-    api.postBoundWitness(bwJson) { json, error in
+    try api.postBoundWitness(bwJson) { json, error in
       XCTAssertEqual(error == nil, true)
       XCTAssertEqual(json == 1, true)
       apiExpectation.fulfill()

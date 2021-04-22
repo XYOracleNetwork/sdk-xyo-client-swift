@@ -18,10 +18,10 @@ class XyoArchivistApi {
     }
   }
 
-  public func postBoundWitnesses(
+  public func postBoundWitnesses (
     _ entries: [XyoBoundWitnessJson],
     _ closure: @escaping (_ count: Int?, _ error: Error?) -> ()
-  ) {
+  ) throws {
     AF.request(
       "\(self.config.apiDomain)/archive/\(self.config.archive)/bw",
       method: .post,
@@ -45,8 +45,8 @@ class XyoArchivistApi {
   public func postBoundWitness(
     _ entry: XyoBoundWitnessJson,
     _ closure: @escaping (_ count: Int?, _ error: Error?) -> ()
-  ) {
-    self.postBoundWitnesses([entry], closure)
+  ) throws {
+    try self.postBoundWitnesses([entry], closure)
   }
 
   static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApi {
