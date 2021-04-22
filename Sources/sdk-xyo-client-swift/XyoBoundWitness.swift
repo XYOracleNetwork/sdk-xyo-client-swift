@@ -1,8 +1,8 @@
 import Foundation
 
-typealias XyoBoundWitnessJsonProtocol = XyoBoundWitnessBodyJsonProtocol & XyoBoundWitnessMetaJsonProtocol
-
-class XyoBoundWitnessJson<T: Codable> : XyoBoundWitnessBodyJson<T>, XyoBoundWitnessMetaJsonProtocol {
-  var _hash: String! = nil
-  var _signatures: [String]! = nil
+class XyoBoundWitnessJson : XyoBoundWitnessBodyJson, XyoBoundWitnessMetaJsonProtocol {
+  var _signatures: [String]?
+  var _payloads: [Codable]?
+  var _client: String?
+  var _hash: String?
 }

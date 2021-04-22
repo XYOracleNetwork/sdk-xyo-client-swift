@@ -6,9 +6,8 @@ class TestPayload1SubObject: Codable {
   var stringValue = "yo"
 }
 
-class TestPayload1 : Codable, XyoPayloadJsonProtocol {
-  var _timestamp = 1618603439107
-  var _schema = "network.xyo.test"
+class TestPayload1 : Codable {
+  var timestamp = 1618603439107
   var numberField = 1
   var objectField = TestPayload1SubObject()
   var stringField = "there"
@@ -19,15 +18,14 @@ class TestPayload2SubObject: Codable {
   var numberValue = 2
 }
 
-class TestPayload2 : Codable, XyoPayloadJsonProtocol {
-  var _schema = "network.xyo.test"
+class TestPayload2 : Codable {
   var stringField = "there"
   var objectField = TestPayload1SubObject()
-  var _timestamp = 1618603439107
+  var timestamp = 1618603439107
   var numberField = 1
 }
 
-var knownHash = "a4cb8ff16e9a0367b5a8dce2a8934f1fca89a786499d27944795ff06ab6c1536"
+var knownHash = "d684819b68a8e2f5b5ecf6292cef1e4b9ef4a6dc6a3606a6b19c4d92f48eba54"
 
 final class sdk_xyo_client_swiftTests: XCTestCase {
   func testNotAuthenticated() {
@@ -39,10 +37,10 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
   func testPayload1() throws {
     let config = XyoArchivistApiConfig("test", "http://localhost:3030/dev")
     let api = XyoArchivistApi.get(config)
-    let bw = BoundWitnessBuilder().witness("1234567890").payload(TestPayload1())
+    let bw = try BoundWitnessBuilder().witness("1234567890").payload("network.xyo.test", TestPayload1())
     let apiExpectation = expectation(description: "API Call")
     let bwJson = try bw.build()
-    XCTAssertEqual(bwJson._hash == knownHash, true)
+    XCTAssertEqual(bwJson._hash, knownHash)
     api.postBoundWitness(bwJson) { json, error in
       XCTAssertEqual(error == nil, true)
       XCTAssertEqual(json == 1, true)
@@ -56,10 +54,10 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
   func testPayload2() throws {
     let config = XyoArchivistApiConfig("test", "http://localhost:3030/dev")
     let api = XyoArchivistApi.get(config)
-    let bw = BoundWitnessBuilder().witness("1234567890").payload(TestPayload2())
+    let bw = try BoundWitnessBuilder().witness("1234567890").payload("network.xyo.test", TestPayload2())
     let apiExpectation = expectation(description: "API Call")
     let bwJson = try bw.build()
-    XCTAssertEqual(bwJson._hash == knownHash, true)
+    XCTAssertEqual(bwJson._hash, knownHash)
     api.postBoundWitness(bwJson) { json, error in
       XCTAssertEqual(error == nil, true)
       XCTAssertEqual(json == 1, true)

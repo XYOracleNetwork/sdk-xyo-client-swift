@@ -37,36 +37,53 @@ public extension String {
 
 @available(iOS 13.0, *)
 @available(OSX 10.15, *)
-class BoundWitnessBuilder<T: Codable> {
-  private var json = XyoBoundWitnessJson<T>()
+class BoundWitnessBuilder {
+  private var _addresses: [String] = []
+  private var _previous_hashes: [String?] = []
+  private var _payload_hashes: [String] = []
+  private var _payload_schemas: [String] = []
+  private var _payloads: [Codable] = []
 
   public func witness(_ address: String, _ previousHash: String? = nil) -> BoundWitnessBuilder {
-    self.json.addresses.append(address)
-    self.json.hashes.append(previousHash)
+    self._addresses.append(address)
+    self._previous_hashes.append(previousHash)
     return self
   }
   
-  public func payload(_ payload: T) -> BoundWitnessBuilder {
-    self.json.payload = payload
-    return self
+  public func hashableFields() -> XyoBoundWitnessBodyJson {
+    return XyoBoundWitnessBodyJson (
+      self._addresses,
+      self._previous_hashes,
+      self._payload_hashes,
+      self._payload_schemas
+    )
   }
   
-  public func hashable() -> XyoBoundWitnessBodyJson<T> {
-    return self.json as XyoBoundWitnessBodyJson
+  public func payload<T: Codable>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
+    self._payloads.append(payload)
+    self._payload_hashes.append(try BoundWitnessBuilder.hash(payload))
+    self._payload_schemas.append(schema)
+    return self
   }
 
-  public func build() throws -> XyoBoundWitnessJson<T> {
-    let hash = try BoundWitnessBuilder.hash(self.hashable())
-    self.json._hash = hash
-    return self.json
+  public func build() throws -> XyoBoundWitnessJson {
+    let bw = XyoBoundWitnessJson()
+    let hashable = self.hashableFields()
+    bw._hash = try BoundWitnessBuilder.hash(hashable)
+    bw._client = "swift"
+    bw._payloads = self._payloads
+    bw.addresses = self._addresses
+    bw.previous_hashes = self._previous_hashes
+    bw.payload_hashes = self._payload_hashes
+    bw.payload_schemas = self._payload_schemas
+    return bw
   }
-
-  static func hash(_ json: XyoBoundWitnessBodyJson<T>) throws -> String {
+  
+  static func hash<T : Codable>(_ json: T) throws -> String {
     let encoder = JSONEncoder()
     encoder.outputFormatting = .sortedKeys
     let data = try encoder.encode(json)
     let str = String(data: data, encoding: .utf8)!
-    debugPrint("AAAAARRRRRIIIIIEEEEEE: \(str)")
     return str.sha256()
   }
 }
