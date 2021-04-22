@@ -63,7 +63,7 @@ See the [LICENSE](LICENSE) file for license details
 
 ## Credits
 
-Made with 🔥and ❄️ by [XYO](https://xyo.network)
+Made with 🔥 and ❄️ by [XYO](https://xyo.network)
 
 [logo]: https://cdn.xy.company/img/brand/XYO_full_colored.png
 

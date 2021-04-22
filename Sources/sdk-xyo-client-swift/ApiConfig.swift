@@ -1,4 +1,4 @@
-class XyoWorldApiConfig {
+class XyoApiConfig {
   var apiDomain: String
   var token: String?
   var userid: String?
