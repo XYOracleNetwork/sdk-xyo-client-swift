@@ -28,6 +28,12 @@ class TestPayload2: Codable {
 var knownHash = "d684819b68a8e2f5b5ecf6292cef1e4b9ef4a6dc6a3606a6b19c4d92f48eba54"
 
 final class sdk_xyo_client_swiftTests: XCTestCase {
+  static var allTests = [
+    ("testNotAuthenticated", testNotAuthenticated),
+    ("testPayload1", testPayload1),
+    ("testPayload2", testPayload2),
+  ]
+  
   func testNotAuthenticated() {
     let config = XyoArchivistApiConfig("test", "http://localhost:3030/dev")
     let api = XyoArchivistApi.get(config)
@@ -79,10 +85,4 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
       XCTAssertNil(error)
     }
   }
-  
-  static var allTests = [
-    ("testNotAuthenticated", testNotAuthenticated),
-    ("testPayload1", testPayload1),
-    ("testPayload2", testPayload2),
-  ]
 }
