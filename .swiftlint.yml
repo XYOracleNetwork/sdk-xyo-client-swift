@@ -56,6 +56,10 @@ disabled_rules: # rule identifiers to exclude from running
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#identifier-name
   - identifier_name
 
+  # Rationale: False positives
+  # https://github.com/realm/SwiftLint/blob/master/Rules.md#implicit-getter
+  - implicit_getter
+
   # Rationale: Being concise and not fighting the language. We allow engineers to decide when and how to use implicit returns based on their best judgement.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#implicit-return
   - implicit_return
@@ -83,11 +87,11 @@ disabled_rules: # rule identifiers to exclude from running
   # Rationale: Functions with closures followed by a parenthesis trigger this warning.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#multiline-arguments-brackets
   - multiline_arguments_brackets
-  
+
   # Rationale: Arbitrary restriction.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#multiline-literal-brackets
   - multiline_literal_brackets
-  
+
   # Rationale: Arbitrary restriction.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#multiline-parameters-brackets
   - multiline_parameters_brackets
@@ -175,11 +179,11 @@ disabled_rules: # rule identifiers to exclude from running
   # Rationale: For typed parameters in closures, parentheses are required by swift, making this rule inherently inconsistent.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#unneeded-parentheses-in-closure-argument
   - unneeded_parentheses_in_closure_argument
- 
+
   # Rationale: Custom rule overrides to allow todos when issue links are provided.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#todo
   - todo
-  
+
   # Rationale: Allows for more readable code when defining new properties or functions on types.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#vertical-whitespace-after-opening-braces
   - vertical_whitespace_opening_braces
@@ -195,15 +199,15 @@ disabled_rules: # rule identifiers to exclude from running
   # Rationale: Arbitrary restriction. The default bundle will be suitable for most projects.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#nslocalizedstring-require-bundle
   - nslocalizedstring_require_bundle
-  
+
   # Rationale: The current rule set does not allow for enforcement of our preferred ordering (namely, private classes at the bottom of the file).
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#file-types-order
   - file_types_order
-  
+
   # Rationale: The benefit of this rule is a minor performance improvement, at the potential cost of legibility. Leave up to the developer's discrection.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#reduce-into
   - reduce_into
-  
+
 opt_in_rules: # some rules are only opt-in
 
   # Rationale: When using map, we think of it being used to transform a current array into something else
@@ -253,7 +257,7 @@ opt_in_rules: # some rules are only opt-in
   # Rationale: A more clear and consise way to check if something exists
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#contains_over_filter_count
   - contains_over_filter_count
-  
+
   # Rationale: A more clear and consise way to check if something exists
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#contains_over_filter_is_empty
   - contains_over_filter_is_empty
@@ -265,7 +269,7 @@ opt_in_rules: # some rules are only opt-in
   # Rationale: A more clear and consise way to check if a range exists
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#contains_over_range_nil_comparison
   - contains_over_range_nil_comparison
-  
+
   # Rationale: Provides consistency in coding style and follows modern practices of the language
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#control-statement
   - control_statement
@@ -353,10 +357,6 @@ opt_in_rules: # some rules are only opt-in
   # Rationale: Prevents coder error, doesn't crash, makes coder be explicit about their assumptions
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#force-unwrapping
   - force_unwrapping
-
-  # Rationale: Provides consistency in coding style and brevity.
-  # https://github.com/realm/SwiftLint/blob/master/Rules.md#implicit-getter
-  - implicit_getter
 
   # Rationale: Prevents coder error, doesn't crash, makes coder be explicit about their assumptions
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#implicitly-unwrapped-optional
@@ -577,7 +577,7 @@ opt_in_rules: # some rules are only opt-in
   # Rationale: Provides consistency in coding style
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#vertical-whitespace
   - vertical_whitespace
-  
+
   # Rationale: Provides consistency in coding style
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#vertical-whitespace-before-closing-braces
   - vertical_whitespace_closing_braces
@@ -605,31 +605,31 @@ opt_in_rules: # some rules are only opt-in
   # Rationale: Encourages documentation
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#todo
   - custom_todo
-  
+
   # Rationale: Provides consistency in coding style.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#reduce-boolean
   - reduce_boolean
-  
+
   # Rationale: == is not used for NSObject comparison, and could lead to confusion.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#nsobject-prefer-isequal
   - nsobject_prefer_isequal
-  
+
   # Rationale: Provides consistency of ordering within a type.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#type-contents-order
   - type_contents_order
-  
+
   # Rationale: Provides consistency in coding style.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#unused-capture-list
   - unused_capture_list
-  
+
   # Rationale: Prevents issues with using unowned.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#unowned-variable-capture
   - unowned_variable_capture
-  
+
   # Rationale: Ensures all enums can be switched upon.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#duplicate-enum-cases
   - duplicate_enum_cases
-  
+
   # Rationale: Provides consistency in coding style.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#legacy-multiple
   - legacy_multiple
@@ -651,12 +651,6 @@ type_contents_order:
     - [initializer, deinitializer, type_method, view_life_cycle_method, subscript, other_method, ib_action]
 
 custom_rules:
-  force_https:
-    name: "Force HTTPS over HTTP"
-    regex: "((?i)http(?!s))"
-    match_kinds: string
-    message: "HTTPS should be favored over HTTP"
-    severity: warning
   custom_todo:
     name: "TODO Violation"
     regex: "(TODO).(?!.*(https&)).(?!.*issue)"

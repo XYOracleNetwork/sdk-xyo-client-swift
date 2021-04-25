@@ -6,7 +6,7 @@ class TestPayload1SubObject: Codable {
   var stringValue = "yo"
 }
 
-class TestPayload1 : Codable {
+class TestPayload1: Codable {
   var timestamp = 1618603439107
   var numberField = 1
   var objectField = TestPayload1SubObject()
@@ -18,7 +18,7 @@ class TestPayload2SubObject: Codable {
   var numberValue = 2
 }
 
-class TestPayload2 : Codable {
+class TestPayload2: Codable {
   var stringField = "there"
   var objectField = TestPayload1SubObject()
   var timestamp = 1618603439107

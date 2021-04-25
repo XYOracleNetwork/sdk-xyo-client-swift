@@ -1,11 +1,6 @@
 import Foundation
 
-class XyoBoundWitnessJson : XyoBoundWitnessBodyJson, XyoBoundWitnessMetaJsonProtocol {
-  var _signatures: [String]?
-  var _payloads: [Codable]?
-  var _client: String?
-  var _hash: String?
-  
+class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaJsonProtocol {
   enum CodingKeys: String, CodingKey {
     case addresses
     case previous_hashes
@@ -15,6 +10,11 @@ class XyoBoundWitnessJson : XyoBoundWitnessBodyJson, XyoBoundWitnessMetaJsonProt
     case _client
     case _hash
   }
+  
+  var _signatures: [String]?
+  var _payloads: [Codable]?
+  var _client: String?
+  var _hash: String?
   
   func encodeMetaFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
     try container.encode(_signatures, forKey: ._signatures)
