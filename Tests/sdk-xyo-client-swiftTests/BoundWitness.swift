@@ -37,7 +37,7 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
     func testPayload1() throws {
         let bw = try BoundWitnessBuilder().witness("1234567890").payload("network.xyo.test", TestPayload1())
         let bwJson = try bw.build()
-        XCTAssertEqual(bwJson.hash, knownHash)
+        XCTAssertEqual(bwJson._hash, knownHash)
     }
     
     func testPayload1WithSend() throws {
@@ -46,7 +46,7 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
         let bw = try BoundWitnessBuilder().witness("1234567890").payload("network.xyo.test", TestPayload1())
         let apiExpectation = expectation(description: "API Call")
         let bwJson = try bw.build()
-        XCTAssertEqual(bwJson.hash, knownHash)
+        XCTAssertEqual(bwJson._hash, knownHash)
         try api.postBoundWitness(bwJson) { json, error in
             XCTAssertEqual(error == nil, true)
             XCTAssertEqual(json == 1, true)
@@ -60,7 +60,7 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
     func testPayload2() throws {
         let bw = try BoundWitnessBuilder().witness("1234567890").payload("network.xyo.test", TestPayload2())
         let bwJson = try bw.build()
-        XCTAssertEqual(bwJson.hash, knownHash)
+        XCTAssertEqual(bwJson._hash, knownHash)
     }
     
     func testPayload2WithSend() throws {
@@ -69,7 +69,7 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
         let bw = try BoundWitnessBuilder().witness("1234567890").payload("network.xyo.test", TestPayload2())
         let apiExpectation = expectation(description: "API Call")
         let bwJson = try bw.build()
-        XCTAssertEqual(bwJson.hash, knownHash)
+        XCTAssertEqual(bwJson._hash, knownHash)
         try api.postBoundWitness(bwJson) { json, error in
             XCTAssertEqual(error == nil, true)
             XCTAssertEqual(json == 1, true)
