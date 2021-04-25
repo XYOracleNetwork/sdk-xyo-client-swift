@@ -1,2 +1,2 @@
 disabled_rules:
-  identifier_name
+  - identifier_name
