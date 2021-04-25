@@ -71,7 +71,7 @@ Made with 🔥 and ❄️ by [XYO](https://xyo.network)
 [bch-link]: https://bettercodehub.com/results/XYOracleNetwork/sdk-xyo-client-swift
 
 [codacy-badge]: https://app.codacy.com/project/badge/Grade/c0ba3913b706492f99077eb5e6b4760c
-[codacy-link]: https://www.codacy.com/gh/XYOracleNetwork/sdk-xyo-client-js/dashboard?utm_source=github.com&utm_medium=referral&utm_content=XYOracleNetwork/sdk-xyo-client-swift&utm_campaign=Badge_Grade
+[codacy-link]: https://www.codacy.com/gh/XYOracleNetwork/sdk-xyo-client-swift/dashboard?utm_source=github.com&utm_medium=referral&utm_content=XYOracleNetwork/sdk-xyo-client-swift&utm_campaign=Badge_Grade
 
 [codeclimate-badge]: https://api.codeclimate.com/v1/badges/d051b36c73cd52e4030a/maintainability
 [codeclimate-link]: https://codeclimate.com/github/XYOracleNetwork/sdk-xyo-client-swift/maintainability
