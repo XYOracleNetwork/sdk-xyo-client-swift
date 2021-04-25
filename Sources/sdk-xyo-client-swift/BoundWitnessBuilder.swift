@@ -38,6 +38,10 @@ public extension String {
 @available(iOS 13.0, *)
 @available(OSX 10.15, *)
 class BoundWitnessBuilder {
+  enum BoundWitnessBuilderError: Error {
+      case encodingError
+  }
+  
   private var _addresses: [String] = []
   private var _previous_hashes: [String?] = []
   private var _payload_hashes: [String] = []
@@ -83,7 +87,10 @@ class BoundWitnessBuilder {
     let encoder = JSONEncoder()
     encoder.outputFormatting = .sortedKeys
     let data = try encoder.encode(json)
-    let str = String(data: data, encoding: .utf8)!
+    
+    guard let str = String(data: data, encoding: .utf8) else {
+      throw BoundWitnessBuilderError.encodingError
+    }
     return str.sha256()
   }
 }
