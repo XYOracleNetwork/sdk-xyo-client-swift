@@ -1,6 +1,6 @@
 import Foundation
 
-class XyoBoundWitnessBodyJson : Codable {
+class XyoBoundWitnessBodyJson: Codable {
   var addresses: [String] = []
   var previousHashes: [String?] = []
   var payloadHashes: [String] = []

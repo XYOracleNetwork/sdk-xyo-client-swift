@@ -12,13 +12,13 @@ class XyoArchivistApi {
         self.config = config
     }
     
-    public var authenticated : Bool {
+    public var authenticated: Bool {
         get {
             return self.token != nil
         }
     }
     
-    public var token : String? {
+    public var token: String? {
         get {
             return self.config.token
         }
