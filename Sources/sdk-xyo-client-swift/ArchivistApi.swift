@@ -9,13 +9,13 @@ class XyoArchivistApiStatic {
 class XyoArchivistApi {
   let config: XyoArchivistApiConfig
   
-  public var authenticated: Bool {
+  var authenticated: Bool {
     get {
       return self.token != nil
     }
   }
   
-  public var token: String? {
+  var token: String? {
     get {
       return self.config.token
     }

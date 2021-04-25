@@ -79,11 +79,11 @@ class BoundWitnessBuilder {
     return bw
   }
   
-  static func hash<T: Codable>(_ json: T) throws -> String {
+  static func hash<T: Codable>(_ json: T) throws -> String? {
     let encoder = JSONEncoder()
     encoder.outputFormatting = .sortedKeys
     let data = try encoder.encode(json)
-    let str = String(data: data, encoding: .utf8)!
-    return str.sha256()
+    let str = String(data: data, encoding: .utf8)
+    return str?.sha256()
   }
 }
