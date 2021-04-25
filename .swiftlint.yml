@@ -1,2 +1,6 @@
 disabled_rules:
   - identifier_name
+trailing_whitespace:
+  severity: warning
+  ignores_empty_line: true
+  ignores_comments: true
