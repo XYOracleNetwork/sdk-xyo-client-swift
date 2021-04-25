@@ -44,13 +44,13 @@ class BoundWitnessBuilder {
   private var _payload_schemas: [String] = []
   private var _payloads: [Codable] = []
   
-  public func witness(_ address: String, _ previousHash: String? = nil) -> BoundWitnessBuilder {
+  func witness(_ address: String, _ previousHash: String? = nil) -> BoundWitnessBuilder {
     _addresses.append(address)
     _previous_hashes.append(previousHash)
     return self
   }
   
-  public func hashableFields() -> XyoBoundWitnessBodyJson {
+  func hashableFields() -> XyoBoundWitnessBodyJson {
     return XyoBoundWitnessBodyJson(
       _addresses,
       _previous_hashes,
@@ -59,14 +59,14 @@ class BoundWitnessBuilder {
     )
   }
   
-  public func payload<T: Codable>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
+  func payload<T: Codable>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
     _payloads.append(payload)
     _payload_hashes.append(try BoundWitnessBuilder.hash(payload))
     _payload_schemas.append(schema)
     return self
   }
   
-  public func build() throws -> XyoBoundWitnessJson {
+  func build() throws -> XyoBoundWitnessJson {
     let bw = XyoBoundWitnessJson()
     let hashable = hashableFields()
     bw._hash = try BoundWitnessBuilder.hash(hashable)
