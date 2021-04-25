@@ -16,14 +16,22 @@ class XyoBoundWitnessJson : XyoBoundWitnessBodyJson, XyoBoundWitnessMetaJsonProt
     case _hash
   }
   
-  override func encode(to encoder: Encoder) throws {
-    var container = encoder.container(keyedBy: CodingKeys.self)
+  func encodeMetaFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
+    try container.encode(_signatures, forKey: ._signatures)
+    try container.encode(_client, forKey: ._client)
+    try container.encode(_hash, forKey: ._hash)
+  }
+  
+  func encodeBodyFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
     try container.encode(addresses, forKey: .addresses)
     try container.encode(previous_hashes, forKey: .previous_hashes)
     try container.encode(payload_hashes, forKey: .payload_hashes)
     try container.encode(payload_schemas, forKey: .payload_schemas)
-    try container.encode(_signatures, forKey: ._signatures)
-    try container.encode(_client, forKey: ._client)
-    try container.encode(_hash, forKey: ._hash)
+  }
+  
+  override func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try encodeBodyFields(&container)
+    try encodeMetaFields(&container)
   }
 }

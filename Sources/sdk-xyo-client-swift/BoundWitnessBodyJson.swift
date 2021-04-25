@@ -27,12 +27,16 @@ class XyoBoundWitnessBodyJson : XyoBoundWitnessBodyJsonProtocol, Codable {
     case payload_schemas
   }
   
-  func encode(to encoder: Encoder) throws {
-    var container = encoder.container(keyedBy: CodingKeys.self)
+  func encodeBodyFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
     try container.encode(addresses, forKey: .addresses)
     try container.encode(previous_hashes, forKey: .previous_hashes)
     try container.encode(payload_hashes, forKey: .payload_hashes)
     try container.encode(payload_schemas, forKey: .payload_schemas)
+  }
+  
+  func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try encodeBodyFields(&container)
   }
   
   required init() {}
