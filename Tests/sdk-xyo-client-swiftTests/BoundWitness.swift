@@ -31,7 +31,7 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
   static var allTests = [
     ("testNotAuthenticated", testNotAuthenticated),
     ("testPayload1", testPayload1),
-    ("testPayload2", testPayload2),
+    ("testPayload2", testPayload2)
   ]
   
   func testNotAuthenticated() {
