@@ -2,9 +2,9 @@
 
 # sdk-xyo-client-swift
 
-[![bch-badge]][bch-link]
-[![codacy-badge]][codacy-link]
-[![codeclimate-badge]][codeclimate-link]
+[![bch-badge][]][bch-link]
+[![codacy-badge][]][codacy-link]
+[![codeclimate-badge][]][codeclimate-link]
 
 > The XYO Foundation provides this source code available in our efforts to advance the understanding of the XYO Procotol and its possible uses. We continue to maintain this software in the interest of developer education. Usage of this source code is not intended for production.
 
@@ -26,7 +26,7 @@ Primary SDK for using the XYO Protocol 2.0 from Swift.  Designed to work in both
 ### Add Package
 ```swift
 dependencies: [
-  .package(url: "https://github.com/XYOracleNetwork/sdk-xyo-client-swift.git", .upToNextMajor(from: "2.0.3")),
+.package(url: "https://github.com/XYOracleNetwork/sdk-xyo-client-swift.git", .upToNextMajor(from: "2.0.3")),
 ],
 ```
 
@@ -42,14 +42,14 @@ let bw = try BoundWitnessBuilder().payload(<schema>, <payload>).witness("<addres
 ### Send BoundWitness
 ```swift
 try api.postBoundWitness(<bw>) { count, error in
-  print("\(count) bound witnesses sent")
+print("\(count) bound witnesses sent")
 }
 ```
 
 ### Send BoundWitnessBatch
 ```swift
 try api.postBoundWitnesses([<bw>]) { count, error in
-  print("\(count) bound witnesses sent")
+print("\(count) bound witnesses sent")
 }
 ```
 
