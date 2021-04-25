@@ -1,6 +1,6 @@
 import Foundation
 
-class XyoBoundWitnessJson : XyoBoundWitnessBodyJson {
+class XyoBoundWitnessJson: XyoBoundWitnessBodyJson {
     var signatures: [String]?
     var payloads: [Codable]?
     var client: String?
