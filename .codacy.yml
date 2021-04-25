@@ -1,6 +1,5 @@
 ---
 engines:
   swiftlint:
-    config:
-      disabled_rules:
-          identifier_name
+    disabled_rules:
+      - identifier_name
