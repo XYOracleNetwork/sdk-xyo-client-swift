@@ -1,10 +1,10 @@
 import Foundation
 
-class XyoBoundWitnessJson : XyoBoundWitnessBodyJson, XyoBoundWitnessMetaJsonProtocol {
-    var _signatures: [String]?
-    var _payloads: [Codable]?
-    var _client: String?
-    var _hash: String?
+class XyoBoundWitnessJson : XyoBoundWitnessBodyJson {
+    var signatures: [String]?
+    var payloads: [Codable]?
+    var client: String?
+    var hash: String?
     
     enum CodingKeys: String, CodingKey {
         case addresses
@@ -17,16 +17,16 @@ class XyoBoundWitnessJson : XyoBoundWitnessBodyJson, XyoBoundWitnessMetaJsonProt
     }
     
     func encodeMetaFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
-        try container.encode(_signatures, forKey: ._signatures)
-        try container.encode(_client, forKey: ._client)
-        try container.encode(_hash, forKey: ._hash)
+        try container.encode(signatures, forKey: ._signatures)
+        try container.encode(client, forKey: ._client)
+        try container.encode(hash, forKey: ._hash)
     }
     
     func encodeBodyFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
         try container.encode(addresses, forKey: .addresses)
-        try container.encode(previous_hashes, forKey: .previous_hashes)
-        try container.encode(payload_hashes, forKey: .payload_hashes)
-        try container.encode(payload_schemas, forKey: .payload_schemas)
+        try container.encode(previousHashes, forKey: .previous_hashes)
+        try container.encode(payloadHashes, forKey: .payload_hashes)
+        try container.encode(payloadSchemas, forKey: .payload_schemas)
     }
     
     override func encode(to encoder: Encoder) throws {

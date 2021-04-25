@@ -14,7 +14,16 @@ class XyoArchivistApi {
     
     public var authenticated : Bool {
         get {
-            return self.config.token != nil
+            return self.token != nil
+        }
+    }
+    
+    public var token : String? {
+        get {
+            return self.config.token
+        }
+        set {
+            self.config.token = newValue
         }
     }
     
