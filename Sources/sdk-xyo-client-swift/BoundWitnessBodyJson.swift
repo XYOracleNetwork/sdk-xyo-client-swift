@@ -1,17 +1,24 @@
 import Foundation
 
 protocol XyoBoundWitnessBodyJsonProtocol {
-  var addresses : [String] {get set}
-  var previous_hashes : [String?] {get set}
-  var payload_hashes : [String] {get set}
-  var payload_schemas : [String] {get set}
+  var addresses: [String] {get set}
+  var previous_hashes: [String?] {get set}
+  var payload_hashes: [String] {get set}
+  var payload_schemas: [String] {get set}
 }
 
-class XyoBoundWitnessBodyJson : XyoBoundWitnessBodyJsonProtocol, Codable {
+class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyJsonProtocol, Codable {
   var addresses: [String] = []
   var previous_hashes: [String?] = []
   var payload_hashes: [String] = []
   var payload_schemas: [String] = []
+  
+  enum CodingKeys: String, CodingKey {
+    case addresses
+    case previous_hashes
+    case payload_hashes
+    case payload_schemas
+  }
   
   init (_ addresses: [String], _ previous_hashes: [String?], _ payload_hashes: [String], _ payload_schemas: [String]) {
     self.addresses = addresses
@@ -20,11 +27,14 @@ class XyoBoundWitnessBodyJson : XyoBoundWitnessBodyJsonProtocol, Codable {
     self.payload_schemas = payload_schemas
   }
   
-  enum CodingKeys: String, CodingKey {
-    case addresses
-    case previous_hashes
-    case payload_hashes
-    case payload_schemas
+  required init() {}
+  
+  required init(from decoder: Decoder) throws {
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    addresses = try values.decode([String].self, forKey: .addresses)
+    previous_hashes = try values.decode([String?].self, forKey: .previous_hashes)
+    payload_hashes = try values.decode([String].self, forKey: .payload_hashes)
+    payload_schemas = try values.decode([String].self, forKey: .payload_schemas)
   }
   
   func encodeBodyFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
@@ -37,16 +47,6 @@ class XyoBoundWitnessBodyJson : XyoBoundWitnessBodyJsonProtocol, Codable {
   func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try encodeBodyFields(&container)
-  }
-  
-  required init() {}
-  
-  required init(from decoder: Decoder) throws {
-    let values = try decoder.container(keyedBy: CodingKeys.self)
-    addresses = try values.decode([String].self, forKey: .addresses)
-    previous_hashes = try values.decode([String?].self, forKey: .previous_hashes)
-    payload_hashes = try values.decode([String].self, forKey: .payload_hashes)
-    payload_schemas = try values.decode([String].self, forKey: .payload_schemas)
   }
   
 }

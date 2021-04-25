@@ -8,9 +8,6 @@ class XyoArchivistApiStatic {
 
 class XyoArchivistApi {
   let config: XyoArchivistApiConfig
-  private init(_ config: XyoArchivistApiConfig) {
-    self.config = config
-  }
   
   public var authenticated: Bool {
     get {
@@ -27,7 +24,11 @@ class XyoArchivistApi {
     }
   }
   
-  public func postBoundWitnesses (
+  private init(_ config: XyoArchivistApiConfig) {
+    self.config = config
+  }
+  
+  func postBoundWitnesses (
     _ entries: [XyoBoundWitnessJson],
     _ closure: @escaping (_ count: Int?, _ error: Error?) -> Void
   ) throws {
@@ -51,7 +52,7 @@ class XyoArchivistApi {
     }
   }
   
-  public func postBoundWitness(
+  func postBoundWitness(
     _ entry: XyoBoundWitnessJson,
     _ closure: @escaping (_ count: Int?, _ error: Error?) -> Void
   ) throws {
