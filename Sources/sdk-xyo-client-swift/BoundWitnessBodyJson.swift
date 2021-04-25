@@ -8,17 +8,17 @@ protocol XyoBoundWitnessBodyJsonProtocol {
 }
 
 class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyJsonProtocol, Codable {
-  var addresses: [String] = []
-  var previous_hashes: [String?] = []
-  var payload_hashes: [String] = []
-  var payload_schemas: [String] = []
-  
   enum CodingKeys: String, CodingKey {
     case addresses
     case previous_hashes
     case payload_hashes
     case payload_schemas
   }
+  
+  var addresses: [String] = []
+  var previous_hashes: [String?] = []
+  var payload_hashes: [String] = []
+  var payload_schemas: [String] = []
   
   init (_ addresses: [String], _ previous_hashes: [String?], _ payload_hashes: [String], _ payload_schemas: [String]) {
     self.addresses = addresses
@@ -48,5 +48,4 @@ class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyJsonProtocol, Codable {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try encodeBodyFields(&container)
   }
-  
 }
