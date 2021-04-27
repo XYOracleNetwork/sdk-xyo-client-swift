@@ -28,5 +28,5 @@ let package = Package(
             name: "sdk-xyo-client-swiftTests",
             dependencies: ["sdk-xyo-client-swift"])
     ],
-    swiftLanguageVersions: [.v5]
+  swiftLanguageVersions: [.v5, .v4_2, .v4]
 )
