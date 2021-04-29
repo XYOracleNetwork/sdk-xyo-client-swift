@@ -6,16 +6,16 @@ class XyoArchivistApiStatic {
   static fileprivate let mainQueue = DispatchQueue.main
 }
 
-class XyoArchivistApi {
+public class XyoArchivistApi {
   let config: XyoArchivistApiConfig
   
-  var authenticated: Bool {
+  public var authenticated: Bool {
     get {
       return self.token != nil
     }
   }
   
-  var token: String? {
+  public var token: String? {
     get {
       return self.config.token
     }
@@ -28,7 +28,7 @@ class XyoArchivistApi {
     self.config = config
   }
   
-  func postBoundWitnesses (
+  public func postBoundWitnesses (
     _ entries: [XyoBoundWitnessJson],
     _ closure: @escaping (_ count: Int?, _ error: Error?) -> Void
   ) throws {
@@ -52,14 +52,14 @@ class XyoArchivistApi {
     }
   }
   
-  func postBoundWitness(
+  public func postBoundWitness(
     _ entry: XyoBoundWitnessJson,
     _ closure: @escaping (_ count: Int?, _ error: Error?) -> Void
   ) throws {
     try self.postBoundWitnesses([entry], closure)
   }
   
-  static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApi {
+  public static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApi {
     return XyoArchivistApi(config)
   }
 }
