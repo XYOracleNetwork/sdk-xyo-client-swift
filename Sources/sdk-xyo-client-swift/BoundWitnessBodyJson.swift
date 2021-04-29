@@ -7,7 +7,7 @@ protocol XyoBoundWitnessBodyJsonProtocol {
   var payload_schemas: [String] { get set }
 }
 
-class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyJsonProtocol, Codable {
+public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyJsonProtocol, Codable {
   enum CodingKeys: String, CodingKey {
     case addresses
     case previous_hashes
@@ -29,7 +29,7 @@ class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyJsonProtocol, Codable {
   
   required init() {}
   
-  required init(from decoder: Decoder) throws {
+  public required init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
     addresses = try values.decode([String].self, forKey: .addresses)
     previous_hashes = try values.decode([String?].self, forKey: .previous_hashes)
@@ -44,7 +44,7 @@ class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyJsonProtocol, Codable {
     try container.encode(payload_schemas, forKey: .payload_schemas)
   }
   
-  func encode(to encoder: Encoder) throws {
+  public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try encodeBodyFields(&container)
   }

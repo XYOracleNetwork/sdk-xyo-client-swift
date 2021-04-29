@@ -1,4 +1,4 @@
-class XyoArchivistApiConfig: XyoApiConfig {
+public class XyoArchivistApiConfig: XyoApiConfig {
   var archive: String
   init(_ archive: String, _ apiDomain: String, _ token: String? = nil, _ userid: String? = nil) {
     self.archive = archive
