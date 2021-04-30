@@ -27,16 +27,19 @@ class TestPayload2: Codable {
 
 var knownHash = "d684819b68a8e2f5b5ecf6292cef1e4b9ef4a6dc6a3606a6b19c4d92f48eba54"
 
-final class sdk_xyo_client_swiftTests: XCTestCase {
+@available(iOS 13.0, *)
+final class BoundWitnessTests: XCTestCase {
   static var allTests = [
     ("testNotAuthenticated", testNotAuthenticated),
     ("testPayload1", testPayload1),
-    ("testPayload2", testPayload2)
+    ("testPayload2", testPayload2),
+    ("testPayload1", testPayload1WithSend),
+    ("testPayload2", testPayload2WithSend)
   ]
   
   func testNotAuthenticated() {
     let config = XyoArchivistApiConfig("test", "http://localhost:3030/dev")
-    let api = XyoArchivistApi.get(config)
+    let api = XyoArchivistApiClient.get(config)
     XCTAssertEqual(api.authenticated, false)
   }
   
@@ -48,7 +51,7 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
   
   func testPayload1WithSend() throws {
     let config = XyoArchivistApiConfig("test", "http://localhost:3030/dev")
-    let api = XyoArchivistApi.get(config)
+    let api = XyoArchivistApiClient.get(config)
     let bw = try BoundWitnessBuilder().witness("1234567890").payload("network.xyo.test", TestPayload1())
     let apiExpectation = expectation(description: "API Call")
     let bwJson = try bw.build()
@@ -71,7 +74,7 @@ final class sdk_xyo_client_swiftTests: XCTestCase {
   
   func testPayload2WithSend() throws {
     let config = XyoArchivistApiConfig("test", "http://localhost:3030/dev")
-    let api = XyoArchivistApi.get(config)
+    let api = XyoArchivistApiClient.get(config)
     let bw = try BoundWitnessBuilder().witness("1234567890").payload("network.xyo.test", TestPayload2())
     let apiExpectation = expectation(description: "API Call")
     let bwJson = try bw.build()

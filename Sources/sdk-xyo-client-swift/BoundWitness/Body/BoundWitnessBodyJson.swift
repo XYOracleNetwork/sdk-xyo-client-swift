@@ -1,13 +1,6 @@
 import Foundation
 
-protocol XyoBoundWitnessBodyJsonProtocol {
-  var addresses: [String] { get set }
-  var previous_hashes: [String?] { get set }
-  var payload_hashes: [String] { get set }
-  var payload_schemas: [String] { get set }
-}
-
-public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyJsonProtocol, Codable {
+public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Codable {
   enum CodingKeys: String, CodingKey {
     case addresses
     case previous_hashes
@@ -15,10 +8,10 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyJsonProtocol, Codable {
     case payload_schemas
   }
   
-  var addresses: [String] = []
-  var previous_hashes: [String?] = []
-  var payload_hashes: [String] = []
-  var payload_schemas: [String] = []
+  public var addresses: [String] = []
+  public var previous_hashes: [String?] = []
+  public var payload_hashes: [String] = []
+  public var payload_schemas: [String] = []
   
   init (_ addresses: [String], _ previous_hashes: [String?], _ payload_hashes: [String], _ payload_schemas: [String]) {
     self.addresses = addresses

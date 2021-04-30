@@ -1,12 +1,7 @@
 import Foundation
 import Alamofire
 
-class XyoArchivistApiStatic {
-  static fileprivate let queue = DispatchQueue(label: "requests.queue", qos: .utility)
-  static fileprivate let mainQueue = DispatchQueue.main
-}
-
-public class XyoArchivistApi {
+public class XyoArchivistApiClient {
   let config: XyoArchivistApiConfig
   
   public var authenticated: Bool {
@@ -37,15 +32,15 @@ public class XyoArchivistApi {
       method: .post,
       parameters: entries,
       encoder: JSONParameterEncoder.default
-    ).responseJSON(queue: XyoArchivistApiStatic.queue) { response in
+    ).responseJSON(queue: XyoArchivistApiClient.queue) { response in
       switch response.result {
       case .failure(let error):
-        XyoArchivistApiStatic.mainQueue.async {
+        XyoArchivistApiClient.mainQueue.async {
           closure(nil, error)
         }
         
       case .success(let data):
-        XyoArchivistApiStatic.mainQueue.async {
+        XyoArchivistApiClient.mainQueue.async {
           closure(data as? Int, nil)
         }
       }
@@ -59,7 +54,12 @@ public class XyoArchivistApi {
     try self.postBoundWitnesses([entry], closure)
   }
   
-  public static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApi {
-    return XyoArchivistApi(config)
+  public static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApiClient {
+    return XyoArchivistApiClient(config)
   }
+}
+
+extension XyoArchivistApiClient {
+  static fileprivate let queue = DispatchQueue(label: "requests.queue", qos: .utility)
+  static fileprivate let mainQueue = DispatchQueue.main
 }
