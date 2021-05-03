@@ -58,11 +58,13 @@ public class XyoAddress {
   }
   
   private func generatePrivateKey(_ privateKey: Data) throws -> Curve25519.Signing.PrivateKey? {
-    if (privateKey.count == 64) {
+    if (privateKey.count != 32) {
       throw XyoAddressError.invalidPrivateKeyLength
     }
     do {
-      return try Curve25519.Signing.PrivateKey(rawRepresentation: privateKey)
+      return try privateKey.withUnsafeBytes { ptr in
+        return try Curve25519.Signing.PrivateKey(rawRepresentation: ptr)
+      }
     } catch {
       throw XyoAddressError.invalidPrivateKey
     }
