@@ -1,5 +1,5 @@
 import XCTest
-@testable import sdk_xyo_client_swift
+@testable import XyoClient
 
 class TestPayload1SubObject: Codable {
   var numberValue = 2
