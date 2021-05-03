@@ -1,14 +1,18 @@
 import Foundation
 
+enum ExtendedStringError: Error {
+  case sha256HashFailure
+}
+
 extension String {
   enum ExtendedEncoding {
       case hexadecimal
   }
-  func sha256() -> String {
+  func sha256() throws -> String {
     if let stringData = data(using: String.Encoding.utf8) {
       return stringData.sha256String()
     }
-    return ""
+    throw ExtendedStringError.sha256HashFailure
   }
   func data(using encoding:ExtendedEncoding) -> Data? {
       let hexStr = self.dropFirst(self.hasPrefix("0x") ? 2 : 0)
