@@ -1,14 +1,14 @@
 import CommonCrypto
 import Foundation
 
+public enum BoundWitnessBuilderError: Error {
+  case encodingError
+}
+
 @available(iOS 13.0, *)
 @available(OSX 10.15, *)
+
 public class BoundWitnessBuilder {
-  
-  public enum BuildError: Error {
-    case encodingError
-  }
-  
   private var _addresses: [String] = []
   private var _previous_hashes: [String?] = []
   private var _payload_hashes: [String] = []
@@ -56,7 +56,7 @@ public class BoundWitnessBuilder {
     let data = try encoder.encode(json)
     
     guard let str = String(data: data, encoding: .utf8) else {
-      throw BuildError.encodingError
+      throw BoundWitnessBuilderError.encodingError
     }
     return str.sha256()
   }

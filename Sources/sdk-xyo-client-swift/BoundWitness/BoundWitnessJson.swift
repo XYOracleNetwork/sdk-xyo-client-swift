@@ -1,6 +1,6 @@
 import Foundation
 
-public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaJsonProtocol {
+public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaProtocol {
   enum CodingKeys: String, CodingKey {
     case addresses
     case previous_hashes
