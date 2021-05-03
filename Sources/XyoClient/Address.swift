@@ -25,19 +25,19 @@ public class XyoAddress {
     }
   }
   
-  init() throws {
+  public init() throws {
     if let generatedPrivateKey = try self.generatePrivateKey() {
       self._privateKey = generatedPrivateKey
     }
   }
   
-  init(key: Data) throws {
+  public init(key: Data) throws {
     if let generatedPrivateKey = try self.generatePrivateKey(key) {
       self._privateKey = generatedPrivateKey
     }
   }
   
-  init(key: String) throws {
+  public init(key: String) throws {
     if let keyData = key.data(using: .hexadecimal) {
       if let generatedPrivateKey = try self.generatePrivateKey(keyData) {
         self._privateKey = generatedPrivateKey
@@ -45,7 +45,7 @@ public class XyoAddress {
     }
   }
   
-  convenience init(phrase: String) throws {
+  public convenience init(phrase: String) throws {
     if let key = phrase.data(using: String.Encoding.utf8)?.sha256() {
       try self.init(key: key as Data)
     } else {
