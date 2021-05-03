@@ -1,5 +1,5 @@
 import XCTest
-@testable import sdk_xyo_client_swift
+@testable import XyoClient
 
 let knownPrivateKey = "8deb979933d0e8931074b81ce9005223a65d9b51d0b18a2801b7f61f9d42ff04"
 let knownPublicKey = "55a19a825939b46287cfd182ad2004132051c4be5c4684e4d0d50066f941b382"
