@@ -4,6 +4,8 @@ import CryptoKit
 enum XyoAddressError: Error {
   case invalidPrivateKey
   case invalidPrivateKeyLength
+  case invalidHash
+  case signingFailed
 }
 
 @available(iOS 13.0, *)
@@ -50,6 +52,18 @@ public class XyoAddress {
       try self.init(key: key as Data)
     } else {
       throw XyoAddressError.invalidPrivateKey
+    }
+  }
+  
+  public func sign(_ hash: String) throws -> Data {
+    if let hashData = hash.data(using: String.Encoding.utf8) {
+      if let signature = try self._privateKey?.signature(for: hashData) {
+        return signature
+      } else {
+        throw XyoAddressError.signingFailed
+      }
+    } else {
+      throw XyoAddressError.invalidHash
     }
   }
   

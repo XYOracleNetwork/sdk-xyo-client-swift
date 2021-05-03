@@ -42,10 +42,18 @@ public class BoundWitnessBuilder {
     return self
   }
   
+  public func sign(_ hash: String) throws -> [String] {
+    return try self._witnesses.map {
+      try $0.sign(hash).toHex()
+    }
+  }
+  
   public func build() throws -> XyoBoundWitnessJson {
     let bw = XyoBoundWitnessJson()
     let hashable = hashableFields()
-    bw._hash = try BoundWitnessBuilder.hash(hashable)
+    let hash = try BoundWitnessBuilder.hash(hashable)
+    bw._signatures = try self.sign(hash)
+    bw._hash = hash
     bw._client = "swift"
     bw._payloads = _payloads
     bw.addresses = _witnesses.map { witness in witness.publicKey!}
@@ -63,6 +71,6 @@ public class BoundWitnessBuilder {
     guard let str = String(data: data, encoding: .utf8) else {
       throw BoundWitnessBuilderError.encodingError
     }
-    return str.sha256()
+    return try str.sha256()
   }
 }
