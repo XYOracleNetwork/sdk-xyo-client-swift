@@ -15,6 +15,10 @@ public class BoundWitnessBuilder {
   private var _payload_schemas: [String] = []
   private var _payloads: [Codable] = []
   
+  public init() {
+    
+  }
+  
   public func witness(_ address: String, _ previousHash: String? = nil) -> BoundWitnessBuilder {
     _addresses.append(address)
     _previous_hashes.append(previousHash)
