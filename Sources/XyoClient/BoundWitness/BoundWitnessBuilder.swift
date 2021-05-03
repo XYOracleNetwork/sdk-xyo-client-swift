@@ -9,6 +9,7 @@ public enum BoundWitnessBuilderError: Error {
 @available(OSX 10.15, *)
 
 public class BoundWitnessBuilder {
+  private var _witnesses: [XyoAddress] = []
   private var _addresses: [String] = []
   private var _previous_hashes: [String?] = []
   private var _payload_hashes: [String] = []
@@ -19,8 +20,8 @@ public class BoundWitnessBuilder {
     
   }
   
-  public func witness(_ address: String, _ previousHash: String? = nil) -> BoundWitnessBuilder {
-    _addresses.append(address)
+  public func witness(_ address: XyoAddress, _ previousHash: String? = nil) -> BoundWitnessBuilder {
+    _witnesses.append(address)
     _previous_hashes.append(previousHash)
     return self
   }
@@ -47,7 +48,7 @@ public class BoundWitnessBuilder {
     bw._hash = try BoundWitnessBuilder.hash(hashable)
     bw._client = "swift"
     bw._payloads = _payloads
-    bw.addresses = _addresses
+    bw.addresses = _witnesses.map { witness in witness.publicKey!}
     bw.previous_hashes = _previous_hashes
     bw.payload_hashes = _payload_hashes
     bw.payload_schemas = _payload_schemas
