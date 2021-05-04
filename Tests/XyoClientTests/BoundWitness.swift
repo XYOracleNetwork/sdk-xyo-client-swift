@@ -60,7 +60,7 @@ final class BoundWitnessTests: XCTestCase {
         XCTAssertEqual(bwJson._hash, knownHash)
         try api.postBoundWitness(bwJson) { json, error in
             XCTAssertEqual(error == nil, true)
-            XCTAssertEqual(json == 1, true)
+            XCTAssertEqual(json, 1)
             apiExpectation.fulfill()
         }
         waitForExpectations(timeout: 10) { (error) in

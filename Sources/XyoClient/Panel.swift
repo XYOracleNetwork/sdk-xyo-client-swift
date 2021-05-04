@@ -6,9 +6,23 @@ public enum XyoPanelError: Error {
 
 public class XyoPanel {
     
-    private init(_ archivists: [XyoArchivistApiClient], _ witnesses: [XyoWitness]) {
-        _archivists = archivists
-        _witnesses = witnesses
+    public init(archivists: [XyoArchivistApiClient], witnesses: [XyoWitness]) {
+        self._archivists = archivists
+        self._witnesses = witnesses
+    }
+    
+    public convenience init(archive: String? = nil, apiDomain: String? = nil, witnesses: [XyoWitness]? = nil, token: String? = nil) throws {
+        let apiConfig = XyoArchivistApiConfig(archive ?? XyoPanel.Defaults.apiArchive, apiDomain ?? XyoPanel.Defaults.apiDomain)
+        let archivist = XyoArchivistApiClient.get(apiConfig)
+        try self.init(archivists: [archivist], witnesses: witnesses ?? [XyoWitness(try XyoAddress())])
+    }
+    
+    public convenience init(observe: (() -> XyoPayload?)?) throws {
+        if (observe != nil) {
+            try self.init(witnesses: [XyoBasicWitness(observe)])
+        } else {
+            try self.init()
+        }
     }
     
     public typealias XyoPanelReportCallback = (([Error])->Void)
@@ -17,7 +31,6 @@ public class XyoPanel {
     private var _witnesses: [XyoWitness]
     
     public func report(closure:@escaping XyoPanelReportCallback) throws {
-        var errors: [Error] = []
         let payloads = self._witnesses.map { witness in
             witness.observe()
         }
@@ -25,14 +38,19 @@ public class XyoPanel {
             .payloads(payloads.compactMap { $0 })
             .witnesses(self._witnesses)
             .build()
-        let _ = try _archivists.map { archivist in
+        var errors: [Error] = []
+        var archivistCount = _archivists.count
+        try _archivists.forEach { archivist in
             try archivist.postBoundWitness(bw) { count, error in
-                if error != nil {
-                    errors.append(XyoPanelError.postToArchivistFailed)
+                archivistCount = archivistCount - 1
+                if let errorExists = error {
+                    errors.append(errorExists)
+                }
+                if (archivistCount == 0) {
+                    closure(errors)
                 }
             }
         }
-        closure(errors)
     }
     
     struct Defaults {
@@ -45,11 +63,5 @@ public class XyoPanel {
             let apiConfig = XyoArchivistApiConfig(self.Defaults.apiArchive, self.Defaults.apiDomain)
             return XyoArchivistApiClient.get(apiConfig)
         }
-    }
-    
-    public static func get(archive: String?, apiDomain: String?, token: String?, witnesses: [XyoWitness]?) throws -> XyoPanel {
-        let apiConfig = XyoArchivistApiConfig(archive ?? self.Defaults.apiArchive, apiDomain ?? self.Defaults.apiDomain)
-        let archivist = XyoArchivistApiClient.get(apiConfig)
-        return XyoPanel([archivist], try witnesses ?? [XyoWitness(try XyoAddress())])
     }
 }
