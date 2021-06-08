@@ -8,10 +8,10 @@ open class XyoWitness {
     }
     
     open func observe() -> XyoPayload? {
-        return nil
+        preconditionFailure("This method must be overridden")
     }
     
     open func previousHash() -> String? {
-        return nil
+        preconditionFailure("This method must be overridden")
     }
 }

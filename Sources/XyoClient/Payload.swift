@@ -9,7 +9,7 @@ open class XyoPayload:Codable {
     }
     
     open func schema() throws -> String {
-        fatalError("schema()->String has not been implemented")
+        return "adhoc"
     }
     
     func sha256() throws -> String {

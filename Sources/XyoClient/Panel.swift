@@ -19,7 +19,7 @@ public class XyoPanel {
     
     public convenience init(observe: (() -> XyoPayload?)?) throws {
         if (observe != nil) {
-            try self.init(witnesses: [XyoBasicWitness(observe)])
+            try self.init(witnesses: [XyoBasicWitness(observe!)])
         } else {
             try self.init()
         }

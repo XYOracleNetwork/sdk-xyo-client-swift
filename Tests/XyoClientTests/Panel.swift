@@ -23,8 +23,11 @@ final class PanelTests: XCTestCase {
     func testPanelReport() throws {
         let apiDomain = "http://localhost:3030/dev"
         let archive = "test"
-        let address = try XyoAddress()
-        let witness = try XyoWitness(address)
+        _ = try XyoAddress()
+        let witness = try XyoBasicWitness({
+            let payload = XyoPayload()
+            return payload
+        })
         let panel = try XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
         let panelExpectation = expectation(description: "Panel Report")
         try panel.report { errors in
