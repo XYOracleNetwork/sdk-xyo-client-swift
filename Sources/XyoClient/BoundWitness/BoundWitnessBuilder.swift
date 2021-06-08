@@ -28,7 +28,7 @@ public class BoundWitnessBuilder {
     
     public func witnesses(_ witnesses: [XyoWitness]) -> BoundWitnessBuilder {
         _witnesses.append(contentsOf: witnesses.map { witness in witness.address })
-        _previous_hashes.append(contentsOf: witnesses.map { witness in witness.previousHash() })
+        _previous_hashes.append(contentsOf: witnesses.map { witness in witness.previousHash })
         return self
     }
     

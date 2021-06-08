@@ -17,7 +17,7 @@ public class XyoPanel {
         try self.init(archivists: [archivist], witnesses: witnesses ?? [XyoWitness(try XyoAddress())])
     }
     
-    public convenience init(observe: (() -> XyoPayload?)?) throws {
+    public convenience init(observe: ((_ previousHash: String?) -> XyoPayload?)?) throws {
         if (observe != nil) {
             try self.init(witnesses: [XyoBasicWitness(observe!)])
         } else {
@@ -31,8 +31,8 @@ public class XyoPanel {
     private var _witnesses: [XyoWitness]
     
     public func report(closure:@escaping XyoPanelReportCallback) throws {
-        let payloads = self._witnesses.map { witness in
-            witness.observe()
+        let payloads = try self._witnesses.map { witness in
+            try witness.observe()
         }
         let bw = try BoundWitnessBuilder()
             .payloads(payloads.compactMap { $0 })

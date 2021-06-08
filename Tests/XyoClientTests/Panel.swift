@@ -24,7 +24,7 @@ final class PanelTests: XCTestCase {
         let apiDomain = "http://localhost:3030/dev"
         let archive = "test"
         _ = try XyoAddress()
-        let witness = try XyoBasicWitness({
+        let witness = try XyoBasicWitness({ previousHash in
             let payload = XyoPayload()
             return payload
         })
@@ -40,7 +40,7 @@ final class PanelTests: XCTestCase {
     }
     
     func testSimplePanelReport() throws {
-        let panel = try XyoPanel {
+        let panel = try XyoPanel { previousHash in
             return nil
         }
         let panelExpectation = expectation(description: "Panel Report")

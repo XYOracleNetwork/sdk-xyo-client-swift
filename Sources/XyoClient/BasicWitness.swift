@@ -12,11 +12,13 @@ public class XyoBasicWitness: XyoWitness {
         try super.init(address)
     }
     
-    public typealias ObserverClosure = (()->XyoPayload?)
+    public typealias ObserverClosure = ((_ previousHash: String?)->XyoPayload?)
     
     private let _observer: ObserverClosure
     
-    override public func observe() -> XyoPayload? {
-        return _observer()
+    override public func observe() throws -> XyoPayload? {
+        let payload = _observer(previousHash)
+        previousHash = try payload?.sha256()
+        return payload
     }
 }
