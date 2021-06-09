@@ -9,30 +9,30 @@ let testPublicKey = "67d3b5eaf0c0bf6b5a602d359daecc86a7a74053490ec37ae08e7136058
 
 @available(iOS 13.0, *)
 final class AddressTests: XCTestCase {
-  static var allTests = [
-    ("testGeneratedPrivateKey", testGeneratedPrivateKey),
-    ("testKnownPrivateKey", testKnownPrivateKey),
-    ("testPhrasePrivateKey", testPhrasePrivateKey),
-  ]
-  
-  func testGeneratedPrivateKey() throws {
-    let address = try XyoAddress()
-    XCTAssertNotNil(address)
-    XCTAssertEqual(address.privateKey?.count, 64)
-    XCTAssertEqual(address.publicKey?.count, 64)
-  }
-  
-  func testKnownPrivateKey() throws {
-    let address = try XyoAddress(key: testVectorPrivateKey)
-    XCTAssertNotNil(address)
-    XCTAssertEqual(address.privateKey, testVectorPrivateKey)
-    XCTAssertEqual(address.publicKey, testVectorPublicKey)
-  }
-  
-  func testPhrasePrivateKey() throws {
-    let address = try XyoAddress(phrase: "test")
-    XCTAssertNotNil(address)
-    XCTAssertEqual(address.privateKey, testPrivateKey)
-    XCTAssertEqual(address.publicKey, testPublicKey)
-  }
+    static var allTests = [
+        ("testGeneratedPrivateKey", testGeneratedPrivateKey),
+        ("testKnownPrivateKey", testKnownPrivateKey),
+        ("testPhrasePrivateKey", testPhrasePrivateKey),
+    ]
+    
+    func testGeneratedPrivateKey() throws {
+        let address = try XyoAddress()
+        XCTAssertNotNil(address)
+        XCTAssertEqual(address.privateKey?.count, 64)
+        XCTAssertEqual(address.publicKey?.count, 64)
+    }
+    
+    func testKnownPrivateKey() throws {
+        let address = try XyoAddress(key: testVectorPrivateKey)
+        XCTAssertNotNil(address)
+        XCTAssertEqual(address.privateKey, testVectorPrivateKey)
+        XCTAssertEqual(address.publicKey, testVectorPublicKey)
+    }
+    
+    func testPhrasePrivateKey() throws {
+        let address = try XyoAddress(phrase: "test")
+        XCTAssertNotNil(address)
+        XCTAssertEqual(address.privateKey, testPrivateKey)
+        XCTAssertEqual(address.publicKey, testPublicKey)
+    }
 }

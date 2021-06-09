@@ -2,34 +2,34 @@ import CommonCrypto
 import Foundation
 
 extension Data {
-  func sha256() -> NSData {
-    return digest(input: self as NSData)
-  }
-  
-  func sha256String() -> String {
-    return hexStringFromData(input: self.sha256())
-  }
-  
-  func digest(input: NSData) -> NSData {
-    let digestLength = Int(CC_SHA256_DIGEST_LENGTH)
-    var hash = [UInt8](repeating: 0, count: digestLength)
-    CC_SHA256(input.bytes, UInt32(input.length), &hash)
-    return NSData(bytes: hash, length: digestLength)
-  }
-  
-  func toHex() -> String {
-    return hexStringFromData(input: self as NSData)
-  }
-  
-  func hexStringFromData(input: NSData) -> String {
-    var bytes = [UInt8](repeating: 0, count: input.length)
-    input.getBytes(&bytes, length: input.length)
-    
-    var hexString = ""
-    for byte in bytes {
-      hexString += String(format: "%02x", UInt8(byte))
+    func sha256() -> NSData {
+        return digest(input: self as NSData)
     }
     
-    return hexString
-  }
+    func sha256String() -> String {
+        return hexStringFromData(input: self.sha256())
+    }
+    
+    func digest(input: NSData) -> NSData {
+        let digestLength = Int(CC_SHA256_DIGEST_LENGTH)
+        var hash = [UInt8](repeating: 0, count: digestLength)
+        CC_SHA256(input.bytes, UInt32(input.length), &hash)
+        return NSData(bytes: hash, length: digestLength)
+    }
+    
+    func toHex() -> String {
+        return hexStringFromData(input: self as NSData)
+    }
+    
+    func hexStringFromData(input: NSData) -> String {
+        var bytes = [UInt8](repeating: 0, count: input.length)
+        input.getBytes(&bytes, length: input.length)
+        
+        var hexString = ""
+        for byte in bytes {
+            hexString += String(format: "%02x", UInt8(byte))
+        }
+        
+        return hexString
+    }
 }
