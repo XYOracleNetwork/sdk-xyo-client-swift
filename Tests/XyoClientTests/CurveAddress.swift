@@ -7,8 +7,7 @@ let testVectorPublicKey = "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021
 let testPrivateKey = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
 let testPublicKey = "67d3b5eaf0c0bf6b5a602d359daecc86a7a74053490ec37ae08e71360587c870"
 
-@available(iOS 13.0, *)
-final class AddressTests: XCTestCase {
+final class CurveAddressTests: XCTestCase {
     static var allTests = [
         ("testGeneratedPrivateKey", testGeneratedPrivateKey),
         ("testKnownPrivateKey", testKnownPrivateKey),
