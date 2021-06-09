@@ -22,7 +22,7 @@ final class PanelTests: XCTestCase {
     
     func testPanelReport() throws {
         let apiDomain = "http://localhost:3030/dev"
-        let archive = "test"
+        let archive = "panel-test"
         _ = try XyoAddress()
         let witness = try XyoBasicWitness({ previousHash in
             let payload = XyoPayload()
