@@ -5,9 +5,6 @@ public enum BoundWitnessBuilderError: Error {
     case encodingError
 }
 
-@available(iOS 13.0, *)
-@available(OSX 10.15, *)
-
 public class BoundWitnessBuilder {
     private var _witnesses: [XyoAddress] = []
     private var _addresses: [String] = []
