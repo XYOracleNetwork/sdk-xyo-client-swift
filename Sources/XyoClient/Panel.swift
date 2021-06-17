@@ -17,9 +17,12 @@ public class XyoPanel {
         try self.init(archivists: [archivist], witnesses: witnesses ?? [XyoWitness(try XyoAddress())])
     }
     
-    public convenience init(observe: ((_ previousHash: String?) -> XyoPayload?)?) throws {
+    public convenience init(observe: ((_ previousHash: String?) -> XyoBasicPayload?)?) throws {
         if (observe != nil) {
-            try self.init(witnesses: [XyoBasicWitness(observe!)])
+            let witness = try XyoBasicWitness(observe!)
+            var witnesses = Array<XyoWitness>()
+            witnesses.append(witness)
+            try self.init(witnesses: witnesses)
         } else {
             try self.init()
         }

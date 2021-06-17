@@ -4,11 +4,20 @@ open class XyoPayload:Codable {
     
     init() {}
     
+    enum CodingKeys: String, CodingKey {
+        case schema
+    }
+    
     required public init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
     
-    open func schema() throws -> String {
+    open func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode("adhoc", forKey: .schema)
+    }
+    
+    open func schema() -> String {
         return "adhoc"
     }
     

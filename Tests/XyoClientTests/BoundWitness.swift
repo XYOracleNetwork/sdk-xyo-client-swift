@@ -6,7 +6,7 @@ class TestPayload1SubObject: Codable {
     var stringValue = "yo"
 }
 
-class TestPayload1: Codable {
+class TestPayload1: XyoPayload {
     var timestamp = 1618603439107
     var numberField = 1
     var objectField = TestPayload1SubObject()
@@ -18,14 +18,14 @@ class TestPayload2SubObject: Codable {
     var numberValue = 2
 }
 
-class TestPayload2: Codable {
+class TestPayload2: XyoPayload {
     var stringField = "there"
     var objectField = TestPayload1SubObject()
     var timestamp = 1618603439107
     var numberField = 1
 }
 
-var knownHash = "4d9c220baca61456e5cd7447a078d07834c7b9a11df1f15966c550f8b2280dfd"
+var knownHash = "7dcf152241b0dcc86c3cd052727f213ab0912af6a98dcd7843cbaab9170ab201"
 
 @available(iOS 13.0, *)
 final class BoundWitnessTests: XCTestCase {
