@@ -27,12 +27,36 @@ class SystemInformation {
     }
 }
 
-class WifiInformation {
+@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
+class PathMonitorManager {
+    let monitor = NWPathMonitor()
+    let queue = DispatchQueue(label: "Monitor")
+    var connected: Bool?
+    var name: String?
+    var ip: String?
+    var isWifi: Bool?
+    var isCellular: Bool?
+    var isWired: Bool?
+    var ready = false
+    init() {
+        monitor.start(queue: queue)
+        monitor.pathUpdateHandler = { path in
+            self.ready = true
+            self.name = path.availableInterfaces[0].name
+            self.ip = PathMonitorManager.getIPAddress(self.name)
+            print("Name: \(self.name!)")
+            self.connected = path.status == .satisfied
+            print("Connected: \(self.connected!)")
+            self.isWifi = path.usesInterfaceType(.wifi)
+            print("Wifi: \(self.isWifi!)")
+            self.isCellular = path.usesInterfaceType(.cellular)
+            print("Cellular: \(self.isCellular!)")
+            self.isWired = path.usesInterfaceType(.wiredEthernet)
+            print("Wired: \(self.isWired!)")
+        }
+    }
     
-    @available(iOS 12.0, *)
-    static var pathMonitor = NWPathMonitor()
-    
-    static func getIPAddress() -> String? {
+    static func getIPAddress(_ name: String? = nil) -> String? {
         var address: String?
         var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
         if getifaddrs(&ifaddr) == 0 {
@@ -48,9 +72,8 @@ class WifiInformation {
                     // wired = ["en2", "en3", "en4"]
                     // cellular = ["pdp_ip0","pdp_ip1","pdp_ip2","pdp_ip3"]
 
-                    let name: String = String(cString: (interface.ifa_name))
-                    print("name: \(name)")
-                    if  name == "en0" || name == "en2" || name == "en3" || name == "en4" || name == "pdp_ip0" || name == "pdp_ip1" || name == "pdp_ip2" || name == "pdp_ip3" {
+                    let foundName: String = String(cString: (interface.ifa_name))
+                    if  name == nil || name == foundName {
                         var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
                         getnameinfo(interface.ifa_addr, socklen_t((interface.ifa_addr.pointee.sa_len)), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST)
                         address = String(cString: hostname)
@@ -61,6 +84,12 @@ class WifiInformation {
         }
         return address
     }
+}
+
+class WifiInformation {
+    
+    @available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
+    static var pathMonitor = PathMonitorManager()
     
     static func getWifiIPAddress() -> String? {
         var address: String?
@@ -229,12 +258,26 @@ class WifiInformation {
     
     #if os(macOS)
     static func isWifi() -> Bool {
-        return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.wifi)
+        return WifiInformation.pathMonitor.isWifi ?? false
     }
     #else
     static func isWifi() -> Bool {
         if #available(iOS 12, *) {
-            return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.wifi)
+            return WifiInformation.pathMonitor.isWifi ?? false
+        } else {
+            return WifiInformation.reachability.connection == .wifi
+        }
+    }
+    #endif
+    
+    #if os(macOS)
+    static func isWired() -> Bool {
+        return WifiInformation.pathMonitor.isWired ?? false
+    }
+    #else
+    static func isWired() -> Bool {
+        if #available(iOS 12, *) {
+            return WifiInformation.pathMonitor.isWired ?? false
         } else {
             return WifiInformation.reachability.connection == .wifi
         }
@@ -243,12 +286,12 @@ class WifiInformation {
     
     #if os(macOS)
     static func isLoopback() -> Bool {
-        return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.loopback)
+        return WifiInformation.pathMonitor.monitor.currentPath.usesInterfaceType(.loopback)
     }
     #else
     static func isLoopback() -> Bool {
         if #available(iOS 12, *) {
-            return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.loopback)
+            return WifiInformation.pathMonitor.monitor.currentPath.usesInterfaceType(.loopback)
         } else {
             return false
         }
@@ -257,44 +300,15 @@ class WifiInformation {
     
     #if os(macOS)
     static func isCellular() -> Bool {
-        return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.cellular)
+        return WifiInformation.pathMonitor.isCellular ?? false
     }
     #else
     static func isCellular() -> Bool {
         if #available(iOS 12, *) {
-            return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.cellular)
+            return WifiInformation.pathMonitor.isCellular ?? false
         } else {
             return WifiInformation.reachability.connection == .cellular
         }
-    }
-    #endif
-    
-    #if os(macOS)
-    static func isWired() -> Bool {
-        let client = CWWiFiClient.shared()
-        let interface = client.interface(withName: nil)
-        let security = interface?.security() ?? .none
-        return security == .unknown
-    }
-    #else
-    static func isWired() -> Bool {
-        if #available(iOS 12, *) {
-            return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.wiredEthernet)
-        } else {
-            return false
-        }
-    }
-    #endif
-    
-    #if os(macOS)
-    static func on() -> Bool? {
-        let client = CWWiFiClient.shared()
-        let interface = client.interface(withName: nil)
-        return interface?.powerOn()
-    }
-    #else
-    static func on() -> Bool? {
-        return nil
     }
     #endif
     
@@ -346,7 +360,6 @@ struct XyoSystemInfoOsPayloadStruct: Encodable {
 struct XyoSystemInfoNetworkWifiPayloadStruct: Encodable {
     var ssid: String?
     var mac: String?
-    var on: Bool?
     var rssi: Int?
     var txPower: Int?
     var security: String?
@@ -354,7 +367,6 @@ struct XyoSystemInfoNetworkWifiPayloadStruct: Encodable {
     init() {
         ssid = WifiInformation.ssid()
         mac = WifiInformation.mac()
-        on = WifiInformation.on()
         rssi = WifiInformation.rssi()
         txPower = WifiInformation.txPower()
         security = WifiInformation.security()
@@ -397,35 +409,14 @@ struct XyoSystemInfoNetworkCellularPayloadStruct: Encodable {
 struct XyoSystemInfoNetworkWiredPayloadStruct: Encodable {
     var ip: String?
     init() {
-        ip = WifiInformation.getIPAddress()
+        ip = WifiInformation.pathMonitor.ip
     }
 }
 
 struct XyoSystemInfoNetworkPayloadStruct: Encodable {
     var wifi = WifiInformation.isWifi() ? XyoSystemInfoNetworkWifiPayloadStruct() : nil
-    var cellular = XyoSystemInfoNetworkCellularPayloadStruct()
-    var wired = XyoSystemInfoNetworkWiredPayloadStruct()
-    var reachability: String?
-    var ip: String?
-    init() {
-        switch WifiInformation.reachability.connection {
-        case .wifi:
-            if (WifiInformation.isWifi()) {
-                reachability = "wifi"
-            } else if (WifiInformation.isWired()) {
-                reachability = "wired"
-            } else {
-                reachability = "unknown"
-            }
-        case .cellular:
-            reachability = "cellular"
-        case .unavailable:
-            reachability = "unavailable"
-        default:
-            reachability = nil
-        }
-        ip = WifiInformation.getIPAddress()
-    }
+    var cellular = WifiInformation.isCellular() ? XyoSystemInfoNetworkCellularPayloadStruct() : nil
+    var wired = WifiInformation.isWired() ? XyoSystemInfoNetworkWiredPayloadStruct() : nil
 }
 
 struct XyoSystemInfoDevicePayloadStruct: Encodable {
