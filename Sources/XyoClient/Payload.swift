@@ -8,13 +8,8 @@ open class XyoPayload: Encodable {
     
     public var schema: String
     
-    enum CodingKeys: String, CodingKey {
-        case schema
-    }
-    
     open func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode("adhoc", forKey: .schema)
+        fatalError("Override required")
     }
     
     func sha256() throws -> String {
