@@ -11,7 +11,7 @@ public class BoundWitnessBuilder {
     private var _previous_hashes: [String?] = []
     private var _payload_hashes: [String] = []
     private var _payload_schemas: [String] = []
-    private var _payloads: [Codable] = []
+    private var _payloads: [XyoPayload] = []
     
     public init() {
         
@@ -38,7 +38,7 @@ public class BoundWitnessBuilder {
         )
     }
     
-    public func payload<T: Codable>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
+    public func payload<T: XyoPayload>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
         _payloads.append(payload)
         _payload_hashes.append(try BoundWitnessBuilder.hash(payload))
         _payload_schemas.append(schema)
@@ -48,7 +48,7 @@ public class BoundWitnessBuilder {
     public func payloads(_ payloads: [XyoPayload]) throws -> BoundWitnessBuilder {
         _payloads.append(contentsOf: payloads)
         _payload_hashes.append(contentsOf: try payloads.map {payload in try payload.sha256()})
-        _payload_schemas.append(contentsOf: try payloads.map {payload in try payload.schema()})
+        _payload_schemas.append(contentsOf: payloads.map {payload in payload.schema})
         return self
     }
     
@@ -73,7 +73,7 @@ public class BoundWitnessBuilder {
         return bw
     }
     
-    static func hash<T: Codable>(_ json: T) throws -> String {
+    static func hash<T: Encodable>(_ json: T) throws -> String {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
         let data = try encoder.encode(json)

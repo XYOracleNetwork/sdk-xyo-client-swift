@@ -25,10 +25,10 @@ final class PanelTests: XCTestCase {
         let archive = "test"
         _ = try XyoAddress()
         let witness = try XyoBasicWitness({ previousHash in
-            let payload = XyoPayload()
+            let payload = XyoBasicPayload()
             return payload
         })
-        let panel = try XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
+        let panel = try XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness, XyoSystemInfoWitness()])
         let panelExpectation = expectation(description: "Panel Report")
         try panel.report { errors in
             XCTAssertEqual(errors.count,  0)

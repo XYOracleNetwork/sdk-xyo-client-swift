@@ -1,15 +1,15 @@
 import Foundation
 
-open class XyoPayload:Codable {
+open class XyoPayload: Encodable {
     
-    init() {}
-    
-    required public init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+    init(_ schema: String) {
+        self.schema = schema
     }
     
-    open func schema() throws -> String {
-        return "adhoc"
+    public var schema: String
+    
+    open func encode(to encoder: Encoder) throws {
+        fatalError("Override required")
     }
     
     func sha256() throws -> String {
