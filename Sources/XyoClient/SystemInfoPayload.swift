@@ -13,33 +13,21 @@ import CoreWLAN
 class SystemInformation {
     static func osName() -> String {
         #if os(iOS)
-            return "iOS"
+        return "iOS"
         #elseif os(macOS)
-            return "macOS"
+        return "macOS"
         #elseif os(watchOS)
-            return "watchOS"
+        return "watchOS"
         #elseif os(tvOS)
-            return "tvOS"
+        return "tvOS"
         #else
-            return "unknown"
+        return "unknown"
         #endif
     }
 }
 
-class CellularInformation {
-    #if os(iOS)
-    static func carrier() -> String? {
-        let networkInfo = CTTelephonyNetworkInfo()
-        return networkInfo.subscriberCellularProvider?.carrierName
-    }
-    #else
-    static func carrier() -> String? {
-        return nil
-    }
-    #endif
-}
-
 class WifiInformation {
+    
     static let reachability = try! Reachability()
     #if os(iOS)
     static func ssid() -> String? {
@@ -224,10 +212,33 @@ struct XyoSystemInfoPayloadWifiStruct: Encodable {
     }
 }
 
-struct XyoSystemInfoPayloadCellularStruct: Encodable {
-    var carrierName: String?
+struct XyoSystemInfoPayloadCellularProviderStruct: Encodable {
+    var name: String?
+    var mcc: String?
+    var mnc: String?
+    var icc: String?
+    var allowVoip: Bool?
     init() {
-        carrierName = CellularInformation.carrier()
+        #if os(iOS)
+        let networkInfo = CTTelephonyNetworkInfo()
+        let subscriberCellularProvider = networkInfo.subscriberCellularProvider
+        name = subscriberCellularProvider?.carrierName
+        mcc = subscriberCellularProvider?.mobileCountryCode
+        mnc = subscriberCellularProvider?.mobileNetworkCode
+        icc = subscriberCellularProvider?.isoCountryCode
+        allowVoip = subscriberCellularProvider?.allowsVOIP
+        #endif
+    }
+}
+
+struct XyoSystemInfoPayloadCellularStruct: Encodable {
+    var provider = XyoSystemInfoPayloadCellularProviderStruct()
+    var radio: String?
+    init() {
+        #if os(iOS)
+        let networkInfo = CTTelephonyNetworkInfo()
+        radio = networkInfo.currentRadioAccessTechnology
+        #endif
     }
 }
 
@@ -255,6 +266,43 @@ struct XyoSystemInfoPayloadNetworkStruct: Encodable {
     }
 }
 
+struct XyoSystemInfoPayloadDeviceStruct: Encodable {
+    var model: String?
+    var sysname: String?
+    var nodename: String?
+    var release: String?
+    var version: String?
+    init() {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        model = withUnsafePointer(to: &systemInfo.machine) {
+            $0.withMemoryRebound(to: CChar.self, capacity: 1) {
+                ptr in String.init(validatingUTF8: ptr)
+            }
+        }
+        sysname = withUnsafePointer(to: &systemInfo.sysname) {
+            $0.withMemoryRebound(to: CChar.self, capacity: 1) {
+                ptr in String.init(validatingUTF8: ptr)
+            }
+        }
+        nodename = withUnsafePointer(to: &systemInfo.nodename) {
+            $0.withMemoryRebound(to: CChar.self, capacity: 1) {
+                ptr in String.init(validatingUTF8: ptr)
+            }
+        }
+        release = withUnsafePointer(to: &systemInfo.release) {
+            $0.withMemoryRebound(to: CChar.self, capacity: 1) {
+                ptr in String.init(validatingUTF8: ptr)
+            }
+        }
+        version = withUnsafePointer(to: &systemInfo.version) {
+            $0.withMemoryRebound(to: CChar.self, capacity: 1) {
+                ptr in String.init(validatingUTF8: ptr)
+            }
+        }
+    }
+}
+
 open class XyoSystemInfoPayload: XyoPayload {
     
     init() {
@@ -264,10 +312,12 @@ open class XyoSystemInfoPayload: XyoPayload {
     enum CodingKeys: String, CodingKey {
         case os
         case network
+        case device
     }
     override open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(XyoSystemInfoPayloadOsStruct(), forKey: .os)
         try container.encode(XyoSystemInfoPayloadNetworkStruct(), forKey: .network)
+        try container.encode(XyoSystemInfoPayloadDeviceStruct(), forKey: .device)
     }
 }
