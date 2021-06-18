@@ -370,7 +370,9 @@ struct XyoSystemInfoNetworkWifiPayloadStruct: Encodable {
         rssi = WifiInformation.rssi()
         txPower = WifiInformation.txPower()
         security = WifiInformation.security()
-        ip = WifiInformation.getWifiIPAddress()
+        if #available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *) {
+            ip = WifiInformation.pathMonitor.ip
+        }
     }
 }
 
@@ -402,14 +404,18 @@ struct XyoSystemInfoNetworkCellularPayloadStruct: Encodable {
         let networkInfo = CTTelephonyNetworkInfo()
         radio = networkInfo.currentRadioAccessTechnology
         #endif
-        ip = WifiInformation.getCellularIPAddress()
+        if #available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *) {
+            ip = WifiInformation.pathMonitor.ip
+        }
     }
 }
 
 struct XyoSystemInfoNetworkWiredPayloadStruct: Encodable {
     var ip: String?
     init() {
-        ip = WifiInformation.pathMonitor.ip
+        if #available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *) {
+            ip = WifiInformation.pathMonitor.ip
+        }
     }
 }
 
