@@ -1,6 +1,7 @@
 import Foundation
 import Reachability
 import CoreTelephony
+import Network
 
 #if os(iOS)
 import SystemConfiguration.CaptiveNetwork
@@ -27,6 +28,120 @@ class SystemInformation {
 }
 
 class WifiInformation {
+    
+    @available(iOS 12.0, *)
+    static var pathMonitor = NWPathMonitor()
+    
+    static func getIPAddress() -> String? {
+        var address: String?
+        var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
+        if getifaddrs(&ifaddr) == 0 {
+            var ptr = ifaddr
+            while ptr != nil {
+                defer { ptr = ptr?.pointee.ifa_next }
+
+                guard let interface = ptr?.pointee else { return "" }
+                let addrFamily = interface.ifa_addr.pointee.sa_family
+                if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
+
+                    // wifi = ["en0"]
+                    // wired = ["en2", "en3", "en4"]
+                    // cellular = ["pdp_ip0","pdp_ip1","pdp_ip2","pdp_ip3"]
+
+                    let name: String = String(cString: (interface.ifa_name))
+                    print("name: \(name)")
+                    if  name == "en0" || name == "en2" || name == "en3" || name == "en4" || name == "pdp_ip0" || name == "pdp_ip1" || name == "pdp_ip2" || name == "pdp_ip3" {
+                        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                        getnameinfo(interface.ifa_addr, socklen_t((interface.ifa_addr.pointee.sa_len)), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST)
+                        address = String(cString: hostname)
+                    }
+                }
+            }
+            freeifaddrs(ifaddr)
+        }
+        return address
+    }
+    
+    static func getWifiIPAddress() -> String? {
+        var address: String?
+        var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
+        if getifaddrs(&ifaddr) == 0 {
+            var ptr = ifaddr
+            while ptr != nil {
+                defer { ptr = ptr?.pointee.ifa_next }
+
+                guard let interface = ptr?.pointee else { return "" }
+                let addrFamily = interface.ifa_addr.pointee.sa_family
+                if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
+
+                    // wifi = ["en0"]
+
+                    let name: String = String(cString: (interface.ifa_name))
+                    if  name == "en0" {
+                        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                        getnameinfo(interface.ifa_addr, socklen_t((interface.ifa_addr.pointee.sa_len)), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST)
+                        address = String(cString: hostname)
+                    }
+                }
+            }
+            freeifaddrs(ifaddr)
+        }
+        return address
+    }
+    
+    static func getCellularIPAddress() -> String? {
+        var address: String?
+        var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
+        if getifaddrs(&ifaddr) == 0 {
+            var ptr = ifaddr
+            while ptr != nil {
+                defer { ptr = ptr?.pointee.ifa_next }
+
+                guard let interface = ptr?.pointee else { return "" }
+                let addrFamily = interface.ifa_addr.pointee.sa_family
+                if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
+
+                    // cellular = ["pdp_ip0","pdp_ip1","pdp_ip2","pdp_ip3"]
+
+                    let name: String = String(cString: (interface.ifa_name))
+                    if  name == "pdp_ip0" || name == "pdp_ip1" || name == "pdp_ip2" || name == "pdp_ip3" {
+                        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                        getnameinfo(interface.ifa_addr, socklen_t((interface.ifa_addr.pointee.sa_len)), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST)
+                        address = String(cString: hostname)
+                    }
+                }
+            }
+            freeifaddrs(ifaddr)
+        }
+        return address
+    }
+    
+    static func getWiredIPAddress() -> String? {
+        var address: String?
+        var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
+        if getifaddrs(&ifaddr) == 0 {
+            var ptr = ifaddr
+            while ptr != nil {
+                defer { ptr = ptr?.pointee.ifa_next }
+
+                guard let interface = ptr?.pointee else { return "" }
+                let addrFamily = interface.ifa_addr.pointee.sa_family
+                if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
+
+                    // wired = ["en2", "en3", "en4"]
+
+                    let name: String = String(cString: (interface.ifa_name))
+                    if  name == "en2" || name == "en3" || name == "en4" {
+                        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                        getnameinfo(interface.ifa_addr, socklen_t((interface.ifa_addr.pointee.sa_len)), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST)
+                        address = String(cString: hostname)
+                    }
+                }
+            }
+            freeifaddrs(ifaddr)
+        }
+        return address
+    }
     
     static let reachability = try! Reachability()
     #if os(iOS)
@@ -114,27 +229,60 @@ class WifiInformation {
     
     #if os(macOS)
     static func isWifi() -> Bool {
-        let client = CWWiFiClient.shared()
-        let interface = client.interface(withName: nil)
-        let security = interface?.security() ?? .none
-        return security != .unknown
+        return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.wifi)
     }
     #else
     static func isWifi() -> Bool {
-        return WifiInformation.reachability.connection == .wifi
+        if #available(iOS 12, *) {
+            return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.wifi)
+        } else {
+            return WifiInformation.reachability.connection == .wifi
+        }
     }
     #endif
     
     #if os(macOS)
-    static func isEthernet() -> Bool {
+    static func isLoopback() -> Bool {
+        return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.loopback)
+    }
+    #else
+    static func isLoopback() -> Bool {
+        if #available(iOS 12, *) {
+            return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.loopback)
+        } else {
+            return false
+        }
+    }
+    #endif
+    
+    #if os(macOS)
+    static func isCellular() -> Bool {
+        return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.cellular)
+    }
+    #else
+    static func isCellular() -> Bool {
+        if #available(iOS 12, *) {
+            return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.cellular)
+        } else {
+            return WifiInformation.reachability.connection == .cellular
+        }
+    }
+    #endif
+    
+    #if os(macOS)
+    static func isWired() -> Bool {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         let security = interface?.security() ?? .none
         return security == .unknown
     }
     #else
-    static func isEthernet() -> Bool {
-        return false
+    static func isWired() -> Bool {
+        if #available(iOS 12, *) {
+            return WifiInformation.pathMonitor.currentPath.usesInterfaceType(.wiredEthernet)
+        } else {
+            return false
+        }
     }
     #endif
     
@@ -175,7 +323,7 @@ class WifiInformation {
     #endif
 }
 
-struct XyoSystemInfoPayloadVersionStruct: Encodable {
+struct XyoSystemInfoOsVersionPayloadStruct: Encodable {
     var major: Int
     var minor: Int
     var patch: Int
@@ -187,21 +335,22 @@ struct XyoSystemInfoPayloadVersionStruct: Encodable {
     }
 }
 
-struct XyoSystemInfoPayloadOsStruct: Encodable {
-    var version = XyoSystemInfoPayloadVersionStruct()
+struct XyoSystemInfoOsPayloadStruct: Encodable {
+    var version = XyoSystemInfoOsVersionPayloadStruct()
     var name: String
     init() {
         name = SystemInformation.osName()
     }
 }
 
-struct XyoSystemInfoPayloadWifiStruct: Encodable {
+struct XyoSystemInfoNetworkWifiPayloadStruct: Encodable {
     var ssid: String?
     var mac: String?
     var on: Bool?
     var rssi: Int?
     var txPower: Int?
     var security: String?
+    var ip: String?
     init() {
         ssid = WifiInformation.ssid()
         mac = WifiInformation.mac()
@@ -209,10 +358,11 @@ struct XyoSystemInfoPayloadWifiStruct: Encodable {
         rssi = WifiInformation.rssi()
         txPower = WifiInformation.txPower()
         security = WifiInformation.security()
+        ip = WifiInformation.getWifiIPAddress()
     }
 }
 
-struct XyoSystemInfoPayloadCellularProviderStruct: Encodable {
+struct XyoSystemInfoCellularProviderPayloadStruct: Encodable {
     var name: String?
     var mcc: String?
     var mnc: String?
@@ -231,28 +381,39 @@ struct XyoSystemInfoPayloadCellularProviderStruct: Encodable {
     }
 }
 
-struct XyoSystemInfoPayloadCellularStruct: Encodable {
-    var provider = XyoSystemInfoPayloadCellularProviderStruct()
+struct XyoSystemInfoNetworkCellularPayloadStruct: Encodable {
+    var provider = XyoSystemInfoCellularProviderPayloadStruct()
     var radio: String?
+    var ip: String?
     init() {
         #if os(iOS)
         let networkInfo = CTTelephonyNetworkInfo()
         radio = networkInfo.currentRadioAccessTechnology
         #endif
+        ip = WifiInformation.getCellularIPAddress()
     }
 }
 
-struct XyoSystemInfoPayloadNetworkStruct: Encodable {
-    var wifi = WifiInformation.isWifi() ? XyoSystemInfoPayloadWifiStruct() : nil
-    var cellular = XyoSystemInfoPayloadCellularStruct()
+struct XyoSystemInfoNetworkWiredPayloadStruct: Encodable {
+    var ip: String?
+    init() {
+        ip = WifiInformation.getIPAddress()
+    }
+}
+
+struct XyoSystemInfoNetworkPayloadStruct: Encodable {
+    var wifi = WifiInformation.isWifi() ? XyoSystemInfoNetworkWifiPayloadStruct() : nil
+    var cellular = XyoSystemInfoNetworkCellularPayloadStruct()
+    var wired = XyoSystemInfoNetworkWiredPayloadStruct()
     var reachability: String?
+    var ip: String?
     init() {
         switch WifiInformation.reachability.connection {
         case .wifi:
             if (WifiInformation.isWifi()) {
                 reachability = "wifi"
-            } else if (WifiInformation.isEthernet()) {
-                reachability = "ethernet"
+            } else if (WifiInformation.isWired()) {
+                reachability = "wired"
             } else {
                 reachability = "unknown"
             }
@@ -263,10 +424,11 @@ struct XyoSystemInfoPayloadNetworkStruct: Encodable {
         default:
             reachability = nil
         }
+        ip = WifiInformation.getIPAddress()
     }
 }
 
-struct XyoSystemInfoPayloadDeviceStruct: Encodable {
+struct XyoSystemInfoDevicePayloadStruct: Encodable {
     var model: String?
     var sysname: String?
     var nodename: String?
@@ -316,8 +478,8 @@ open class XyoSystemInfoPayload: XyoPayload {
     }
     override open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(XyoSystemInfoPayloadOsStruct(), forKey: .os)
-        try container.encode(XyoSystemInfoPayloadNetworkStruct(), forKey: .network)
-        try container.encode(XyoSystemInfoPayloadDeviceStruct(), forKey: .device)
+        try container.encode(XyoSystemInfoOsPayloadStruct(), forKey: .os)
+        try container.encode(XyoSystemInfoNetworkPayloadStruct(), forKey: .network)
+        try container.encode(XyoSystemInfoDevicePayloadStruct(), forKey: .device)
     }
 }
