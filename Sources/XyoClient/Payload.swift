@@ -2,7 +2,7 @@ import Foundation
 
 open class XyoPayload: Encodable {
     
-    init(_ schema: String) {
+    public init(_ schema: String) {
         self.schema = schema
     }
     
