@@ -1,7 +1,7 @@
 import XCTest
 @testable import XyoClient
 
-class TestPayload1SubObject: Codable {
+class TestPayload1SubObject: Encodable {
     var numberValue = 2
     var stringValue = "yo"
 }
@@ -13,7 +13,7 @@ class TestPayload1: XyoPayload {
     var stringField = "there"
 }
 
-class TestPayload2SubObject: Codable {
+class TestPayload2SubObject: Encodable {
     var stringValue = "yo"
     var numberValue = 2
 }
@@ -45,7 +45,7 @@ final class BoundWitnessTests: XCTestCase {
     
     func testPayload1() throws {
         let address = try XyoAddress(phrase: "test")
-        let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload1())
+        let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload1("network.xyo.test"))
         let bwJson = try bw.build()
         XCTAssertEqual(bwJson._hash, knownHash)
     }
@@ -54,7 +54,7 @@ final class BoundWitnessTests: XCTestCase {
         let address = try XyoAddress(phrase: "test")
         let config = XyoArchivistApiConfig("test", "http://localhost:3030/dev")
         let api = XyoArchivistApiClient.get(config)
-        let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload1())
+        let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload1("network.xyo.test"))
         let apiExpectation = expectation(description: "API Call")
         let bwJson = try bw.build()
         XCTAssertEqual(bwJson._hash, knownHash)
@@ -70,7 +70,7 @@ final class BoundWitnessTests: XCTestCase {
     
     func testPayload2() throws {
         let address = try XyoAddress(phrase: "test")
-        let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload2())
+        let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload2("network.xyo.test"))
         let bwJson = try bw.build()
         XCTAssertEqual(bwJson._hash, knownHash)
     }
@@ -79,7 +79,7 @@ final class BoundWitnessTests: XCTestCase {
         let address = try XyoAddress(phrase: "test")
         let config = XyoArchivistApiConfig("test", "http://localhost:3030/dev")
         let api = XyoArchivistApiClient.get(config)
-        let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload2())
+        let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload2("network.xyo.test"))
         let apiExpectation = expectation(description: "API Call")
         let bwJson = try bw.build()
         XCTAssertEqual(bwJson._hash, knownHash)
