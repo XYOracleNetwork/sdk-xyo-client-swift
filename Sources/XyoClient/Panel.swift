@@ -33,7 +33,11 @@ public class XyoPanel {
     private var _archivists: [XyoArchivistApiClient]
     private var _witnesses: [XyoWitness]
     
-    public func report(closure: XyoPanelReportCallback?) throws {
+    public func report() throws {
+        try report(nil)
+    }
+    
+    public func report(_ closure: XyoPanelReportCallback?) throws {
         let payloads = try self._witnesses.map { witness in
             try witness.observe()
         }
