@@ -6,9 +6,9 @@ import PackageDescription
 let package = Package(
   name: "XyoClient",
   platforms: [.macOS(.v10_15),
-              .iOS(.v11),
-              .tvOS(.v10),
-              .watchOS(.v3)],
+              .iOS(.v12),
+              .tvOS(.v12),
+              .watchOS(.v5)],
   products: [
     // Products define the executables and libraries a package produces, and make them visible to other packages.
     .library(
@@ -16,15 +16,14 @@ let package = Package(
       targets: ["XyoClient"])
   ],
   dependencies: [
-    .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.2.0")),
-    .package(name: "Reachability", url: "https://github.com/ashleymills/Reachability.swift.git", .upToNextMajor(from: "5.1.0"))
+    .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.2.0"))
   ],
   targets: [
     // Targets are the basic building blocks of a package. A target can define a module or a test suite.
     // Targets can depend on other targets in this package, and on products in packages this package depends on.
     .target(
       name: "XyoClient",
-        dependencies: ["Alamofire", "Reachability"]),
+        dependencies: ["Alamofire"]),
     .testTarget(
       name: "XyoClientTests",
       dependencies: ["XyoClient"])
