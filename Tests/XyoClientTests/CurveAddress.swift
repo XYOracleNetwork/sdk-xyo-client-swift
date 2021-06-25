@@ -2,10 +2,10 @@ import XCTest
 @testable import XyoClient
 
 let testVectorPrivateKey = "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60"
-let testVectorPublicKey = "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+let testVectorPublicKey = "667fef5f7578a801037ed144092dcf7c7c44e3bf3e09cfc8a67fcf70fcd8123a"
 
 let testPrivateKey = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
-let testPublicKey = "67d3b5eaf0c0bf6b5a602d359daecc86a7a74053490ec37ae08e71360587c870"
+let testPublicKey = "be9a880a7f5334a8e50bd701bd38c6def25369c7084b5be4d5b1022886835212"
 
 final class CurveAddressTests: XCTestCase {
     static var allTests = [

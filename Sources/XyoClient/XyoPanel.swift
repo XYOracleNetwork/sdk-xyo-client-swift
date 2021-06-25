@@ -48,7 +48,7 @@ public class XyoPanel {
         var errors: [Error] = []
         var archivistCount = _archivists.count
         try _archivists.forEach { archivist in
-            try archivist.postBoundWitness(bw) { count, error in
+            try archivist.postBoundWitness(bw) { error in
                 archivistCount = archivistCount - 1
                 if let errorExists = error {
                     errors.append(errorExists)

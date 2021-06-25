@@ -2,11 +2,11 @@ import Foundation
 import CoreTelephony
 
 struct XyoSystemInfoCellularProviderPayloadStruct: Encodable {
+    var allowVoip: Bool?
+    var icc: String?
     var name: String?
     var mcc: String?
     var mnc: String?
-    var icc: String?
-    var allowVoip: Bool?
     init() {
         #if os(iOS)
         let networkInfo = CTTelephonyNetworkInfo()

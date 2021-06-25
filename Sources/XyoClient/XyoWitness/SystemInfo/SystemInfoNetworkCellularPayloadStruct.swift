@@ -2,9 +2,9 @@ import Foundation
 import CoreTelephony
 
 struct XyoSystemInfoNetworkCellularPayloadStruct: Encodable {
+    var ip: String?
     var provider = XyoSystemInfoCellularProviderPayloadStruct()
     var radio: String?
-    var ip: String?
     init() {
         #if os(iOS)
         let networkInfo = CTTelephonyNetworkInfo()

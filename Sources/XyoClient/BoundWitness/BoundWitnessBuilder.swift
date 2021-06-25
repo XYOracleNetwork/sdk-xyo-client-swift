@@ -7,7 +7,6 @@ public enum BoundWitnessBuilderError: Error {
 
 public class BoundWitnessBuilder {
     private var _witnesses: [XyoAddress] = []
-    private var _addresses: [String] = []
     private var _previous_hashes: [String?] = []
     private var _payload_hashes: [String] = []
     private var _payload_schemas: [String] = []
@@ -31,7 +30,7 @@ public class BoundWitnessBuilder {
     
     private func hashableFields() -> XyoBoundWitnessBodyJson {
         return XyoBoundWitnessBodyJson(
-            _addresses,
+            _witnesses.map { witness in witness.publicKey!},
             _previous_hashes,
             _payload_hashes,
             _payload_schemas

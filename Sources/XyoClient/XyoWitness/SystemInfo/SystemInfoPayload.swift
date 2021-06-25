@@ -6,14 +6,14 @@ open class XyoSystemInfoPayload: XyoPayload {
     }
     
     enum CodingKeys: String, CodingKey {
-        case os
-        case network
         case device
+        case network
+        case os
     }
     override open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(XyoSystemInfoOsPayloadStruct(), forKey: .os)
-        try container.encode(XyoSystemInfoNetworkPayloadStruct(), forKey: .network)
         try container.encode(XyoSystemInfoDevicePayloadStruct(), forKey: .device)
+        try container.encode(XyoSystemInfoNetworkPayloadStruct(), forKey: .network)
+        try container.encode(XyoSystemInfoOsPayloadStruct(), forKey: .os)
     }
 }
