@@ -1,6 +1,11 @@
 import Foundation
 import Alamofire
 
+public struct XyoApiBoundWitnnessBody: Encodable {
+    var boundWitnesses: [XyoBoundWitnessJson]
+    var payloads: [XyoPayload]?
+}
+
 public class XyoArchivistApiClient {
     let config: XyoArchivistApiConfig
     
@@ -26,28 +31,31 @@ public class XyoArchivistApiClient {
     public func postBoundWitnesses(
         _ entries: [XyoBoundWitnessJson]
     ) throws {
-        try self.postBoundWitnesses(entries) {_count, _error in}
+        try self.postBoundWitnesses(entries) {_error in}
     }
     
     public func postBoundWitnesses (
         _ entries: [XyoBoundWitnessJson],
-        _ closure: @escaping (_ count: Int?, _ error: Error?) -> Void
+        _ closure: @escaping (_ error: Error?) -> Void
     ) throws {
+        let body: XyoApiBoundWitnnessBody = XyoApiBoundWitnnessBody(
+            boundWitnesses: entries
+        )
         AF.request(
             "\(self.config.apiDomain)/archive/\(self.config.archive)/bw",
             method: .post,
-            parameters: entries,
+            parameters: body,
             encoder: JSONParameterEncoder.default
         ).responseJSON(queue: XyoArchivistApiClient.queue) { response in
             switch response.result {
             case .failure(let error):
                 XyoArchivistApiClient.mainQueue.async {
-                    closure(nil, error)
+                    closure(error)
                 }
                 
-            case .success(let data):
+            case .success( _):
                 XyoArchivistApiClient.mainQueue.async {
-                    closure(data as? Int, nil)
+                    closure(nil)
                 }
             }
         }
@@ -56,12 +64,12 @@ public class XyoArchivistApiClient {
     public func postBoundWitness(
         _ entry: XyoBoundWitnessJson
     ) throws {
-        try self.postBoundWitnesses([entry]) {_count, _error in}
+        try self.postBoundWitnesses([entry]) {_error in}
     }
     
     public func postBoundWitness(
         _ entry: XyoBoundWitnessJson,
-        _ closure: @escaping (_ count: Int?, _ error: Error?) -> Void
+        _ closure: @escaping (_ error: Error?) -> Void
     ) throws {
         try self.postBoundWitnesses([entry], closure)
     }

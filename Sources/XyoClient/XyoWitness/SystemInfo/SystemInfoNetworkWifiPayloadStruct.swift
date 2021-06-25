@@ -1,12 +1,12 @@
 import Foundation
 
 struct XyoSystemInfoNetworkWifiPayloadStruct: Encodable {
-    var ssid: String?
+    var ip: String?
     var mac: String?
     var rssi: Int?
-    var txPower: Int?
     var security: String?
-    var ip: String?
+    var ssid: String?
+    var txPower: Int?
     init() {
         ssid = WifiInformation.ssid()
         mac = WifiInformation.mac()

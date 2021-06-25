@@ -2,9 +2,9 @@ import Foundation
 
 struct XyoSystemInfoDevicePayloadStruct: Encodable {
     var model: String?
-    var sysname: String?
     var nodename: String?
     var release: String?
+    var sysname: String?
     var version: String?
     init() {
         var systemInfo = utsname()

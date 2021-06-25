@@ -7,8 +7,8 @@ public class XyoAddress {
     
     public var privateKey: String? {
         get {
-            if #available(iOS 13.0, *) {
-                let pk = self._privateKey as? Curve25519.Signing.PrivateKey
+            if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
+                let pk = self._privateKey as? P256.Signing.PrivateKey
                 return pk?.rawRepresentation.toHex()
             } else {
                 let pk = self._privateKey as? Data
@@ -19,9 +19,10 @@ public class XyoAddress {
     
     public var publicKey: String? {
         get {
-            if #available(iOS 13.0, *) {
-                let pk = self._privateKey as? Curve25519.Signing.PrivateKey
-                return pk?.publicKey.rawRepresentation.toHex()
+            if #available(iOS 13.0, macOS 11.0, watchOS 6.0, tvOS 13.0, *) {
+                guard let pk = self._privateKey as? P256.Signing.PrivateKey else {return nil}
+                let fullPk = pk.publicKey.rawRepresentation.toHex()
+                return String(fullPk.prefix(64))
             } else {
                 let pk = self._privateKey as? Data
                 return pk?.toHex()
@@ -59,10 +60,10 @@ public class XyoAddress {
     
     public func sign(_ hash: String) throws -> Data {
         if let hashData = hash.data(using: String.Encoding.utf8) {
-            if #available(iOS 13.0, *) {
-                let pk = self._privateKey as? Curve25519.Signing.PrivateKey
+            if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
+                let pk = self._privateKey as? P256.Signing.PrivateKey
                 if let signature = try pk?.signature(for: hashData) {
-                    return signature
+                    return signature.rawRepresentation
                 } else {
                     throw XyoAddressError.signingFailed
                 }
@@ -89,8 +90,8 @@ public class XyoAddress {
     }
     
     private func generatePrivateKey() throws -> Any? {
-        if #available(iOS 13.0, *) {
-            return Curve25519.Signing.PrivateKey()
+        if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
+            return P256.Signing.PrivateKey()
         } else {
             return generateRandomBytes()
         }
@@ -101,9 +102,9 @@ public class XyoAddress {
             throw XyoAddressError.invalidPrivateKeyLength
         }
         do {
-            if #available(iOS 13.0, *) {
+            if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
                 return try privateKey.withUnsafeBytes { ptr in
-                    return try Curve25519.Signing.PrivateKey(rawRepresentation: ptr)
+                    return try P256.Signing.PrivateKey(rawRepresentation: ptr)
                 }
             } else {
                 return privateKey
