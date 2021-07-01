@@ -1,8 +1,8 @@
 import Foundation
 
 open class XyoSystemInfoPayload: XyoPayload {
-    init() {
-        super.init("network.xyo.system.info")
+    init(_ previousHash: String?) {
+        super.init("network.xyo.system.info", previousHash)
     }
     
     enum CodingKeys: String, CodingKey {

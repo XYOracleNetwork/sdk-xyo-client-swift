@@ -8,12 +8,12 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable {
         case previous_hashes
     }
     
-    public var addresses: [String] = []
+    public var addresses: [String?] = []
     public var payload_hashes: [String] = []
     public var payload_schemas: [String] = []
     public var previous_hashes: [String?] = []
     
-    init (_ addresses: [String], _ previous_hashes: [String?], _ payload_hashes: [String], _ payload_schemas: [String]) {
+    init (_ addresses: [String?], _ previous_hashes: [String?], _ payload_hashes: [String], _ payload_schemas: [String]) {
         self.addresses = addresses
         self.payload_hashes = payload_hashes
         self.payload_schemas = payload_schemas

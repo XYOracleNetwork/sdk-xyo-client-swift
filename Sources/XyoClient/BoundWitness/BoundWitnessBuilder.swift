@@ -6,7 +6,7 @@ public enum BoundWitnessBuilderError: Error {
 }
 
 public class BoundWitnessBuilder {
-    private var _witnesses: [XyoAddress] = []
+    private var _witnesses: [XyoAddress?] = []
     private var _previous_hashes: [String?] = []
     private var _payload_hashes: [String] = []
     private var _payload_schemas: [String] = []
@@ -30,7 +30,7 @@ public class BoundWitnessBuilder {
     
     private func hashableFields() -> XyoBoundWitnessBodyJson {
         return XyoBoundWitnessBodyJson(
-            _witnesses.map { witness in witness.publicKey!},
+            _witnesses.map { witness in witness?.publicKey},
             _previous_hashes,
             _payload_hashes,
             _payload_schemas
@@ -51,9 +51,9 @@ public class BoundWitnessBuilder {
         return self
     }
     
-    public func sign(_ hash: String) throws -> [String] {
+    public func sign(_ hash: String) throws -> [String?] {
         return try self._witnesses.map {
-            try $0.sign(hash).toHex()
+            try $0?.sign(hash).toHex()
         }
     }
     
@@ -65,7 +65,7 @@ public class BoundWitnessBuilder {
         bw._hash = hash
         bw._client = "swift"
         bw._payloads = _payloads
-        bw.addresses = _witnesses.map { witness in witness.publicKey!}
+        bw.addresses = _witnesses.map { witness in witness?.publicKey!}
         bw.previous_hashes = _previous_hashes
         bw.payload_hashes = _payload_hashes
         bw.payload_schemas = _payload_schemas
