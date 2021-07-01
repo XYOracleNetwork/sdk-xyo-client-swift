@@ -17,12 +17,10 @@ public class XyoPanel {
         self.init(archivists: [archivist], witnesses: witnesses ?? [])
     }
     
-    public convenience init(observe: ((_ previousHash: String?) -> XyoBasicPayload?)?) {
+    public convenience init(observe: ((_ previousHash: String?) -> XyoEventPayload?)?) {
         if (observe != nil) {
             var witnesses = Array<XyoWitness>()
-            if let witness = try? XyoBasicWitness(observe!) {
-                witnesses.append(witness)
-            }
+            witnesses.append(XyoEventWitness(observe!))
             self.init(witnesses: witnesses)
         } else {
             self.init()
@@ -38,13 +36,20 @@ public class XyoPanel {
         try report(nil)
     }
     
-    public func report(_ closure: XyoPanelReportCallback?) throws {
-        let payloads = self._witnesses.map { witness in
+    public func event(_ event: String, _ closure: XyoPanelReportCallback?) throws {
+        try report([XyoEventWitness { previousHash in XyoEventPayload(event, previousHash) }], closure)
+    }
+    
+    public func report(_ adhocWitnesses: [XyoWitness], _ closure: XyoPanelReportCallback?) throws {
+        var witnesses: [XyoWitness] = []
+        witnesses.append(contentsOf: adhocWitnesses)
+        witnesses.append(contentsOf: self._witnesses)
+        let payloads = witnesses.map { witness in
             witness.observe()
         }
         let bw = try BoundWitnessBuilder()
             .payloads(payloads.compactMap { $0 })
-            .witnesses(self._witnesses)
+            .witnesses(witnesses)
             .build()
         var errors: [Error] = []
         var archivistCount = _archivists.count
@@ -59,6 +64,10 @@ public class XyoPanel {
                 }
             }
         }
+    }
+    
+    public func report(_ closure: XyoPanelReportCallback?) throws {
+        return try self.report([], closure)
     }
     
     struct Defaults {

@@ -2,15 +2,13 @@ import Foundation
 
 open class XyoPayload: Encodable {
     
-    public init(_ schema: String) {
+    public init(_ schema: String, _ previousHash: String? = nil) {
         self.schema = schema
+        self.previousHash = previousHash
     }
     
     public var schema: String
-    
-    open func encode(to encoder: Encoder) throws {
-        fatalError("Override required")
-    }
+    public var previousHash: String?
     
     func sha256() throws -> String {
         let encoder = JSONEncoder()
