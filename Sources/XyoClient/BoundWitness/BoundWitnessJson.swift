@@ -15,7 +15,7 @@ public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaPr
     public var _client: String?
     public var _hash: String?
     public var _payloads: [XyoPayload]?
-    public var _signatures: [String]?
+    public var _signatures: [String?]?
     
     func encodeMetaFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
         try container.encode(_client, forKey: ._client)

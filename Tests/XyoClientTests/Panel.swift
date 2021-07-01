@@ -14,8 +14,8 @@ final class PanelTests: XCTestCase {
         let apiDomain = "https://beta.archivist.xyo.network"
         let archive = "test"
         let address = try XyoAddress()
-        let witness = try XyoWitness(address)
-        let panel = try XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
+        let witness = XyoWitness(address)
+        let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
         XCTAssertNotNil(address)
         XCTAssertNotNil(panel)
     }
@@ -40,7 +40,7 @@ final class PanelTests: XCTestCase {
     }
     
     func testSimplePanelReport() throws {
-        let panel = try XyoPanel { previousHash in
+        let panel = XyoPanel { previousHash in
             return nil
         }
         let panelExpectation = expectation(description: "Panel Report")

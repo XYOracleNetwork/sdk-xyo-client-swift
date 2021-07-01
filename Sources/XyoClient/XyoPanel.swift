@@ -11,20 +11,21 @@ public class XyoPanel {
         self._witnesses = witnesses
     }
     
-    public convenience init(archive: String? = nil, apiDomain: String? = nil, witnesses: [XyoWitness]? = nil, token: String? = nil) throws {
+    public convenience init(archive: String? = nil, apiDomain: String? = nil, witnesses: [XyoWitness]? = nil, token: String? = nil) {
         let apiConfig = XyoArchivistApiConfig(archive ?? XyoPanel.Defaults.apiArchive, apiDomain ?? XyoPanel.Defaults.apiDomain)
         let archivist = XyoArchivistApiClient.get(apiConfig)
-        try self.init(archivists: [archivist], witnesses: witnesses ?? [XyoWitness(try XyoAddress())])
+        self.init(archivists: [archivist], witnesses: witnesses ?? [])
     }
     
-    public convenience init(observe: ((_ previousHash: String?) -> XyoBasicPayload?)?) throws {
+    public convenience init(observe: ((_ previousHash: String?) -> XyoBasicPayload?)?) {
         if (observe != nil) {
-            let witness = try XyoBasicWitness(observe!)
             var witnesses = Array<XyoWitness>()
-            witnesses.append(witness)
-            try self.init(witnesses: witnesses)
+            if let witness = try? XyoBasicWitness(observe!) {
+                witnesses.append(witness)
+            }
+            self.init(witnesses: witnesses)
         } else {
-            try self.init()
+            self.init()
         }
     }
     
@@ -38,8 +39,8 @@ public class XyoPanel {
     }
     
     public func report(_ closure: XyoPanelReportCallback?) throws {
-        let payloads = try self._witnesses.map { witness in
-            try witness.observe()
+        let payloads = self._witnesses.map { witness in
+            witness.observe()
         }
         let bw = try BoundWitnessBuilder()
             .payloads(payloads.compactMap { $0 })
