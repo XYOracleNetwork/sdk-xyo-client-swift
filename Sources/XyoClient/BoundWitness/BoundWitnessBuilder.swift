@@ -57,7 +57,7 @@ public class BoundWitnessBuilder {
         }
     }
     
-    public func build() throws -> XyoBoundWitnessJson {
+    public func build(_ previousHash: String? = nil) throws -> XyoBoundWitnessJson {
         let bw = XyoBoundWitnessJson()
         let hashable = hashableFields()
         let hash = try BoundWitnessBuilder.hash(hashable)
@@ -65,6 +65,7 @@ public class BoundWitnessBuilder {
         bw._hash = hash
         bw._client = "swift"
         bw._payloads = _payloads
+        bw._previous_hash = previousHash
         bw.addresses = _witnesses.map { witness in witness?.publicKey!}
         bw.previous_hashes = _previous_hashes
         bw.payload_hashes = _payload_hashes

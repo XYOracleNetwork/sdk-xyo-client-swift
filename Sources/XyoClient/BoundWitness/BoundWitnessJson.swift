@@ -5,6 +5,7 @@ public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaPr
         case _client
         case _hash
         case _payloads
+        case _previous_hash
         case _signatures
         case addresses
         case payload_hashes
@@ -16,6 +17,7 @@ public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaPr
     public var _hash: String?
     public var _payloads: [XyoPayload]?
     public var _signatures: [String?]?
+    public var _previous_hash: String?
     
     func encodeMetaFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
         try container.encode(_client, forKey: ._client)

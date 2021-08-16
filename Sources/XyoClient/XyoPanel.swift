@@ -31,6 +31,7 @@ public class XyoPanel {
     
     private var _archivists: [XyoArchivistApiClient]
     private var _witnesses: [XyoWitness]
+    private var _previous_hash: String?
     
     public func report() throws {
         try report(nil)
@@ -50,7 +51,8 @@ public class XyoPanel {
         let bw = try BoundWitnessBuilder()
             .payloads(payloads.compactMap { $0 })
             .witnesses(witnesses)
-            .build()
+            .build(_previous_hash)
+        self._previous_hash = bw._hash
         var errors: [Error] = []
         var archivistCount = _archivists.count
         try _archivists.forEach { archivist in
