@@ -4,7 +4,7 @@ open class XyoPayload: Encodable {
     
     public init(_ schema: String, _ previousHash: String? = nil) {
         self.schema = schema.lowercased()
-        self.previousHash = previousHash
+        self.previousHash = previousHash?.lowercased()
     }
     
     public var schema: String
@@ -18,6 +18,6 @@ open class XyoPayload: Encodable {
         guard let str = String(data: data, encoding: .utf8) else {
             throw BoundWitnessBuilderError.encodingError
         }
-        return try str.sha256()
+        return try str.sha256().lowercased()
     }
 }

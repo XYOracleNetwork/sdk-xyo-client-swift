@@ -7,7 +7,7 @@ extension Data {
     }
     
     func sha256String() -> String {
-        return hexStringFromData(input: self.sha256())
+        return hexStringFromData(input: self.sha256()).lowercased()
     }
     
     func digest(input: NSData) -> NSData {
