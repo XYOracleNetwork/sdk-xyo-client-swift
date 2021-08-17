@@ -27,7 +27,7 @@ public class XyoPanel {
         }
     }
     
-    public typealias XyoPanelReportCallback = (([Error])->Void)
+    public typealias XyoPanelReportCallback = (([String])->Void)
     
     private var _archivists: [XyoArchivistApiClient]
     private var _witnesses: [XyoWitness]
@@ -53,7 +53,7 @@ public class XyoPanel {
             .witnesses(witnesses)
             .build(_previous_hash)
         self._previous_hash = bw._hash
-        var errors: [Error] = []
+        var errors: [String] = []
         var archivistCount = _archivists.count
         try _archivists.forEach { archivist in
             try archivist.postBoundWitness(bw) { error in

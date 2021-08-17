@@ -36,7 +36,7 @@ public class XyoArchivistApiClient {
     
     public func postBoundWitnesses (
         _ entries: [XyoBoundWitnessJson],
-        _ closure: @escaping (_ error: Error?) -> Void
+        _ closure: @escaping (_ error: String?) -> Void
     ) throws {
         let body: XyoApiBoundWitnnessBody = XyoApiBoundWitnnessBody(
             boundWitnesses: entries
@@ -48,9 +48,9 @@ public class XyoArchivistApiClient {
             encoder: JSONParameterEncoder.default
         ).responseJSON(queue: XyoArchivistApiClient.queue) { response in
             switch response.result {
-            case .failure(let error):
+            case .failure( _):
                 XyoArchivistApiClient.mainQueue.async {
-                    closure(error)
+                    closure(String(decoding: response.data!, as: UTF8.self))
                 }
                 
             case .success( _):
@@ -69,7 +69,7 @@ public class XyoArchivistApiClient {
     
     public func postBoundWitness(
         _ entry: XyoBoundWitnessJson,
-        _ closure: @escaping (_ error: Error?) -> Void
+        _ closure: @escaping (_ error: String?) -> Void
     ) throws {
         try self.postBoundWitnesses([entry], closure)
     }
