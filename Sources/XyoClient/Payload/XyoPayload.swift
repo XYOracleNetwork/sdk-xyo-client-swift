@@ -3,14 +3,14 @@ import Foundation
 open class XyoPayload: Encodable {
     
     public init(_ schema: String, _ previousHash: String? = nil) {
-        self.schema = schema
+        self.schema = schema.lowercased()
         self.previousHash = previousHash
     }
     
     public var schema: String
     public var previousHash: String?
     
-    func sha256() throws -> String {
+    public func hash() throws -> String {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
         let data = try encoder.encode(self)

@@ -4,8 +4,9 @@ open class XyoWitness {
     public let address: XyoAddress?
     public var previousHash: String?
     
-    public init(_ address: XyoAddress? = nil) {
+    public init(_ address: XyoAddress? = nil, previousHash: String? = nil) {
         self.address = try? address ?? XyoAddress()
+        self.previousHash = previousHash
     }
     
     open func observe() -> XyoPayload? {

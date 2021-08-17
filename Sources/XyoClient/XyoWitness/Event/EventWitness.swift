@@ -18,7 +18,7 @@ open class XyoEventWitness: XyoWitness {
     
     override public func observe() -> XyoEventPayload? {
         let payload = _observer(previousHash)
-        previousHash = try? payload?.sha256()
+        previousHash = try? payload?.hash()
         return payload
     }
 }
