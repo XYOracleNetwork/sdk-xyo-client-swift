@@ -26,13 +26,17 @@ class PathMonitorManager {
             self.isWired = path.usesInterfaceType(.wiredEthernet)
             print("Wired: \(self.isWired!)")
             
-            if let endpoint = path.gateways.first {
-                switch endpoint {
-                case .hostPort(let host, _):
-                    self.ip = host.debugDescription
-                    break
-                default:
-                    break
+            if #available(iOS 13, *) {
+                if let endpoint = path.gateways.first {
+                    switch endpoint {
+                    case .hostPort(let host, _):
+                        self.ip = host.debugDescription
+                        break
+                    default:
+                        break
+                    }
+                } else {
+                    self.ip = nil
                 }
             } else {
                 self.ip = nil
