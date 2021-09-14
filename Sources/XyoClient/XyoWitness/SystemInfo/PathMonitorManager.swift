@@ -4,6 +4,8 @@ import Network
 class PathMonitorManager {
     let monitor = NWPathMonitor()
     let queue = DispatchQueue(label: "Monitor")
+    //we create a group to prevent deinit while still processing on another thread
+    let group = DispatchGroup()
     var connected: Bool?
     var name: String?
     var ip: String?
@@ -11,9 +13,15 @@ class PathMonitorManager {
     var isCellular: Bool?
     var isWired: Bool?
     var ready = false
+    var shuttingDown = false
     init() {
         monitor.start(queue: queue)
         monitor.pathUpdateHandler = { path in
+            //bail if shutting down
+            if (self.shuttingDown) {
+                return
+            }
+            self.group.enter()
             self.ready = true
             self.name = path.availableInterfaces[0].name
             print("Name: \(self.name!)")
@@ -42,7 +50,18 @@ class PathMonitorManager {
                 self.ip = nil
             }
 
-            print("Ip: \(self.ip!)")
+            self.group.leave()
         }
+    }
+    
+    deinit {
+        //stop processing new dispatches
+        shuttingDown = true
+        
+        //stop generating new dispatches
+        monitor.cancel()
+        
+        //wait for any last dispatch, if any, to finish
+        group.wait()
     }
 }
