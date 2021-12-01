@@ -14,6 +14,9 @@ public class PathMonitorManager {
     var isWired: Bool?
     var ready = false
     var shuttingDown = false
+    
+    init() {}
+    
     init(start: Bool = true) {
         if (start) {
             self.start()
