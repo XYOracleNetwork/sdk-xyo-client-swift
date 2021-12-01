@@ -2,7 +2,7 @@ import Foundation
 
 struct XyoSystemInfoNetworkWiredPayloadStruct: Encodable {
     var ip: String?
-    init() {
-        ip = WifiInformation.pathMonitor.ip
+    init(_ wifiInfo: WifiInformation?) {
+        ip = wifiInfo?.pathMonitor.ip
     }
 }

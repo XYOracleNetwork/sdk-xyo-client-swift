@@ -5,11 +5,11 @@ struct XyoSystemInfoNetworkCellularPayloadStruct: Encodable {
     var ip: String?
     var provider = XyoSystemInfoCellularProviderPayloadStruct()
     var radio: String?
-    init() {
+    init(_ wifiInfo: WifiInformation?) {
         #if os(iOS)
         let networkInfo = CTTelephonyNetworkInfo()
         radio = networkInfo.serviceCurrentRadioAccessTechnology?.first?.value
         #endif
-        ip = WifiInformation.pathMonitor.ip
+        ip = wifiInfo?.pathMonitor.ip
     }
 }

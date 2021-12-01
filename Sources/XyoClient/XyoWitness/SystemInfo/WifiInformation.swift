@@ -11,10 +11,14 @@ import CoreWLAN
 
 class WifiInformation {
     
-    static var pathMonitor = PathMonitorManager()
+    var pathMonitor: PathMonitorManager
+    
+    init(_ pathMonitor: PathMonitorManager? = nil) {
+        self.pathMonitor = pathMonitor ?? PathMonitorManager()
+    }
     
     #if os(iOS)
-    static func ssid() -> String? {
+    func ssid() -> String? {
         var ssid: String?
         if let interfaces = CNCopySupportedInterfaces() as NSArray? {
             for interface in interfaces {
@@ -27,31 +31,31 @@ class WifiInformation {
         return ssid
     }
     #elseif os(macOS)
-    static func ssid() -> String? {
+    func ssid() -> String? {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         return interface?.ssid()
     }
     #else
-    static func ssid() -> String? {
+    func ssid() -> String? {
         return nil
     }
     #endif
     
     #if os(macOS)
-    static func mac() -> String? {
+    func mac() -> String? {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         return interface?.hardwareAddress()
     }
     #else
-    static func mac() -> String? {
+    func mac() -> String? {
         return nil
     }
     #endif
     
     #if os(macOS)
-    static func security() -> String? {
+    func security() -> String? {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         guard let security = interface?.security() else {return nil}
@@ -91,43 +95,43 @@ class WifiInformation {
         }
     }
     #else
-    static func security() -> String? {
+    func security() -> String? {
         return nil
     }
     #endif
     
-    static func isWifi() -> Bool {
-        return WifiInformation.pathMonitor.isWifi ?? false
+    func isWifi() -> Bool {
+        return pathMonitor.isWifi ?? false
     }
     
-    static func isWired() -> Bool {
-        return WifiInformation.pathMonitor.isWired ?? false
+    func isWired() -> Bool {
+        return pathMonitor.isWired ?? false
     }
     
-    static func isCellular() -> Bool {
-        return WifiInformation.pathMonitor.isCellular ?? false
+    func isCellular() -> Bool {
+        return pathMonitor.isCellular ?? false
     }
     
     #if os(macOS)
-    static func rssi() -> Int? {
+    func rssi() -> Int? {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         return interface?.rssiValue()
     }
     #else
-    static func rssi() -> Int? {
+    func rssi() -> Int? {
         return nil
     }
     #endif
     
     #if os(macOS)
-    static func txPower() -> Int? {
+    func txPower() -> Int? {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         return interface?.transmitPower()
     }
     #else
-    static func txPower() -> Int? {
+    func txPower() -> Int? {
         return nil
     }
     #endif

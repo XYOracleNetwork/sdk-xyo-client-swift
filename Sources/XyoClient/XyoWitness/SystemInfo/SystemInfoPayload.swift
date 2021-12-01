@@ -1,7 +1,11 @@
 import Foundation
 
 open class XyoSystemInfoPayload: XyoPayload {
-    init(_ previousHash: String?) {
+    
+    var wifiInfo: WifiInformation?
+    
+    init(_ wifiInfo: WifiInformation? = nil, _ previousHash: String? = nil) {
+        self.wifiInfo = wifiInfo
         super.init("network.xyo.system.info", previousHash)
     }
     
@@ -13,7 +17,9 @@ open class XyoSystemInfoPayload: XyoPayload {
     override open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(XyoSystemInfoDevicePayloadStruct(), forKey: .device)
-        try container.encode(XyoSystemInfoNetworkPayloadStruct(), forKey: .network)
+        if let wifiInfo = self.wifiInfo {
+            try container.encode(XyoSystemInfoNetworkPayloadStruct(wifiInfo), forKey: .network)
+        }
         try container.encode(XyoSystemInfoOsPayloadStruct(), forKey: .os)
     }
 }

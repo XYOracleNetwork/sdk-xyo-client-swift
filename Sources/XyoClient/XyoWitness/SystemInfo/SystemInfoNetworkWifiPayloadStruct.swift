@@ -7,12 +7,12 @@ struct XyoSystemInfoNetworkWifiPayloadStruct: Encodable {
     var security: String?
     var ssid: String?
     var txPower: Int?
-    init() {
-        ssid = WifiInformation.ssid()
-        mac = WifiInformation.mac()
-        rssi = WifiInformation.rssi()
-        txPower = WifiInformation.txPower()
-        security = WifiInformation.security()
-        ip = WifiInformation.pathMonitor.ip
+    init(_ wifiInfo: WifiInformation?) {
+        ssid = wifiInfo?.ssid()
+        mac = wifiInfo?.mac()
+        rssi = wifiInfo?.rssi()
+        txPower = wifiInfo?.txPower()
+        security = wifiInfo?.security()
+        ip = wifiInfo?.pathMonitor.ip
     }
 }

@@ -14,7 +14,17 @@ class PathMonitorManager {
     var isWired: Bool?
     var ready = false
     var shuttingDown = false
-    init() {
+    init(start: Bool = true) {
+        if (start) {
+            self.start()
+        }
+    }
+    
+    deinit {
+        stop()
+    }
+    
+    func start() {
         monitor.start(queue: queue)
         monitor.pathUpdateHandler = { path in
             //bail if shutting down
@@ -54,7 +64,7 @@ class PathMonitorManager {
         }
     }
     
-    deinit {
+    func stop() {
         //stop processing new dispatches
         shuttingDown = true
         
