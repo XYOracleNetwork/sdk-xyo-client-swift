@@ -15,9 +15,7 @@ public class PathMonitorManager {
     var ready = false
     var shuttingDown = false
     
-    init() {}
-    
-    init(start: Bool = true) {
+    public init(start: Bool = true) {
         if (start) {
             self.start()
         }

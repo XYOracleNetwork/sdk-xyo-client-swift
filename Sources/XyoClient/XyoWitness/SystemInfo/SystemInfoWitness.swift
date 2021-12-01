@@ -4,9 +4,7 @@ open class XyoSystemInfoWitness: XyoWitness {
     
     var wifiInfo: WifiInformation?
     
-    init() {}
-    
-    init(_ wifiInfo: WifiInformation?) {
+    public init(_ wifiInfo: WifiInformation? = nil) {
         self.wifiInfo = wifiInfo
     }
     

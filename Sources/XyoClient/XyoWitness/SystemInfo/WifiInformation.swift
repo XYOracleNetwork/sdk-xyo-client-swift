@@ -13,12 +13,8 @@ public class WifiInformation {
     
     var pathMonitor: PathMonitorManager
     
-    init() {
-        self.pathMonitor = PathMonitorManager()
-    }
-    
-    init(_ pathMonitor: PathMonitorManager) {
-        self.pathMonitor = pathMonitor
+    public init(_ pathMonitor: PathMonitorManager? = nil) {
+        self.pathMonitor = pathMonitor ?? PathMonitorManager()
     }
     
     #if os(iOS)

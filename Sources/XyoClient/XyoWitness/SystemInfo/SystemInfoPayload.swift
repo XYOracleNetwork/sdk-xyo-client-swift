@@ -4,7 +4,7 @@ open class XyoSystemInfoPayload: XyoPayload {
     
     var wifiInfo: WifiInformation?
     
-    init(_ wifiInfo: WifiInformation? = nil, _ previousHash: String? = nil) {
+    public init(_ wifiInfo: WifiInformation? = nil, _ previousHash: String? = nil) {
         self.wifiInfo = wifiInfo
         super.init("network.xyo.system.info", previousHash)
     }
