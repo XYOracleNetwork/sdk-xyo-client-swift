@@ -1,7 +1,7 @@
 import Foundation
 import Network
 
-class PathMonitorManager {
+public class PathMonitorManager {
     let monitor = NWPathMonitor()
     let queue = DispatchQueue(label: "Monitor")
     //we create a group to prevent deinit while still processing on another thread

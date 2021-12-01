@@ -9,7 +9,7 @@ import SystemConfiguration.CaptiveNetwork
 import CoreWLAN
 #endif
 
-class WifiInformation {
+public class WifiInformation {
     
     var pathMonitor: PathMonitorManager
     
