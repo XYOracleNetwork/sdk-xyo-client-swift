@@ -39,7 +39,7 @@ open class XyoSchemaValidator {
 
     public func allDynamic(closure: (_ errors: [String]) -> Void) {
         var errors: [String] = []
-        if (self.schema.count == 0) {
+        if (self.schema.isEmpty) {
             errors.append("schema missing")
             closure(errors)
         }
@@ -55,7 +55,7 @@ open class XyoSchemaValidator {
 
     public func all() -> [String] {
         var errors: [String] = []
-        if (self.schema.count == 0) {
+        if (self.schema.isEmpty) {
             errors.append("schema missing")
         }
         else if (self.levels < 3) {

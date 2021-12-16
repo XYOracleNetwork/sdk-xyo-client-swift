@@ -4,7 +4,7 @@ import Network
 public class PathMonitorManager {
     let monitor = NWPathMonitor()
     let queue = DispatchQueue(label: "Monitor")
-    //we create a group to prevent deinit while still processing on another thread
+    // we create a group to prevent deinit while still processing on another thread
     let group = DispatchGroup()
     var connected: Bool?
     var name: String?
