@@ -50,7 +50,11 @@ public class XyoArchivistApiClient {
             switch response.result {
             case .failure( _):
                 XyoArchivistApiClient.mainQueue.async {
-                    closure(String(decoding: response.data!, as: UTF8.self))
+                    if let data = response.data {
+                        closure(String(decoding: data, as: UTF8.self))
+                    } else {
+                        closure("Unknown Error")
+                    }
                 }
                 
             case .success( _):
