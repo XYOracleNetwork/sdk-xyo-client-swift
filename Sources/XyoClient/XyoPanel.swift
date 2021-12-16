@@ -19,8 +19,12 @@ public class XyoPanel {
     
     public convenience init(observe: ((_ previousHash: String?) -> XyoEventPayload?)?) {
         if (observe != nil) {
-            var witnesses = Array<XyoWitness>()
-            witnesses.append(XyoEventWitness(observe!))
+            var witnesses = [XyoWitness]()
+            
+            if let observe = observe {
+                witnesses.append(XyoEventWitness(observe))
+            }
+
             self.init(witnesses: witnesses)
         } else {
             self.init()
