@@ -19,17 +19,19 @@ public class WifiInformation {
     
     #if os(iOS)
     func ssid() -> String? {
-        var ssid: String?
-        if let interfaces = CNCopySupportedInterfaces() as NSArray? {
-            for interface in interfaces {
-                if let interfaceInfo = CNCopyCurrentNetworkInfo(interface as! CFString) as NSDictionary? {
-                    ssid = interfaceInfo[kCNNetworkInfoKeySSID as String] as? String
-                    break
-                }
-            }
+        guard let interfaceNames = CNCopySupportedInterfaces() as? [String] else {
+            return nil
         }
-        
-        return ssid
+        let ssids: [String] = interfaceNames.compactMap { name in
+            guard let info = CNCopyCurrentNetworkInfo(name as CFString) as? [String:AnyObject] else {
+                return nil
+            }
+            guard let ssid = info[kCNNetworkInfoKeySSID as String] as? String else {
+                return nil
+            }
+            return ssid
+        }
+        return ssids.first
     }
     #elseif os(macOS)
     func ssid() -> String? {
