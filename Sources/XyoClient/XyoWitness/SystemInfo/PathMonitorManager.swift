@@ -34,7 +34,7 @@ public class PathMonitorManager {
             }
             self.group.enter()
             self.ready = true
-            self.name = path.availableInterfaces[0].name
+            self.name = path.availableInterfaces.first?.name
             print("Name: \(self.name!)")
             self.connected = path.status == .satisfied
             print("Connected: \(self.connected!)")
