@@ -32,26 +32,12 @@ dependencies: [
 
 ### Configure Api
 ```swift
-let api = XyoArchivistApi.get( XyoArchivistApiConfig("main", "https://archivist.xyo.network"))
+let panel = XyoPanel(archive: 'test', apiDomain: 'https://archivist.xyo.network', witnesses: [XyoSystemInfoWitness()])
 ```
 
-### Create Bound Witness
+### Generate BoundWitness report
 ```swift
-let bw = try BoundWitnessBuilder().payload(<schema>, <payload>).witness("<address>").build()
-```
-
-### Send BoundWitness
-```swift
-try api.postBoundWitness(<bw>) { count, error in
-print("\(count) bound witnesses sent")
-}
-```
-
-### Send BoundWitnessBatch
-```swift
-try api.postBoundWitnesses([<bw>]) { count, error in
-print("\(count) bound witnesses sent")
-}
+panel.report(nil, nil)
 ```
 
 ## Maintainers
