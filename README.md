@@ -32,13 +32,14 @@ dependencies: [
 
 ### Configure Api
 ```swift
-let config = XyoArchivistApiConfig("test", "http://localhost:3030/dev")
 let api = XyoArchivistApi.get( XyoArchivistApiConfig("main", "https://archivist.xyo.network"))
 ```
+
 ### Create Bound Witness
 ```swift
 let bw = try BoundWitnessBuilder().payload(<schema>, <payload>).witness("<address>").build()
 ```
+
 ### Send BoundWitness
 ```swift
 try api.postBoundWitness(<bw>) { count, error in
@@ -67,7 +68,7 @@ Made with 🔥 and ❄️ by [XYO](https://xyo.network)
 
 [logo]: https://cdn.xy.company/img/brand/XYO_full_colored.png
 
-[bch-badge]: https://bettercodehub.com/edge/badge/XYOracleNetwork/sdk-xyo-client-swift?branch=master
+[bch-badge]: https://bettercodehub.com/edge/badge/XYOracleNetwork/sdk-xyo-client-swift
 [bch-link]: https://bettercodehub.com/results/XYOracleNetwork/sdk-xyo-client-swift
 
 [codacy-badge]: https://app.codacy.com/project/badge/Grade/c0ba3913b706492f99077eb5e6b4760c
