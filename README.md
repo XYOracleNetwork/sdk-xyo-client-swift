@@ -32,7 +32,7 @@ dependencies: [
 
 ### Configure Api
 ```swift
-let panel = XyoPanel(archive: 'test', apiDomain: "https://archivist.xyo.network", witnesses: [XyoSystemInfoWitness()])
+let panel = XyoPanel(archive: 'test', apiDomain: "https://api.archivist.xyo.network", witnesses: [XyoSystemInfoWitness()])
 ```
 
 ### Generate BoundWitness report

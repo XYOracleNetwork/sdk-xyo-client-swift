@@ -84,7 +84,7 @@ final class BoundWitnessTests: XCTestCase {
     
     func testPayload1WithSend() throws {
         let address = try XyoAddress(phrase: "test")
-        let config = XyoArchivistApiConfig("test", "https://beta.archivist.xyo.network")
+        let config = XyoArchivistApiConfig("test", "https://api.archivist.xyo.network")
         let api = XyoArchivistApiClient.get(config)
         let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload1("network.xyo.test"))
         let apiExpectation = expectation(description: "API Call")
@@ -108,7 +108,7 @@ final class BoundWitnessTests: XCTestCase {
     
     func testPayload2WithSend() throws {
         let address = try XyoAddress(phrase: "test")
-        let config = XyoArchivistApiConfig("test", "https://beta.archivist.xyo.network")
+        let config = XyoArchivistApiConfig("test", "https://api.archivist.xyo.network")
         let api = XyoArchivistApiClient.get(config)
         let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload2("network.xyo.test"))
         let apiExpectation = expectation(description: "API Call")

@@ -78,7 +78,7 @@ public class XyoPanel {
     
     struct Defaults {
         static let apiArchive = "default"
-        static let apiDomain = "https://archivist.xyo.network"
+        static let apiDomain = "https://api.archivist.xyo.network"
     }
     
     private static var defaultArchivist: XyoArchivistApiClient {
