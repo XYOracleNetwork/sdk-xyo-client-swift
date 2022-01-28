@@ -3,6 +3,7 @@ import CoreTelephony
 
 #if os(iOS)
 import SystemConfiguration.CaptiveNetwork
+import UIKit
 #endif
 
 #if os(macOS)
@@ -13,8 +14,38 @@ public class WifiInformation {
     
     var pathMonitor: PathMonitorManager
     
+    @objc func applicationWillEnterForeground(notification: Notification) {
+        self.pathMonitor.start()
+    }
+    
+    @objc func applicationWillResignActive(notification: Notification) {
+        self.pathMonitor.stop()
+    }
+    
+    @objc func applicationWillTerminate(notification: Notification) {
+        self.pathMonitor.stop()
+    }
+    
     public init(_ pathMonitor: PathMonitorManager? = nil) {
         self.pathMonitor = pathMonitor ?? PathMonitorManager()
+#if os(iOS)
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(applicationWillEnterForeground(notification:)),
+          name: UIApplication.willEnterForegroundNotification,
+          object: nil)
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(applicationWillResignActive(notification:)),
+          name: UIApplication.willResignActiveNotification,
+          object: nil)
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(applicationWillResignActive(notification:)),
+          name: UIApplication.willTerminateNotification,
+          object: nil)
+#endif
+        self.pathMonitor.start()
     }
     
     #if os(iOS)
