@@ -13,6 +13,6 @@ struct XyoSystemInfoNetworkWifiPayloadStruct: Encodable {
         rssi = wifiInfo?.rssi()
         txPower = wifiInfo?.txPower()
         security = wifiInfo?.security()
-        ip = wifiInfo?.pathMonitor.ip
+        ip = wifiInfo?.pathMonitor?.ip
     }
 }

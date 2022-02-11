@@ -3,7 +3,6 @@ import CoreTelephony
 
 #if os(iOS)
 import SystemConfiguration.CaptiveNetwork
-import UIKit
 #endif
 
 #if os(macOS)
@@ -12,40 +11,10 @@ import CoreWLAN
 
 public class WifiInformation {
     
-    var pathMonitor: PathMonitorManager
+    var pathMonitor: PathMonitorManager?
     
-    @objc func applicationWillEnterForeground(notification: Notification) {
-        self.pathMonitor.start()
-    }
-    
-    @objc func applicationWillResignActive(notification: Notification) {
-        self.pathMonitor.stop()
-    }
-    
-    @objc func applicationWillTerminate(notification: Notification) {
-        self.pathMonitor.stop()
-    }
-    
-    public init(_ pathMonitor: PathMonitorManager? = nil) {
-        self.pathMonitor = pathMonitor ?? PathMonitorManager()
-#if os(iOS)
-        NotificationCenter.default.addObserver(
-          self,
-          selector: #selector(applicationWillEnterForeground(notification:)),
-          name: UIApplication.willEnterForegroundNotification,
-          object: nil)
-        NotificationCenter.default.addObserver(
-          self,
-          selector: #selector(applicationWillResignActive(notification:)),
-          name: UIApplication.willResignActiveNotification,
-          object: nil)
-        NotificationCenter.default.addObserver(
-          self,
-          selector: #selector(applicationWillResignActive(notification:)),
-          name: UIApplication.willTerminateNotification,
-          object: nil)
-#endif
-        self.pathMonitor.start()
+    public init(_ allowPathMonitor: Bool = false) {
+        self.pathMonitor = allowPathMonitor ? PathMonitorManager(true) : nil
     }
     
     #if os(iOS)
@@ -72,7 +41,16 @@ public class WifiInformation {
     }
     #else
     func ssid() -> String? {
-        return nil
+        var ssid: String?
+        if let interfaces = CNCopySupportedInterfaces() as NSArray? {
+            for interface in interfaces {
+                if let interfaceInfo = CNCopyCurrentNetworkInfo(interface as! CFString) as NSDictionary? {
+                    ssid = interfaceInfo[kCNNetworkInfoKeySSID as String] as? String
+                    break
+                }
+            }
+        }
+        return ssid
     }
     #endif
     
@@ -135,15 +113,15 @@ public class WifiInformation {
     #endif
     
     func isWifi() -> Bool {
-        return pathMonitor.isWifi ?? false
+        return pathMonitor?.isWifi ?? false
     }
     
     func isWired() -> Bool {
-        return pathMonitor.isWired ?? false
+        return pathMonitor?.isWired ?? false
     }
     
     func isCellular() -> Bool {
-        return pathMonitor.isCellular ?? false
+        return pathMonitor?.isCellular ?? false
     }
     
     #if os(macOS)

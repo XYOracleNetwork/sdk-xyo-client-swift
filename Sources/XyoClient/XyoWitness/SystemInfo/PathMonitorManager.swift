@@ -1,5 +1,6 @@
 import Foundation
 import Network
+import UIKit
 
 public class PathMonitorManager {
     let monitor = NWPathMonitor()
@@ -15,7 +16,24 @@ public class PathMonitorManager {
     var ready = false
     var shuttingDown = false
     
-    public init(start: Bool = true) {
+    public init(_ start: Bool = true) {
+#if os(iOS)
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(applicationWillEnterForeground(notification:)),
+          name: UIApplication.willEnterForegroundNotification,
+          object: nil)
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(applicationWillResignActive(notification:)),
+          name: UIApplication.willResignActiveNotification,
+          object: nil)
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(applicationWillResignActive(notification:)),
+          name: UIApplication.willTerminateNotification,
+          object: nil)
+#endif
         if (start) {
             self.start()
         }
@@ -23,6 +41,18 @@ public class PathMonitorManager {
     
     deinit {
         stop()
+    }
+    
+    @objc func applicationWillEnterForeground(notification: Notification) {
+        self.start()
+    }
+    
+    @objc func applicationWillResignActive(notification: Notification) {
+        self.stop()
+    }
+    
+    @objc func applicationWillTerminate(notification: Notification) {
+        self.stop()
     }
     
     func start() {
