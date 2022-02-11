@@ -10,6 +10,6 @@ struct XyoSystemInfoNetworkCellularPayloadStruct: Encodable {
         let networkInfo = CTTelephonyNetworkInfo()
         radio = networkInfo.serviceCurrentRadioAccessTechnology?.first?.value
         #endif
-        ip = wifiInfo?.pathMonitor.ip
+        ip = wifiInfo?.pathMonitor?.ip
     }
 }

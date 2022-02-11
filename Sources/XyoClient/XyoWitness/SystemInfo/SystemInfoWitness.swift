@@ -4,8 +4,8 @@ open class XyoSystemInfoWitness: XyoWitness {
     
     var wifiInfo: WifiInformation?
     
-    public init(_ wifiInfo: WifiInformation? = nil) {
-        self.wifiInfo = wifiInfo
+    public init(_ allowPathMonitor: Bool = false) {
+        self.wifiInfo = WifiInformation(allowPathMonitor)
     }
     
     public typealias ObserverClosure = ((_ previousHash: String?)->XyoSystemInfoPayload?)
