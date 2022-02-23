@@ -76,14 +76,14 @@ final class BoundWitnessTests: XCTestCase {
     func testPayload1() throws {
         let hash = try BoundWitnessBuilder.hash(TestPayload1("network.xyo.test"))
         XCTAssertEqual(hash, "13898b1fc7ef16c6eb8917b4bdd1aabbc1981069f035c51d4166a171273bfe3d")
-        let address = try XyoAddress(phrase: "test")
+        let address = XyoAddress()
         let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload1("network.xyo.test"))
         let bwJson = try bw.build()
         XCTAssertEqual(bwJson._hash, knownHash)
     }
     
     func testPayload1WithSend() throws {
-        let address = try XyoAddress(phrase: "test")
+        let address = XyoAddress()
         let config = XyoArchivistApiConfig("test", "https://api.archivist.xyo.network")
         let api = XyoArchivistApiClient.get(config)
         let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload1("network.xyo.test"))
@@ -100,14 +100,14 @@ final class BoundWitnessTests: XCTestCase {
     }
     
     func testPayload2() throws {
-        let address = try XyoAddress(phrase: "test")
+        let address = XyoAddress()
         let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload2("network.xyo.test"))
         let bwJson = try bw.build()
         XCTAssertEqual(bwJson._hash, knownHash)
     }
     
     func testPayload2WithSend() throws {
-        let address = try XyoAddress(phrase: "test")
+        let address = XyoAddress()
         let config = XyoArchivistApiConfig("test", "https://api.archivist.xyo.network")
         let api = XyoArchivistApiClient.get(config)
         let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload2("network.xyo.test"))

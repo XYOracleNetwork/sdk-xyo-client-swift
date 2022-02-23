@@ -1,116 +1,117 @@
 import Foundation
-import CryptoKit
+import secp256k1
 
 public class XyoAddress {
     
-    private var _privateKey: Any?
+    private var _privateKey: secp256k1.Signing.PrivateKey?
     
-    public var privateKey: String? {
+    public init(_ privateKey: Data? = generateRandomBytes()) {
+        self._privateKey = try? secp256k1.Signing.PrivateKey(rawRepresentation: privateKey ?? generateRandomBytes(32), format: .uncompressed)
+    }
+    
+    convenience init(privateKey: String) {
+        self.init(privateKey.hexToData())
+    }
+    
+    public var privateKey: secp256k1.Signing.PrivateKey? {
         get {
-            if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
-                let pk = self._privateKey as? P256.Signing.PrivateKey
-                return pk?.rawRepresentation.toHex()
-            } else {
-                let pk = self._privateKey as? Data
-                return pk?.toHex()
-            }
+            return _privateKey
         }
     }
     
-    public var publicKey: String? {
+    public var privateKeyBytes: Data? {
         get {
-            if #available(iOS 13.0, macOS 11.0, watchOS 6.0, tvOS 13.0, *) {
-                guard let pk = self._privateKey as? P256.Signing.PrivateKey else {return nil}
-                let fullPk = pk.publicKey.rawRepresentation.toHex()
-                return String(fullPk.prefix(64))
-            } else {
-                let pk = self._privateKey as? Data
-                return pk?.toHex()
+            return _privateKey?.rawRepresentation
+        }
+    }
+    
+    public var privateKeyHex: String? {
+        get {
+            return privateKeyBytes?.toHex()
+        }
+    }
+    
+    public var publicKey: secp256k1.Signing.PublicKey? {
+        get {
+            return _privateKey?.publicKey
+        }
+    }
+    
+    public var publicKeyBytes: Data? {
+        get {
+            return _privateKey?.publicKey.rawRepresentation
+        }
+    }
+    
+    public var publicKeyHex: String? {
+        get {
+            var bytes = publicKeyBytes ?? Data()
+            if (bytes.count != 0) {
+                let _ = bytes.popFirst()
+                return bytes.toHex()
             }
-        }
-    }
-    
-    public init() throws {
-        if let generatedPrivateKey = try self.generatePrivateKey() {
-            self._privateKey = generatedPrivateKey
-        }
-    }
-    
-    public init(key: Data) throws {
-        if let generatedPrivateKey = try self.generatePrivateKey(key) {
-            self._privateKey = generatedPrivateKey
-        }
-    }
-    
-    public init(key: String) throws {
-        if let keyData = key.data(using: .hexadecimal) {
-            if let generatedPrivateKey = try self.generatePrivateKey(keyData) {
-                self._privateKey = generatedPrivateKey
-            }
-        }
-    }
-    
-    public convenience init(phrase: String) throws {
-        if let key = phrase.data(using: String.Encoding.utf8)?.sha256() {
-            try self.init(key: key as Data)
-        } else {
-            throw XyoAddressError.invalidPrivateKey
-        }
-    }
-    
-    public func sign(_ hash: String) throws -> Data {
-        if let hashData = hash.data(using: String.Encoding.utf8) {
-            if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
-                let pk = self._privateKey as? P256.Signing.PrivateKey
-                if let signature = try pk?.signature(for: hashData) {
-                    return signature.rawRepresentation
-                } else {
-                    throw XyoAddressError.signingFailed
-                }
-            } else {
-                return Data(bytes: "unsigned", count: 8)
-            }
-        } else {
-            throw XyoAddressError.invalidHash
-        }
-    }
-    
-    private func generateRandomBytes() -> Data? {
-
-        var keyData = Data(count: 32)
-        let result = keyData.withUnsafeMutableBytes {
-            SecRandomCopyBytes(kSecRandomDefault, 32, $0.baseAddress!)
-        }
-        if result == errSecSuccess {
-            return keyData
-        } else {
-            print("Problem generating random bytes")
             return nil
         }
     }
     
-    private func generatePrivateKey() throws -> Any? {
-        if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
-            return P256.Signing.PrivateKey()
-        } else {
-            return generateRandomBytes()
+    public var addressBytes: Data? {
+        get {
+            return _privateKey?.publicKey.rawRepresentation
         }
     }
     
-    private func generatePrivateKey(_ privateKey: Data) throws -> Any? {
-        if (privateKey.count != 32) {
-            throw XyoAddressError.invalidPrivateKeyLength
-        }
-        do {
-            if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
-                return try privateKey.withUnsafeBytes { ptr in
-                    return try P256.Signing.PrivateKey(rawRepresentation: ptr)
-                }
-            } else {
-                return privateKey
+    public var addressHex: String? {
+        get {
+            var bytes = addressBytes ?? Data()
+            if (bytes.count != 0) {
+                let _ = bytes.popFirst()
+                return bytes.toHex()
             }
-        } catch {
-            throw XyoAddressError.invalidPrivateKey
+            return nil
         }
+    }
+    
+    public func sign(_ hash: String) throws -> Data? {
+        let message = hash.hexToData()
+        guard (message != nil) else { return nil }
+        return try? _privateKey?.signature(for: message!).rawRepresentation
+    }
+}
+
+extension String {
+    func hexToData() -> Data? {
+        var data = Data(capacity: self.count / 2)
+
+        let regex = try! NSRegularExpression(pattern: "[0-9a-f]{1,2}", options: .caseInsensitive)
+        regex.enumerateMatches(in: self, options: [], range: NSMakeRange(0, self.count)) { match, flags, stop in
+            let byteString = (self as NSString).substring(with: match!.range)
+            var num = UInt8(byteString, radix: 16)!
+            data.append(&num, count: 1)
+        }
+
+        guard data.count > 0 else {
+            return nil
+        }
+
+        return data
+    }
+}
+
+public func generateRandomBytes(_ count: Int = 32) -> Data {
+
+    var keyData = Data(count: count)
+    let result = keyData.withUnsafeMutableBytes {
+        SecRandomCopyBytes(kSecRandomDefault, 32, $0.baseAddress!)
+    }
+    if result == errSecSuccess {
+        return keyData
+    } else {
+        print("Problem generating random bytes")
+        var simpleRandom = Data.init()
+        var randomGenerator = SystemRandomNumberGenerator()
+        while(simpleRandom.count < count) {
+            simpleRandom.append(contentsOf: [UInt8(randomGenerator.next())])
+        }
+        return simpleRandom
     }
 }

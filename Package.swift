@@ -16,17 +16,22 @@ let package = Package(
       targets: ["XyoClient"])
   ],
   dependencies: [
-    .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.2.0"))
+    .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.2.0")),
+    .package(
+        name: "secp256k1",
+        url: "https://github.com/GigaBitcoin/secp256k1.swift.git",
+        .upToNextMajor(from: "0.3.4")
+    )
   ],
   targets: [
     // Targets are the basic building blocks of a package. A target can define a module or a test suite.
     // Targets can depend on other targets in this package, and on products in packages this package depends on.
     .target(
       name: "XyoClient",
-        dependencies: ["Alamofire"]),
+        dependencies: ["Alamofire", "secp256k1"]),
     .testTarget(
       name: "XyoClientTests",
-      dependencies: ["XyoClient"])
+      dependencies: ["XyoClient", "secp256k1"])
   ],
   swiftLanguageVersions: [.v5, .v4_2]
 )

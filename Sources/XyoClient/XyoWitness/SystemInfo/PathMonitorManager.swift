@@ -1,6 +1,9 @@
 import Foundation
 import Network
+
+#if os(iOS)
 import UIKit
+#endif
 
 public class PathMonitorManager {
     let monitor = NWPathMonitor()
