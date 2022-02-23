@@ -8,12 +8,21 @@ extension String {
     enum ExtendedEncoding {
         case hexadecimal
     }
-    func sha256() throws -> String {
+    
+    func sha256() throws -> Data {
         if let stringData = data(using: String.Encoding.utf8) {
-            return stringData.sha256String()
+            return stringData.sha256() as Data
         }
         throw ExtendedStringError.sha256HashFailure
     }
+    
+    func keccak256() throws -> Data {
+        if let stringData = data(using: String.Encoding.utf8) {
+            return stringData.keccak256()
+        }
+        throw ExtendedStringError.sha256HashFailure
+    }
+    
     func data(using encoding:ExtendedEncoding) -> Data? {
         let hexStr = self.dropFirst(self.hasPrefix("0x") ? 2 : 0)
         
@@ -31,6 +40,23 @@ extension String {
             indexIsEven.toggle()
         }
         return newData
+    }
+    
+    func hexToData() -> Data? {
+        var data = Data(capacity: self.count / 2)
+
+        let regex = try! NSRegularExpression(pattern: "[0-9a-f]{1,2}", options: .caseInsensitive)
+        regex.enumerateMatches(in: self, options: [], range: NSMakeRange(0, self.count)) { match, flags, stop in
+            let byteString = (self as NSString).substring(with: match!.range)
+            var num = UInt8(byteString, radix: 16)!
+            data.append(&num, count: 1)
+        }
+
+        guard data.count > 0 else {
+            return nil
+        }
+
+        return data
     }
     
 }

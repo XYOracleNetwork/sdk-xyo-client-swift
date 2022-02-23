@@ -13,7 +13,7 @@ final class PanelTests: XCTestCase {
     func testCreatePanel() throws {
         let apiDomain = "https://api.archivist.xyo.network"
         let archive = "test"
-        let address = try XyoAddress()
+        let address = XyoAddress()
         let witness = XyoWitness(address)
         let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
         XCTAssertNotNil(address)
@@ -23,7 +23,7 @@ final class PanelTests: XCTestCase {
     func testPanelReport() throws {
         let apiDomain = "https://api.archivist.xyo.network"
         let archive = "test"
-        _ = try XyoAddress()
+        _ = XyoAddress()
         let witness = XyoBasicWitness({ previousHash in
             let payload = XyoPayload("network.xyo.basic")
             return payload

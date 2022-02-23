@@ -1,116 +1,105 @@
 import Foundation
-import CryptoKit
+import secp256k1
 
 public class XyoAddress {
     
-    private var _privateKey: Any?
+    private var _privateKey: secp256k1.Signing.PrivateKey?
     
-    public var privateKey: String? {
+    public init(_ privateKey: Data? = generateRandomBytes()) {
+        self._privateKey = try? secp256k1.Signing.PrivateKey(rawRepresentation: privateKey ?? generateRandomBytes(32), format: .uncompressed)
+        let pk = self._privateKey?.rawRepresentation
+        let pk2 = self._privateKey?.rawRepresentation
+    }
+    
+    convenience init(privateKey: String) {
+        self.init(privateKey.hexToData())
+    }
+    
+    public var privateKey: secp256k1.Signing.PrivateKey? {
         get {
-            if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
-                let pk = self._privateKey as? P256.Signing.PrivateKey
-                return pk?.rawRepresentation.toHex()
-            } else {
-                let pk = self._privateKey as? Data
-                return pk?.toHex()
-            }
+            return _privateKey
         }
     }
     
-    public var publicKey: String? {
+    public var privateKeyBytes: Data? {
         get {
-            if #available(iOS 13.0, macOS 11.0, watchOS 6.0, tvOS 13.0, *) {
-                guard let pk = self._privateKey as? P256.Signing.PrivateKey else {return nil}
-                let fullPk = pk.publicKey.rawRepresentation.toHex()
-                return String(fullPk.prefix(64))
-            } else {
-                let pk = self._privateKey as? Data
-                return pk?.toHex()
-            }
+            return _privateKey?.rawRepresentation
         }
     }
     
-    public init() throws {
-        if let generatedPrivateKey = try self.generatePrivateKey() {
-            self._privateKey = generatedPrivateKey
+    public var privateKeyHex: String? {
+        get {
+            return privateKeyBytes?.toHex()
         }
     }
     
-    public init(key: Data) throws {
-        if let generatedPrivateKey = try self.generatePrivateKey(key) {
-            self._privateKey = generatedPrivateKey
+    public var publicKey: secp256k1.Signing.PublicKey? {
+        get {
+            return _privateKey?.publicKey
         }
     }
     
-    public init(key: String) throws {
-        if let keyData = key.data(using: .hexadecimal) {
-            if let generatedPrivateKey = try self.generatePrivateKey(keyData) {
-                self._privateKey = generatedPrivateKey
-            }
+    public var publicKeyBytes: Data? {
+        get {
+            return _privateKey?.publicKey.rawRepresentation.subdata(in: 1..<(_privateKey?.publicKey.rawRepresentation.count ?? 0))
         }
     }
     
-    public convenience init(phrase: String) throws {
-        if let key = phrase.data(using: String.Encoding.utf8)?.sha256() {
-            try self.init(key: key as Data)
-        } else {
-            throw XyoAddressError.invalidPrivateKey
+    public var publicKeyHex: String? {
+        get {
+            return publicKeyBytes?.toHex()
         }
     }
     
-    public func sign(_ hash: String) throws -> Data {
-        if let hashData = hash.data(using: String.Encoding.utf8) {
-            if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
-                let pk = self._privateKey as? P256.Signing.PrivateKey
-                if let signature = try pk?.signature(for: hashData) {
-                    return signature.rawRepresentation
-                } else {
-                    throw XyoAddressError.signingFailed
-                }
-            } else {
-                return Data(bytes: "unsigned", count: 8)
-            }
-        } else {
-            throw XyoAddressError.invalidHash
+    public var keccakBytes: Data? {
+        get {
+            return publicKeyBytes?.keccak256()
         }
     }
     
-    private func generateRandomBytes() -> Data? {
+    public var keccakHex: String? {
+        get {
+            guard let bytes = keccakBytes else { return nil }
+                return bytes.toHex(64)
+        }
+    }
+    
+    public var addressBytes: Data? {
+        get {
+            guard let keccakBytes = keccakBytes else { return nil }
+                return keccakBytes.subdata(in: 12..<keccakBytes.count)
+        }
+    }
+    
+    public var addressHex: String? {
+        get {
+            guard let bytes = addressBytes else { return nil }
+                return bytes.toHex()
+        }
+    }
+    
+    public func sign(_ hash: String) throws -> Data? {
+        let message = hash.hexToData()
+        guard (message != nil) else { return nil }
+        return try? _privateKey?.signature(for: message!).rawRepresentation
+    }
+}
 
-        var keyData = Data(count: 32)
-        let result = keyData.withUnsafeMutableBytes {
-            SecRandomCopyBytes(kSecRandomDefault, 32, $0.baseAddress!)
-        }
-        if result == errSecSuccess {
-            return keyData
-        } else {
-            print("Problem generating random bytes")
-            return nil
-        }
+public func generateRandomBytes(_ count: Int = 32) -> Data {
+
+    var keyData = Data(count: count)
+    let result = keyData.withUnsafeMutableBytes {
+        SecRandomCopyBytes(kSecRandomDefault, 32, $0.baseAddress!)
     }
-    
-    private func generatePrivateKey() throws -> Any? {
-        if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
-            return P256.Signing.PrivateKey()
-        } else {
-            return generateRandomBytes()
+    if result == errSecSuccess {
+        return keyData
+    } else {
+        print("Problem generating random bytes")
+        var simpleRandom = Data.init()
+        var randomGenerator = SystemRandomNumberGenerator()
+        while(simpleRandom.count < count) {
+            simpleRandom.append(contentsOf: [UInt8(randomGenerator.next())])
         }
-    }
-    
-    private func generatePrivateKey(_ privateKey: Data) throws -> Any? {
-        if (privateKey.count != 32) {
-            throw XyoAddressError.invalidPrivateKeyLength
-        }
-        do {
-            if #available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *) {
-                return try privateKey.withUnsafeBytes { ptr in
-                    return try P256.Signing.PrivateKey(rawRepresentation: ptr)
-                }
-            } else {
-                return privateKey
-            }
-        } catch {
-            throw XyoAddressError.invalidPrivateKey
-        }
+        return simpleRandom
     }
 }
