@@ -5,7 +5,7 @@ open class XyoWitness {
     public var previousHash: String?
     
     public init(_ address: XyoAddress? = nil, previousHash: String? = nil) {
-        self.address = try? address ?? XyoAddress()
+        self.address = address ?? XyoAddress()
         self.previousHash = previousHash
     }
     
