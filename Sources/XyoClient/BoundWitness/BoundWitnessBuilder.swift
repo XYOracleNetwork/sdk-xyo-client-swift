@@ -81,6 +81,6 @@ public class BoundWitnessBuilder {
         guard let str = String(data: data, encoding: .utf8) else {
             throw BoundWitnessBuilderError.encodingError
         }
-        return try str.sha256()
+        return try str.sha256().toHex()
     }
 }

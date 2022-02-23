@@ -1,13 +1,15 @@
 import CommonCrypto
 import Foundation
+import keccak
 
 extension Data {
-    func sha256() -> NSData {
-        return digest(input: self as NSData)
+    var pointer: UnsafePointer<UInt8>! { return withUnsafeBytes { $0 } }
+    mutating func mutablePointer() -> UnsafeMutablePointer<UInt8>! {
+        return withUnsafeMutableBytes { $0 }
     }
     
-    func sha256String() -> String {
-        return hexStringFromData(input: self.sha256()).lowercased()
+    func sha256() -> Data {
+        return digest(input: self as NSData) as Data
     }
     
     func digest(input: NSData) -> NSData {
@@ -17,11 +19,11 @@ extension Data {
         return NSData(bytes: hash, length: digestLength)
     }
     
-    func toHex() -> String {
-        return hexStringFromData(input: self as NSData)
+    func toHex(_ expectedLength: Int? = nil) -> String {
+        return Data.hexStringFromData(input: self as NSData).padding(toLength: expectedLength ?? self.count * 2, withPad: "0", startingAt: 0).lowercased()
     }
     
-    func hexStringFromData(input: NSData) -> String {
+    static func hexStringFromData(input: NSData) -> String {
         var bytes = [UInt8](repeating: 0, count: input.length)
         input.getBytes(&bytes, length: input.length)
         
@@ -31,5 +33,12 @@ extension Data {
         }
         
         return hexString
+    }
+    
+    /// - Returns: kaccak256 hash of data
+    public func keccak256() -> Data {
+        var data = Data(count: 32)
+        keccak_256(data.mutablePointer(), 32, pointer, count)
+        return data
     }
 }

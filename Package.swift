@@ -20,18 +20,18 @@ let package = Package(
     .package(
         name: "secp256k1",
         url: "https://github.com/GigaBitcoin/secp256k1.swift.git",
-        .upToNextMajor(from: "0.3.4")
-    )
+        .upToNextMajor(from: "0.3.4")),
   ],
   targets: [
     // Targets are the basic building blocks of a package. A target can define a module or a test suite.
     // Targets can depend on other targets in this package, and on products in packages this package depends on.
+    .target(name: "keccak"),
     .target(
       name: "XyoClient",
-        dependencies: ["Alamofire", "secp256k1"]),
+        dependencies: ["Alamofire", "secp256k1", "keccak"]),
     .testTarget(
       name: "XyoClientTests",
-      dependencies: ["XyoClient", "secp256k1"])
+      dependencies: ["XyoClient"])
   ],
   swiftLanguageVersions: [.v5, .v4_2]
 )
