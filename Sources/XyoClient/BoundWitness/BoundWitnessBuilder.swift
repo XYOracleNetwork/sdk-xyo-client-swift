@@ -30,7 +30,7 @@ public class BoundWitnessBuilder {
     
     private func hashableFields() -> XyoBoundWitnessBodyJson {
         return XyoBoundWitnessBodyJson(
-            _witnesses.map { witness in witness?.publicKeyHex},
+            _witnesses.map { witness in witness?.addressHex},
             _previous_hashes,
             _payload_hashes,
             _payload_schemas
@@ -39,14 +39,14 @@ public class BoundWitnessBuilder {
     
     public func payload<T: XyoPayload>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
         _payloads.append(payload)
-        _payload_hashes.append(try BoundWitnessBuilder.hash(payload))
+        _payload_hashes.append(try payload.hash().toHex())
         _payload_schemas.append(schema)
         return self
     }
     
     public func payloads(_ payloads: [XyoPayload]) throws -> BoundWitnessBuilder {
         _payloads.append(contentsOf: payloads)
-        _payload_hashes.append(contentsOf: try payloads.map {payload in try payload.hash()})
+        _payload_hashes.append(contentsOf: try payloads.map {payload in try payload.hash().toHex()})
         _payload_schemas.append(contentsOf: payloads.map {payload in payload.schema})
         return self
     }
@@ -66,7 +66,7 @@ public class BoundWitnessBuilder {
         bw._client = "swift"
         bw._payloads = _payloads
         bw._previous_hash = previousHash
-        bw.addresses = _witnesses.map { witness in witness?.publicKeyHex!}
+        bw.addresses = _witnesses.map { witness in witness?.addressHex!}
         bw.previous_hashes = _previous_hashes
         bw.payload_hashes = _payload_hashes
         bw.payload_schemas = _payload_schemas
