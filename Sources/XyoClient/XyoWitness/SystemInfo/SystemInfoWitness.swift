@@ -2,7 +2,7 @@ import Foundation
 
 open class XyoSystemInfoWitness: XyoWitness {
     
-    var wifiInfo: WifiInformation?
+    var wifiInfo: WifiInformation
     
     public init(_ allowPathMonitor: Bool = false) {
         self.wifiInfo = WifiInformation(allowPathMonitor)
@@ -12,7 +12,7 @@ open class XyoSystemInfoWitness: XyoWitness {
     
     override public func observe() -> XyoSystemInfoPayload? {
         let payload = XyoSystemInfoPayload(wifiInfo, previousHash)
-        previousHash = try? payload.hash()
+        previousHash = try? payload.hash().toHex()
         return payload
     }
 }
