@@ -7,8 +7,6 @@ public class XyoAddress {
     
     public init(_ privateKey: Data? = generateRandomBytes()) {
         self._privateKey = try? secp256k1.Signing.PrivateKey(rawRepresentation: privateKey ?? generateRandomBytes(32), format: .uncompressed)
-        let pk = self._privateKey?.rawRepresentation
-        let pk2 = self._privateKey?.rawRepresentation
     }
     
     convenience init(privateKey: String) {
@@ -81,7 +79,7 @@ public class XyoAddress {
     public func sign(_ hash: String) throws -> Data? {
         let message = hash.hexToData()
         guard (message != nil) else { return nil }
-        return try? _privateKey?.signature(for: message!).rawRepresentation
+        return try? _privateKey?.ecdsa.signature(for: message!).rawRepresentation
     }
 }
 
