@@ -27,7 +27,7 @@ public class XyoAddress {
     
     public var privateKeyHex: String? {
         get {
-            return privateKeyBytes?.toHex()
+            return privateKeyBytes?.toHex(64)
         }
     }
     
@@ -45,7 +45,7 @@ public class XyoAddress {
     
     public var publicKeyHex: String? {
         get {
-            return publicKeyBytes?.toHex()
+            return publicKeyBytes?.toHex(128)
         }
     }
     
@@ -72,14 +72,48 @@ public class XyoAddress {
     public var addressHex: String? {
         get {
             guard let bytes = addressBytes else { return nil }
-                return bytes.toHex()
+                return bytes.toHex(40)
         }
     }
     
-    public func sign(_ hash: String) throws -> Data? {
+    public func sign(_ hash: String) throws -> String? {
         let message = hash.hexToData()
         guard (message != nil) else { return nil }
-        return try? _privateKey?.ecdsa.signature(for: message!).rawRepresentation
+        let sig = self.signature(message!)
+        return sig?.rawRepresentation.toHex()
+    }
+    
+    public func signature(_ hash: Data) -> secp256k1.Signing.ECDSASignature? {
+        do {
+            let context = try secp256k1.Context.create()
+            
+            defer { secp256k1_context_destroy(context) }
+            
+            var signature = secp256k1_ecdsa_signature()
+            
+            let arrayHash = Array(hash)
+            let privKey = Array(self._privateKey!.rawRepresentation)
+            
+            guard secp256k1_ecdsa_sign(context, &signature, arrayHash, privKey, nil, nil) == 1 else {
+                throw secp256k1Error.underlyingCryptoError
+            }
+            
+            var signature2 = secp256k1_ecdsa_signature()
+            withUnsafeMutableBytes(of: &signature2) { signature2Bytes in
+                withUnsafeBytes(of: &signature) { signatureBytes in
+                    for i in 0...31 {
+                        signature2Bytes[i] = signatureBytes[31 - i]
+                        signature2Bytes[i+32] = signatureBytes[63 - i]
+                    }
+                }
+            }
+            
+            let rawRepresentation = Data(bytes: &signature2.data, count: MemoryLayout.size(ofValue: signature2.data))
+            
+            return try secp256k1.Signing.ECDSASignature(rawRepresentation: rawRepresentation)
+        } catch {
+            return nil
+        }
     }
 }
 

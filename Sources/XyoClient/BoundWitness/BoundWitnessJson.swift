@@ -11,6 +11,7 @@ public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaPr
         case payload_hashes
         case payload_schemas
         case previous_hashes
+        case schema
     }
     
     public var _client: String?
@@ -31,6 +32,7 @@ public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaPr
         try container.encode(payload_hashes, forKey: .payload_hashes)
         try container.encode(payload_schemas, forKey: .payload_schemas)
         try container.encode(previous_hashes, forKey: .previous_hashes)
+        try container.encode(schema, forKey: .schema)
     }
     
     override public func encode(to encoder: Encoder) throws {

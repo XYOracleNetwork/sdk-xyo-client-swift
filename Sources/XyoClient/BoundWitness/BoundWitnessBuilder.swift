@@ -53,7 +53,7 @@ public class BoundWitnessBuilder {
     
     public func sign(_ hash: String) throws -> [String?] {
         return try self._witnesses.map {
-            try $0?.sign(hash)?.toHex()
+            try $0?.sign(hash)
         }
     }
     
