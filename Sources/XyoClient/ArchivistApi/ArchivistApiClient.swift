@@ -38,11 +38,9 @@ public class XyoArchivistApiClient {
         _ entries: [XyoBoundWitnessJson],
         _ closure: @escaping (_ error: String?) -> Void
     ) throws {
-        let body: XyoApiBoundWitnnessBody = XyoApiBoundWitnnessBody(
-            boundWitnesses: entries
-        )
+        let body = entries
         AF.request(
-            "\(self.config.apiDomain)/archive/\(self.config.archive)/bw",
+            "\(self.config.apiDomain)/archive/\(self.config.archive)/block",
             method: .post,
             parameters: body,
             encoder: JSONParameterEncoder.default

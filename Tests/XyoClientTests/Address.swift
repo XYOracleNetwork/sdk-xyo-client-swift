@@ -1,10 +1,12 @@
 import XCTest
 @testable import XyoClient
 
-let testVectorPrivateKey = "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60"
-let testVectorPublicKey = "8db55b05db86c0b1786ca49f095d76344c9e6056b2f02701a7e7f3c20aabfd913ebbe148dd17c56551a52952371071a6c604b3f3abe8f2c8fa742158ea6dd7d4"
-let testVectorKeccak = "a33e4932f3f7349eb63b379e09231da7b19a016f9e576d23b16277062f4d46a8"
-let testVectorAddress = "09231da7b19a016f9e576d23b16277062f4d46a8"
+let testVectorPrivateKey = "7f71bc5644f8f521f7e9b73f7a391e82c05432f8a9d36c44d6b1edbf1d8db62f"
+let testVectorPublicKey = "ed6f3b86542f45aab88ec48ab1366b462bd993fec83e234054afd8f2311fba774800fdb40c04918463b463a6044b83413a604550bfba8f8911beb65475d6528e"
+let testVectorKeccak = "0889fa0b3d5bb98e749c7bf75e7a847447e7fec41011ae7d32d768f86605ba03"
+let testVectorAddress = "5e7a847447e7fec41011ae7d32d768f86605ba03"
+let testVectorHash = "4b688df40bcedbe641ddb16ff0a1842d9c67ea1c3bf63f3e0471baa664531d1a"
+let testVectorSignature = "b61dad551e910e2793b4f9f880125b5799086510ce102fad0222c1b093c60a6bc755ca10a9068079ac8d9617416a7cd41077093061c1e9bcb2f81812086ae603"
 
 final class AddressTests: XCTestCase {
     static var allTests = [
@@ -29,6 +31,7 @@ final class AddressTests: XCTestCase {
     
     func testKnownPrivateKey() {
         let address = XyoAddress(privateKey: testVectorPrivateKey)
+        let signature = try? address.sign(testVectorHash)
         XCTAssertNotNil(address)
         XCTAssertEqual(address.privateKeyHex, testVectorPrivateKey)
         XCTAssertEqual(address.publicKeyHex, testVectorPublicKey)
