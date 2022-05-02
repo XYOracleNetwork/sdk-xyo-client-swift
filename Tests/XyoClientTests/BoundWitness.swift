@@ -13,6 +13,7 @@ class TestPayload1: XyoPayload {
     var string_field = "there"
     
     enum CodingKeys: String, CodingKey {
+        case schema
         case timestamp
         case number_field
         case object_field
@@ -23,6 +24,7 @@ class TestPayload1: XyoPayload {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(number_field, forKey: .number_field)
         try container.encode(object_field, forKey: .object_field)
+        try container.encode(schema, forKey: .schema)
         try container.encode(string_field, forKey: .string_field)
         try container.encode(timestamp, forKey: .timestamp)
     }
@@ -55,7 +57,7 @@ class TestPayload2: XyoPayload {
     }
 }
 
-var knownHash = "b7503075e973dfa4b7331caa5068bda207ad5239113e57491d69c514d1160975"
+var knownHash = "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35"
 
 @available(iOS 13.0, *)
 final class BoundWitnessTests: XCTestCase {

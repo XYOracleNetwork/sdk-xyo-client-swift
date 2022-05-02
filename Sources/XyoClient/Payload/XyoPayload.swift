@@ -18,9 +18,6 @@ open class XyoPayload: Encodable {
         guard let str = String(data: data, encoding: .utf8) else {
             throw BoundWitnessBuilderError.encodingError
         }
-        let strOut = try? str.sha256().toHex()
-        print("Payload-Hash: \(strOut)")
-        print("Payload-Hash-Source: \(str)")
         return try str.sha256()
     }
 }
