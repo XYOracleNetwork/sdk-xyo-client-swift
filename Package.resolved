@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
         "state": {
           "branch": null,
-          "revision": "f82c23a8a7ef8dc1a49a8bfc6a96883e79121864",
-          "version": "5.5.0"
+          "revision": "8dd85aee02e39dd280c75eef88ffdb86eed4b07b",
+          "version": "5.6.2"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/GigaBitcoin/secp256k1.swift.git",
         "state": {
           "branch": null,
-          "revision": "abe7c8232970c1fd57f4c77590bce2c868df7137",
-          "version": "0.5.0"
+          "revision": "98adfd888b836b883aa098169eeeb8e3327b3b78",
+          "version": "0.8.0"
         }
       }
     ]

@@ -42,6 +42,7 @@ class TestPayload2: XyoPayload {
     var number_field = 1
     
     enum CodingKeys: String, CodingKey {
+        case schema
         case string_field
         case object_field
         case timestamp
@@ -52,6 +53,7 @@ class TestPayload2: XyoPayload {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(number_field, forKey: .number_field)
         try container.encode(object_field, forKey: .object_field)
+        try container.encode(schema, forKey: .schema)
         try container.encode(string_field, forKey: .string_field)
         try container.encode(timestamp, forKey: .timestamp)
     }
@@ -77,7 +79,7 @@ final class BoundWitnessTests: XCTestCase {
     
     func testPayload1() throws {
         let hash = try BoundWitnessBuilder.hash(TestPayload1("network.xyo.test"))
-        XCTAssertEqual(hash, "13898b1fc7ef16c6eb8917b4bdd1aabbc1981069f035c51d4166a171273bfe3d")
+        XCTAssertEqual(hash, "c915c56dd93b5e0db509d1a63ca540cfb211e11f03039b05e19712267bb8b6db")
         let address = XyoAddress(testVectorPrivateKey.hexToData())
         let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload1("network.xyo.test"))
         let bwJson = try bw.build()
@@ -103,14 +105,15 @@ final class BoundWitnessTests: XCTestCase {
     
     func testPayload2() throws {
         let address = XyoAddress(testVectorPrivateKey.hexToData())
-        let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload2("network.xyo.test"))
+        let testPayload2 = TestPayload2("network.xyo.test")
+        let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", testPayload2)
         let bwJson = try bw.build()
         XCTAssertEqual(bwJson._hash, knownHash)
     }
     
     func testPayload2WithSend() throws {
         let address = XyoAddress(testVectorPrivateKey.hexToData())
-        let config = XyoArchivistApiConfig("temp", "http://localhost:8080")
+        let config = XyoArchivistApiConfig("temp", "https://beta.api.archivist.xyo.network")
         let api = XyoArchivistApiClient.get(config)
         let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload2("network.xyo.test"))
         let apiExpectation = expectation(description: "API Call")
