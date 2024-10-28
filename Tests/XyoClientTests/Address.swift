@@ -31,7 +31,7 @@ final class AddressTests: XCTestCase {
     
     func testKnownPrivateKey() {
         let address = XyoAddress(privateKey: testVectorPrivateKey)
-        let signature = try? address.sign(testVectorHash)
+        //let signature = try? address.sign(testVectorHash)
         XCTAssertNotNil(address)
         XCTAssertEqual(address.privateKeyHex, testVectorPrivateKey)
         XCTAssertEqual(address.publicKeyHex, testVectorPublicKey)
