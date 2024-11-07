@@ -40,7 +40,7 @@ public class XyoArchivistApiClient {
     ) throws {
         let body = entries
         AF.request(
-            "\(self.config.apiDomain)/archive/\(self.config.archive)/block",
+            "\(self.config.apiDomain)/\(self.config.apiModule)",
             method: .post,
             parameters: body,
             encoder: JSONParameterEncoder.default
