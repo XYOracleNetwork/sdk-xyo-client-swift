@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-public struct XyoApiBoundWitnnessBody: Encodable {
+public struct XyoApiBoundWitnessBody: Encodable {
     var boundWitnesses: [XyoBoundWitnessJson]
     var payloads: [XyoPayload]?
 }
