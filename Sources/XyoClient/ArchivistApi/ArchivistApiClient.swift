@@ -44,7 +44,7 @@ public class XyoArchivistApiClient {
             method: .post,
             parameters: body,
             encoder: JSONParameterEncoder.default
-        ).responseData(queue: XyoArchivistApiClient.queue) { response in
+        ).validate().responseData(queue: XyoArchivistApiClient.queue) { response in
             switch response.result {
             case .failure( _):
                 XyoArchivistApiClient.mainQueue.async {
