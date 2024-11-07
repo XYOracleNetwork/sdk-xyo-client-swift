@@ -12,7 +12,7 @@ public class XyoPanel {
     }
     
     public convenience init(archive: String? = nil, apiDomain: String? = nil, witnesses: [XyoWitness]? = nil, token: String? = nil) {
-        let apiConfig = XyoArchivistApiConfig(archive ?? XyoPanel.Defaults.apiArchive, apiDomain ?? XyoPanel.Defaults.apiDomain)
+        let apiConfig = XyoArchivistApiConfig(archive ?? XyoPanel.Defaults.apiModule, apiDomain ?? XyoPanel.Defaults.apiDomain)
         let archivist = XyoArchivistApiClient.get(apiConfig)
         self.init(archivists: [archivist], witnesses: witnesses ?? [])
     }
@@ -77,13 +77,13 @@ public class XyoPanel {
     }
     
     struct Defaults {
-        static let apiArchive = "temp"
+        static let apiModule = "Archivist"
         static let apiDomain = "https://beta.api.archivist.xyo.network"
     }
     
     private static var defaultArchivist: XyoArchivistApiClient {
         get {
-            let apiConfig = XyoArchivistApiConfig(self.Defaults.apiArchive, self.Defaults.apiDomain)
+            let apiConfig = XyoArchivistApiConfig(self.Defaults.apiModule, self.Defaults.apiDomain)
             return XyoArchivistApiClient.get(apiConfig)
         }
     }
