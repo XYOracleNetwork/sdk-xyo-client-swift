@@ -37,15 +37,15 @@ public class XyoPanel {
     private var _witnesses: [XyoWitness]
     private var _previous_hash: String?
     
-    public func report() throws {
+    public func report() throws -> [XyoPayload] {
         try report(nil)
     }
     
-    public func event(_ event: String, _ closure: XyoPanelReportCallback?) throws {
+    public func event(_ event: String, _ closure: XyoPanelReportCallback?) throws  -> [XyoPayload] {
         try report([XyoEventWitness { previousHash in XyoEventPayload(event, previousHash) }], closure)
     }
     
-    public func report(_ adhocWitnesses: [XyoWitness], _ closure: XyoPanelReportCallback?) throws {
+    public func report(_ adhocWitnesses: [XyoWitness], _ closure: XyoPanelReportCallback?) throws -> [XyoPayload] {
         var witnesses: [XyoWitness] = []
         witnesses.append(contentsOf: adhocWitnesses)
         witnesses.append(contentsOf: self._witnesses)
@@ -70,9 +70,10 @@ public class XyoPanel {
                 }
             }
         }
+        return payloads.compactMap { $0 }
     }
     
-    public func report(_ closure: XyoPanelReportCallback?) throws {
+    public func report(_ closure: XyoPanelReportCallback?) throws -> [XyoPayload] {
         return try self.report([], closure)
     }
     
@@ -82,9 +83,6 @@ public class XyoPanel {
     }
     
     private static var defaultArchivist: XyoArchivistApiClient {
-        get {
-            let apiConfig = XyoArchivistApiConfig(self.Defaults.apiModule, self.Defaults.apiDomain)
-            return XyoArchivistApiClient.get(apiConfig)
-        }
+        XyoArchivistApiClient.get(XyoArchivistApiConfig(self.Defaults.apiModule, self.Defaults.apiDomain))
     }
 }
