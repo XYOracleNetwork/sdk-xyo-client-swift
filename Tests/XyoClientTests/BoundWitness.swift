@@ -72,7 +72,7 @@ final class BoundWitnessTests: XCTestCase {
     ]
     
     func testNotAuthenticated() {
-        let config = XyoArchivistApiConfig("temp", "https://beta.api.archivist.xyo.network")
+        let config = XyoArchivistApiConfig("Archivist", "https://beta.api.archivist.xyo.network")
         let api = XyoArchivistApiClient.get(config)
         XCTAssertEqual(api.authenticated, false)
     }
@@ -88,7 +88,7 @@ final class BoundWitnessTests: XCTestCase {
     
     func testPayload1WithSend() throws {
         let address = XyoAddress(testVectorPrivateKey.hexToData())
-        let config = XyoArchivistApiConfig("temp", "https://beta.api.archivist.xyo.network")
+        let config = XyoArchivistApiConfig("Archivist", "https://beta.api.archivist.xyo.network")
         let api = XyoArchivistApiClient.get(config)
         let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload1("network.xyo.test"))
         let apiExpectation = expectation(description: "API Call")
@@ -113,7 +113,7 @@ final class BoundWitnessTests: XCTestCase {
     
     func testPayload2WithSend() throws {
         let address = XyoAddress(testVectorPrivateKey.hexToData())
-        let config = XyoArchivistApiConfig("temp", "https://beta.api.archivist.xyo.network")
+        let config = XyoArchivistApiConfig("Archivist", "https://beta.api.archivist.xyo.network")
         let api = XyoArchivistApiClient.get(config)
         let bw = try BoundWitnessBuilder().witness(address).payload("network.xyo.test", TestPayload2("network.xyo.test"))
         let apiExpectation = expectation(description: "API Call")

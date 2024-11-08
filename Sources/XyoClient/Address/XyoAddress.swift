@@ -58,21 +58,21 @@ public class XyoAddress {
     public var keccakHex: String? {
         get {
             guard let bytes = keccakBytes else { return nil }
-                return bytes.toHex(64)
+            return bytes.toHex(64)
         }
     }
     
     public var addressBytes: Data? {
         get {
             guard let keccakBytes = keccakBytes else { return nil }
-                return keccakBytes.subdata(in: 12..<keccakBytes.count)
+            return keccakBytes.subdata(in: 12..<keccakBytes.count)
         }
     }
     
     public var addressHex: String? {
         get {
             guard let bytes = addressBytes else { return nil }
-                return bytes.toHex(40)
+            return bytes.toHex(40)
         }
     }
     
@@ -118,7 +118,7 @@ public class XyoAddress {
 }
 
 public func generateRandomBytes(_ count: Int = 32) -> Data {
-
+    
     var keyData = Data(count: count)
     let result = keyData.withUnsafeMutableBytes {
         SecRandomCopyBytes(kSecRandomDefault, 32, $0.baseAddress!)

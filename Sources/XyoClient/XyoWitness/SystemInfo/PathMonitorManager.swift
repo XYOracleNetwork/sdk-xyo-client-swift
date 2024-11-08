@@ -22,20 +22,20 @@ public class PathMonitorManager {
     public init(_ start: Bool = true) {
 #if os(iOS)
         NotificationCenter.default.addObserver(
-          self,
-          selector: #selector(applicationWillEnterForeground(notification:)),
-          name: UIApplication.willEnterForegroundNotification,
-          object: nil)
+            self,
+            selector: #selector(applicationWillEnterForeground(notification:)),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil)
         NotificationCenter.default.addObserver(
-          self,
-          selector: #selector(applicationWillResignActive(notification:)),
-          name: UIApplication.willResignActiveNotification,
-          object: nil)
+            self,
+            selector: #selector(applicationWillResignActive(notification:)),
+            name: UIApplication.willResignActiveNotification,
+            object: nil)
         NotificationCenter.default.addObserver(
-          self,
-          selector: #selector(applicationWillResignActive(notification:)),
-          name: UIApplication.willTerminateNotification,
-          object: nil)
+            self,
+            selector: #selector(applicationWillResignActive(notification:)),
+            name: UIApplication.willTerminateNotification,
+            object: nil)
 #endif
         if (start) {
             self.start()
@@ -93,7 +93,7 @@ public class PathMonitorManager {
             } else {
                 self.ip = nil
             }
-
+            
             self.group.leave()
         }
     }

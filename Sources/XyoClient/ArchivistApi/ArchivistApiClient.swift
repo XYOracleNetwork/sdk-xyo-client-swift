@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-public struct XyoApiBoundWitnnessBody: Encodable {
+public struct XyoApiBoundWitnessBody: Encodable {
     var boundWitnesses: [XyoBoundWitnessJson]
     var payloads: [XyoPayload]?
 }
@@ -40,11 +40,11 @@ public class XyoArchivistApiClient {
     ) throws {
         let body = entries
         AF.request(
-            "\(self.config.apiDomain)/archive/\(self.config.archive)/block",
+            "\(self.config.apiDomain)/\(self.config.apiModule)",
             method: .post,
             parameters: body,
             encoder: JSONParameterEncoder.default
-        ).responseData(queue: XyoArchivistApiClient.queue) { response in
+        ).validate().responseData(queue: XyoArchivistApiClient.queue) { response in
             switch response.result {
             case .failure( _):
                 XyoArchivistApiClient.mainQueue.async {

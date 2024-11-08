@@ -17,7 +17,7 @@ public class WifiInformation {
         self.pathMonitor = allowPathMonitor ? PathMonitorManager(true) : nil
     }
     
-    #if os(iOS)
+#if os(iOS)
     func ssid() -> String? {
         guard let interfaceNames = CNCopySupportedInterfaces() as? [String] else {
             return nil
@@ -33,13 +33,13 @@ public class WifiInformation {
         }
         return ssids.first
     }
-    #elseif os(macOS)
+#elseif os(macOS)
     func ssid() -> String? {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         return interface?.ssid()
     }
-    #else
+#else
     func ssid() -> String? {
         var ssid: String?
         if let interfaces = CNCopySupportedInterfaces() as NSArray? {
@@ -52,21 +52,21 @@ public class WifiInformation {
         }
         return ssid
     }
-    #endif
+#endif
     
-    #if os(macOS)
+#if os(macOS)
     func mac() -> String? {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         return interface?.hardwareAddress()
     }
-    #else
+#else
     func mac() -> String? {
         return nil
     }
-    #endif
+#endif
     
-    #if os(macOS)
+#if os(macOS)
     func security() -> String? {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
@@ -106,11 +106,11 @@ public class WifiInformation {
             return nil
         }
     }
-    #else
+#else
     func security() -> String? {
         return nil
     }
-    #endif
+#endif
     
     func isWifi() -> Bool {
         return pathMonitor?.isWifi ?? false
@@ -124,27 +124,27 @@ public class WifiInformation {
         return pathMonitor?.isCellular ?? false
     }
     
-    #if os(macOS)
+#if os(macOS)
     func rssi() -> Int? {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         return interface?.rssiValue()
     }
-    #else
+#else
     func rssi() -> Int? {
         return nil
     }
-    #endif
+#endif
     
-    #if os(macOS)
+#if os(macOS)
     func txPower() -> Int? {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         return interface?.transmitPower()
     }
-    #else
+#else
     func txPower() -> Int? {
         return nil
     }
-    #endif
+#endif
 }

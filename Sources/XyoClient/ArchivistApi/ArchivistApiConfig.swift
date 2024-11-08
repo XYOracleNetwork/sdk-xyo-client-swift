@@ -1,7 +1,7 @@
 public class XyoArchivistApiConfig: XyoApiConfig {
-    var archive: String
-    public init(_ archive: String, _ apiDomain: String, _ token: String? = nil) {
-        self.archive = archive
+    var apiModule: String
+    public init(_ apiModule: String, _ apiDomain: String, _ token: String? = nil) {
+        self.apiModule = apiModule
         super.init(apiDomain, token)
     }
 }

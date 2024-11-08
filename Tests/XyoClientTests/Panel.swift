@@ -4,15 +4,16 @@ import XCTest
 @available(iOS 13.0, *)
 final class PanelTests: XCTestCase {
     static var allTests = [
-        ("createPanel", testCreatePanel,
-         "panelReport", testPanelReport,
-         "simplePanelReport", testSimplePanelReport
-         )
+        (
+            "createPanel", testCreatePanel,
+            "panelReport", testPanelReport,
+            "simplePanelReport", testSimplePanelReport
+        )
     ]
     
     func testCreatePanel() throws {
         let apiDomain = "https://beta.api.archivist.xyo.network"
-        let archive = "temp"
+        let archive = "Archivist"
         let address = XyoAddress()
         let witness = XyoWitness(address)
         let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
@@ -22,7 +23,7 @@ final class PanelTests: XCTestCase {
     
     func testPanelReport() throws {
         let apiDomain = "https://beta.api.archivist.xyo.network"
-        let archive = "temp"
+        let archive = "Archivist"
         _ = XyoAddress()
         let witness = XyoBasicWitness({ previousHash in
             let payload = XyoPayload("network.xyo.basic")
@@ -30,10 +31,11 @@ final class PanelTests: XCTestCase {
         })
         let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness, XyoSystemInfoWitness()])
         let panelExpectation = expectation(description: "Panel Report")
-        try panel.report { errors in
+        let result = try panel.report { errors in
             XCTAssertEqual(errors.count,  0)
             panelExpectation.fulfill()
         }
+        XCTAssertFalse(result.isEmpty)
         waitForExpectations(timeout: 10) { (error) in
             XCTAssertNil(error)
         }
@@ -44,10 +46,11 @@ final class PanelTests: XCTestCase {
             return nil
         }
         let panelExpectation = expectation(description: "Panel Report")
-        try panel.report { errors in
+        let result = try panel.report { errors in
             XCTAssertEqual(errors.count,  0)
             panelExpectation.fulfill()
         }
+        XCTAssertTrue(result.isEmpty)
         waitForExpectations(timeout: 10) { (error) in
             XCTAssertNil(error)
         }
@@ -56,10 +59,11 @@ final class PanelTests: XCTestCase {
     func testReportEvent() throws {
         let panel = XyoPanel(witnesses: [XyoSystemInfoWitness()])
         let panelExpectation = expectation(description: "Panel Report")
-        try panel.event("test_event") { errors in
+        let result = try panel.event("test_event") { errors in
             XCTAssertEqual(errors.count,  0)
             panelExpectation.fulfill()
         }
+        XCTAssertFalse(result.isEmpty)
         waitForExpectations(timeout: 10) { (error) in
             XCTAssertNil(error)
         }

@@ -8,7 +8,7 @@ extension Data {
             bytes.baseAddress?.assumingMemoryBound(to: UInt8.self)
         }
     }
-
+    
     mutating func mutablePointer() -> UnsafeMutablePointer<UInt8>! {
         return withUnsafeMutableBytes { (bytes: UnsafeMutableRawBufferPointer) -> UnsafeMutablePointer<UInt8>? in
             bytes.baseAddress?.assumingMemoryBound(to: UInt8.self)
