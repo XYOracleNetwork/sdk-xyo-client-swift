@@ -14,29 +14,29 @@ open class XyoSchemaValidator {
             return self.parts.count
         }
     }
-
+    
     var isLowercase: Bool {
         get {
             return self.schema == self.schema.lowercased()
         }
     }
-
+    
     private func domainLevel(_ level: Int) -> String {
         return self.parts[0..<(level + 1)].reversed().joined(separator: ".")
-
+        
     }
-
+    
     var rootDomain: String {
         get {
             return self.domainLevel(1)
         }
     }
-
+    
     public func rootDomainExists(_ closure: (_ exists: Bool) -> Void) {
         //domainExists(this.rootDomain, closure)
         closure(true)
     }
-
+    
     public func allDynamic(closure: (_ errors: [String]) -> Void) {
         var errors: [String] = []
         if (self.schema.isEmpty) {
@@ -52,7 +52,7 @@ open class XyoSchemaValidator {
             }
         }
     }
-
+    
     public func all() -> [String] {
         var errors: [String] = []
         if (self.schema.isEmpty) {

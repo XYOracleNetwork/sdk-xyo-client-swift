@@ -8,7 +8,7 @@ struct XyoSystemInfoCellularProviderPayloadStruct: Encodable {
     var mcc: String?
     var mnc: String?
     init() {
-        #if os(iOS)
+#if os(iOS)
         let networkInfo = CTTelephonyNetworkInfo()
         let subscriberCellularProvider = networkInfo.serviceSubscriberCellularProviders?.first?.value
         name = subscriberCellularProvider?.carrierName
@@ -16,6 +16,6 @@ struct XyoSystemInfoCellularProviderPayloadStruct: Encodable {
         mnc = subscriberCellularProvider?.mobileNetworkCode
         icc = subscriberCellularProvider?.isoCountryCode
         allowVoip = subscriberCellularProvider?.allowsVOIP
-        #endif
+#endif
     }
 }

@@ -16,7 +16,7 @@ open class XyoPayloadValidator {
             closure(errors)
         }
     }
-
+    
     public func all() -> [String] {
         var errors: [String] = []
         errors.append(contentsOf: self.schemaValidator.all())
