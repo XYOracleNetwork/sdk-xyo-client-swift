@@ -24,7 +24,7 @@ public class XyoPanel {
             if let observe = observe {
                 witnesses.append(XyoEventWitness(observe))
             }
-
+            
             self.init(witnesses: witnesses)
         } else {
             self.init()

@@ -4,10 +4,11 @@ import XCTest
 @available(iOS 13.0, *)
 final class PanelTests: XCTestCase {
     static var allTests = [
-        ("createPanel", testCreatePanel,
-         "panelReport", testPanelReport,
-         "simplePanelReport", testSimplePanelReport
-         )
+        (
+            "createPanel", testCreatePanel,
+            "panelReport", testPanelReport,
+            "simplePanelReport", testSimplePanelReport
+        )
     ]
     
     func testCreatePanel() throws {
