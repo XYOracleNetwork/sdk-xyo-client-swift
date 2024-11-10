@@ -49,7 +49,9 @@ public class XyoPanel {
     try report([XyoEventWitness { previousHash in XyoEventPayload(event, previousHash) }], closure)
   }
 
-  public func report(_ adhocWitnesses: [XyoWitness], _ closure: XyoPanelReportCallback?) throws
+  public func report(
+    _ adhocWitnesses: [XyoWitness], _ closure: XyoPanelReportCallback?
+  ) throws
     -> [XyoPayload]
   {
     var witnesses: [XyoWitness] = []

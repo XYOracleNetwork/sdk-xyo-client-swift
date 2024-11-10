@@ -4,12 +4,7 @@
   "indentation": {
     "spaces": 2
   },
-  "lineBreakBeforeEachArgument": true,
-  "prioritizeKeepingFunctionOutputTogether": true,
   "rules": {
-    "AlwaysUseLowerCamelCase": false,
-    "AmbiguousTrailingClosureOverload": false,
-    "OrderedImports": true,
-    "UseSynthesizedInitializer": false
+    "OrderedImports": true
   }
 }
