@@ -21,6 +21,7 @@ let package = Package(
         name: "secp256k1",
         url: "https://github.com/GigaBitcoin/secp256k1.swift.git",
         .upToNextMajor(from: "0.5.0")),
+    .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.57.0")
   ],
   targets: [
     // Targets are the basic building blocks of a package. A target can define a module or a test suite.

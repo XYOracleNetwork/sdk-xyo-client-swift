@@ -18,6 +18,15 @@
           "revision": "57ce9af6db14e0114af631ace25231a9d0ccccbd",
           "version": "0.18.0"
         }
+      },
+      {
+        "package": "SwiftLintPlugins",
+        "repositoryURL": "https://github.com/SimplyDanny/SwiftLintPlugins",
+        "state": {
+          "branch": null,
+          "revision": "7c80ce6f142164b0201871e580b021d1b2c69804",
+          "version": "0.57.0"
+        }
       }
     ]
   },
