@@ -11,7 +11,7 @@ let testVectorSignature = "b61dad551e910e2793b4f9f880125b5799086510ce102fad0222c
 final class AddressTests: XCTestCase {
     static var allTests = [
         ("testGeneratedPrivateKey", testGeneratedPrivateKey),
-        ("testKnownPrivateKey", testKnownPrivateKey),
+        ("testKnownPrivateKey", testKnownPrivateKey)
     ]
     
     func testGeneratedPrivateKey() {
@@ -31,7 +31,7 @@ final class AddressTests: XCTestCase {
     
     func testKnownPrivateKey() {
         let address = XyoAddress(privateKey: testVectorPrivateKey)
-        //let signature = try? address.sign(testVectorHash)
+        // let signature = try? address.sign(testVectorHash)
         XCTAssertNotNil(address)
         XCTAssertEqual(address.privateKeyHex, testVectorPrivateKey)
         XCTAssertEqual(address.publicKeyHex, testVectorPublicKey)

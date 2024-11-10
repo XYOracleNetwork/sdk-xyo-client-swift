@@ -8,7 +8,7 @@ open class XyoSystemInfoWitness: XyoWitness {
         self.wifiInfo = WifiInformation(allowPathMonitor)
     }
     
-    public typealias ObserverClosure = ((_ previousHash: String?)->XyoSystemInfoPayload?)
+    public typealias ObserverClosure = ((_ previousHash: String?) -> XyoSystemInfoPayload?)
     
     override public func observe() -> XyoSystemInfoPayload? {
         let payload = XyoSystemInfoPayload(wifiInfo, previousHash)

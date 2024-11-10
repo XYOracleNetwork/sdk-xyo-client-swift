@@ -23,7 +23,7 @@ public class WifiInformation {
             return nil
         }
         let ssids: [String] = interfaceNames.compactMap { name in
-            guard let info = CNCopyCurrentNetworkInfo(name as CFString) as? [String:AnyObject] else {
+            guard let info = CNCopyCurrentNetworkInfo(name as CFString) as? [String: AnyObject] else {
                 return nil
             }
             guard let ssid = info[kCNNetworkInfoKeySSID as String] as? String else {
@@ -71,7 +71,7 @@ public class WifiInformation {
         let client = CWWiFiClient.shared()
         let interface = client.interface(withName: nil)
         guard let security = interface?.security() else {return nil}
-        switch(security) {
+        switch security {
         case .WEP:
             return "wep"
         case .dynamicWEP:

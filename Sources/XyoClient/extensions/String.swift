@@ -23,12 +23,12 @@ extension String {
         throw ExtendedStringError.sha256HashFailure
     }
     
-    func data(using encoding:ExtendedEncoding) -> Data? {
+    func data(using encoding: ExtendedEncoding) -> Data? {
         let hexStr = self.dropFirst(self.hasPrefix("0x") ? 2 : 0)
         
         guard hexStr.count % 2 == 0 else { return nil }
         
-        var newData = Data(capacity: hexStr.count/2)
+        var newData = Data(capacity: hexStr.count / 2)
         
         var indexIsEven = true
         for i in hexStr.indices {
@@ -46,17 +46,16 @@ extension String {
         var data = Data(capacity: self.count / 2)
         
         let regex = try! NSRegularExpression(pattern: "[0-9a-f]{1,2}", options: .caseInsensitive)
-        regex.enumerateMatches(in: self, options: [], range: NSMakeRange(0, self.count)) { match, flags, stop in
+        regex.enumerateMatches(in: self, options: [], range: NSRange(location: 0, length: self.count)) { match, _, _ in
             let byteString = (self as NSString).substring(with: match!.range)
             var num = UInt8(byteString, radix: 16)!
             data.append(&num, count: 1)
         }
         
-        guard data.count > 0 else {
+        guard !data.isEmpty else {
             return nil
         }
         
         return data
     }
-    
 }

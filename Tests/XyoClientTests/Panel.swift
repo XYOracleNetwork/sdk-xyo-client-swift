@@ -25,14 +25,14 @@ final class PanelTests: XCTestCase {
         let apiDomain = "https://beta.api.archivist.xyo.network"
         let archive = "Archivist"
         _ = XyoAddress()
-        let witness = XyoBasicWitness({ previousHash in
+        let witness = XyoBasicWitness({ _ in
             let payload = XyoPayload("network.xyo.basic")
             return payload
         })
         let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness, XyoSystemInfoWitness()])
         let panelExpectation = expectation(description: "Panel Report")
         let result = try panel.report { errors in
-            XCTAssertEqual(errors.count,  0)
+            XCTAssertEqual(errors.count, 0)
             panelExpectation.fulfill()
         }
         XCTAssertFalse(result.isEmpty)
@@ -42,12 +42,12 @@ final class PanelTests: XCTestCase {
     }
     
     func testSimplePanelReport() throws {
-        let panel = XyoPanel { previousHash in
+        let panel = XyoPanel { _ in
             return nil
         }
         let panelExpectation = expectation(description: "Panel Report")
         let result = try panel.report { errors in
-            XCTAssertEqual(errors.count,  0)
+            XCTAssertEqual(errors.count, 0)
             panelExpectation.fulfill()
         }
         XCTAssertTrue(result.isEmpty)
@@ -60,7 +60,7 @@ final class PanelTests: XCTestCase {
         let panel = XyoPanel(witnesses: [XyoSystemInfoWitness()])
         let panelExpectation = expectation(description: "Panel Report")
         let result = try panel.event("test_event") { errors in
-            XCTAssertEqual(errors.count,  0)
+            XCTAssertEqual(errors.count, 0)
             panelExpectation.fulfill()
         }
         XCTAssertFalse(result.isEmpty)

@@ -37,7 +37,7 @@ public class PathMonitorManager {
             name: UIApplication.willTerminateNotification,
             object: nil)
 #endif
-        if (start) {
+        if start {
             self.start()
         }
     }
@@ -61,8 +61,8 @@ public class PathMonitorManager {
     func start() {
         monitor.start(queue: queue)
         monitor.pathUpdateHandler = { path in
-            //bail if shutting down
-            if (self.shuttingDown) {
+            // bail if shutting down
+            if self.shuttingDown {
                 return
             }
             self.group.enter()
@@ -83,7 +83,6 @@ public class PathMonitorManager {
                     switch endpoint {
                     case .hostPort(let host, _):
                         self.ip = host.debugDescription
-                        break
                     default:
                         break
                     }
@@ -99,13 +98,13 @@ public class PathMonitorManager {
     }
     
     func stop() {
-        //stop processing new dispatches
+        // stop processing new dispatches
         shuttingDown = true
         
-        //stop generating new dispatches
+        // stop generating new dispatches
         monitor.cancel()
         
-        //wait for any last dispatch, if any, to finish
+        // wait for any last dispatch, if any, to finish
         group.wait()
     }
 }

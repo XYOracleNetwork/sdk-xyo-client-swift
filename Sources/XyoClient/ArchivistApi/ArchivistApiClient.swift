@@ -31,7 +31,7 @@ public class XyoArchivistApiClient {
     public func postBoundWitnesses(
         _ entries: [XyoBoundWitnessJson]
     ) throws {
-        try self.postBoundWitnesses(entries) {_error in}
+        try self.postBoundWitnesses(entries) { _ in }
     }
     
     public func postBoundWitnesses (
@@ -46,7 +46,7 @@ public class XyoArchivistApiClient {
             encoder: JSONParameterEncoder.default
         ).validate().responseData(queue: XyoArchivistApiClient.queue) { response in
             switch response.result {
-            case .failure( _):
+            case .failure:
                 XyoArchivistApiClient.mainQueue.async {
                     if let data = response.data {
                         closure(String(decoding: data, as: UTF8.self))
@@ -55,7 +55,7 @@ public class XyoArchivistApiClient {
                     }
                 }
                 
-            case .success( _):
+            case .success:
                 XyoArchivistApiClient.mainQueue.async {
                     closure(nil)
                 }
@@ -66,7 +66,7 @@ public class XyoArchivistApiClient {
     public func postBoundWitness(
         _ entry: XyoBoundWitnessJson
     ) throws {
-        try self.postBoundWitnesses([entry]) {_error in}
+        try self.postBoundWitnesses([entry]) { _ in }
     }
     
     public func postBoundWitness(

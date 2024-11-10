@@ -78,7 +78,7 @@ public class XyoAddress {
     
     public func sign(_ hash: String) throws -> String? {
         let message = hash.hexToData()
-        guard (message != nil) else { return nil }
+        guard message != nil else { return nil }
         let sig = self.signature(message!)
         return sig?.dataRepresentation.toHex()
     }
@@ -103,7 +103,7 @@ public class XyoAddress {
                 withUnsafeBytes(of: &signature) { signatureBytes in
                     for i in 0...31 {
                         signature2Bytes[i] = signatureBytes[31 - i]
-                        signature2Bytes[i+32] = signatureBytes[63 - i]
+                        signature2Bytes[i + 32] = signatureBytes[63 - i]
                     }
                 }
             }
@@ -127,9 +127,9 @@ public func generateRandomBytes(_ count: Int = 32) -> Data {
         return keyData
     } else {
         print("Problem generating random bytes")
-        var simpleRandom = Data.init()
+        var simpleRandom = Data()
         var randomGenerator = SystemRandomNumberGenerator()
-        while(simpleRandom.count < count) {
+        while simpleRandom.count < count {
             simpleRandom.append(contentsOf: [UInt8(randomGenerator.next())])
         }
         return simpleRandom

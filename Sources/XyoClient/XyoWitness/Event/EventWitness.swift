@@ -12,7 +12,7 @@ open class XyoEventWitness: XyoWitness {
         super.init(address)
     }
     
-    public typealias ObserverClosure = ((_ previousHash: String?)->XyoEventPayload?)
+    public typealias ObserverClosure = ((_ previousHash: String?) -> XyoEventPayload?)
     
     private let _observer: ObserverClosure
     

@@ -18,7 +18,7 @@ public class XyoPanel {
     }
     
     public convenience init(observe: ((_ previousHash: String?) -> XyoEventPayload?)?) {
-        if (observe != nil) {
+        if observe != nil {
             var witnesses = [XyoWitness]()
             
             if let observe = observe {
@@ -31,7 +31,7 @@ public class XyoPanel {
         }
     }
     
-    public typealias XyoPanelReportCallback = (([String])->Void)
+    public typealias XyoPanelReportCallback = (([String]) -> Void)
     
     private var _archivists: [XyoArchivistApiClient]
     private var _witnesses: [XyoWitness]
@@ -41,7 +41,7 @@ public class XyoPanel {
         try report(nil)
     }
     
-    public func event(_ event: String, _ closure: XyoPanelReportCallback?) throws  -> [XyoPayload] {
+    public func event(_ event: String, _ closure: XyoPanelReportCallback?) throws -> [XyoPayload] {
         try report([XyoEventWitness { previousHash in XyoEventPayload(event, previousHash) }], closure)
     }
     
@@ -65,7 +65,7 @@ public class XyoPanel {
                 if let errorExists = error {
                     errors.append(errorExists)
                 }
-                if (archivistCount == 0) {
+                if archivistCount == 0 {
                     closure?(errors)
                 }
             }
