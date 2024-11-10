@@ -1,5 +1,4 @@
 disabled_rules: # rule identifiers to exclude from running
-
   # Rationale: Xcode auto indentation can cause this warning
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#closure-end-indentation
   - closure_end_indentation
@@ -209,7 +208,6 @@ disabled_rules: # rule identifiers to exclude from running
   - reduce_into
 
 opt_in_rules: # some rules are only opt-in
-
   # Rationale: When using map, we think of it being used to transform a current array into something else
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#array-init
   - array_init
@@ -637,9 +635,18 @@ opt_in_rules: # some rules are only opt-in
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Carthage
   - Pods
+  - .build
 
 attributes:
-  always_on_same_line: ["@IBAction", "@IBSegueAction", "@NSManaged", "@discardableResult", "@escaping", "@objc"]
+  always_on_same_line:
+    [
+      "@IBAction",
+      "@IBSegueAction",
+      "@NSManaged",
+      "@discardableResult",
+      "@escaping",
+      "@objc",
+    ]
 
 type_contents_order:
   order:
@@ -648,7 +655,15 @@ type_contents_order:
     - type_alias
     - subtype
     - [type_property, instance_property, ib_outlet, ib_inspectable]
-    - [initializer, deinitializer, type_method, view_life_cycle_method, subscript, other_method, ib_action]
+    - [
+        initializer,
+        deinitializer,
+        type_method,
+        view_life_cycle_method,
+        subscript,
+        other_method,
+        ib_action,
+      ]
 
 custom_rules:
   custom_todo:
