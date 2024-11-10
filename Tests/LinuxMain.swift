@@ -1,5 +1,4 @@
 import XCTest
-
 import sdk_xyo_client_swiftTests
 
 var tests = [XCTestCaseEntry]()

@@ -1,15 +1,15 @@
 import Foundation
 
 func osName() -> String {
-#if os(iOS)
+  #if os(iOS)
     return "iOS"
-#elseif os(macOS)
+  #elseif os(macOS)
     return "macOS"
-#elseif os(watchOS)
+  #elseif os(watchOS)
     return "watchOS"
-#elseif os(tvOS)
+  #elseif os(tvOS)
     return "tvOS"
-#else
+  #else
     return "unknown"
-#endif
+  #endif
 }
