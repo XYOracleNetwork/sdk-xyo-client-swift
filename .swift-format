@@ -9,9 +9,7 @@
   "rules": {
     "AlwaysUseLowerCamelCase": false,
     "AmbiguousTrailingClosureOverload": false,
-    "NoBlockComments": false,
     "OrderedImports": true,
-    "UseLetInEveryBoundCaseVariable": false,
     "UseSynthesizedInitializer": false
   }
 }
