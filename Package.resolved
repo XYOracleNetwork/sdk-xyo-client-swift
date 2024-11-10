@@ -11,12 +11,12 @@
         }
       },
       {
-        "package": "swift-secp256k1",
+        "package": "secp256k1.swift",
         "repositoryURL": "https://github.com/21-DOT-DEV/swift-secp256k1",
         "state": {
           "branch": null,
-          "revision": "57ce9af6db14e0114af631ace25231a9d0ccccbd",
-          "version": "0.18.0"
+          "revision": "9683e8e311c76d8114cd308b697dad2f9fc58fed",
+          "version": "0.17.0"
         }
       }
     ]
