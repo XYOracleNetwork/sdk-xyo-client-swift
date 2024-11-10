@@ -2,18 +2,26 @@ name: build-beta
 
 on:
   push:
-    branches: [ beta ]
+    branches:
+      - beta
   pull_request:
-    branches: [ beta ]
+    branches:
+      - beta
 
 jobs:
   build:
-
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+      - uses: actions/checkout@v3
+      # Use until swift 6 support is added to the default setup-swift action
+      # https://github.com/swift-actions/setup-swift
+      # https://github.com/swift-actions/setup-swift/pull/684
+      # - uses: swift-actions/setup-swift@v2.2
+      - uses: JoelBCarter/setup-swift@feat/swift-6
+        with:
+          swift-version: "6.0"
+      - name: Build
+        run: swift build -v
+      - name: Run tests
+        run: swift test -v
