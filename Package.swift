@@ -35,5 +35,5 @@ let package = Package(
       name: "XyoClientTests",
       dependencies: ["XyoClient"])
   ],
-  swiftLanguageVersions: [.v5, .v4_2]
+  swiftLanguageModes: [.v5, .v4_2]
 )
