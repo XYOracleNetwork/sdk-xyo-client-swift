@@ -63,7 +63,6 @@ public class BoundWitnessBuilder {
     bw._signatures = try self.sign(hash)
     bw._hash = hash
     bw._client = "swift"
-    bw._payloads = _payloads
     bw._previous_hash = previousHash
     bw.addresses = _witnesses.map { witness in witness?.addressHex! }
     bw.previous_hashes = _previous_hashes
