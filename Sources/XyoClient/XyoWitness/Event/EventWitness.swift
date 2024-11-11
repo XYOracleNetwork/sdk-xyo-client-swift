@@ -2,9 +2,6 @@ import Foundation
 
 open class XyoEventWitness: XyoWitness {
 
-  public typealias TPayloadIn = XyoPayload
-  public typealias TPayloadOut = XyoEventPayload
-
   public init(_ observer: @escaping ObserverClosure) {
     _observer = observer
     super.init()
@@ -15,12 +12,12 @@ open class XyoEventWitness: XyoWitness {
     super.init(address: address)
   }
 
-  public typealias ObserverClosure = ((_ previousHash: String?) -> XyoEventPayload?)
+  public typealias ObserverClosure = (() -> XyoEventPayload?)
 
   private let _observer: ObserverClosure
 
-  public func observe(_: [XyoPayload]?) -> [XyoEventPayload] {
-    if let payload = _observer(previousHash) {
+  public override func observe() -> [XyoPayload] {
+    if let payload = _observer() {
       previousHash = try? payload.hash().toHex()
       return [payload]
     } else {

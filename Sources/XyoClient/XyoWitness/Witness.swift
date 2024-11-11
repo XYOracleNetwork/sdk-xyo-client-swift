@@ -1,14 +1,15 @@
 import Foundation
 
-public protocol Witness {
-  associatedtype TPayloadOut: XyoPayload
+public protocol Module {
   var address: XyoAddress { get }
   var previousHash: String? { get }
-  // init(address: XyoAddress?, previousHash: String?)
-  func observe() -> [TPayloadOut]
 }
 
-open class XyoWitness: Witness {
+public protocol Witness {
+  func observe() -> [XyoPayload]
+}
+
+open class XyoWitness: Module, Witness {
   public typealias TPayloadOut = XyoPayload
 
   public let address: XyoAddress

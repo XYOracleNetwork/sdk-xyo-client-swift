@@ -21,7 +21,7 @@ public class XyoPanel {
     self.init(archivists: [archivist], witnesses: witnesses ?? [])
   }
 
-  public convenience init(observe: ((_ previousHash: String?) -> XyoEventPayload?)?) {
+  public convenience init(observe: (() -> XyoEventPayload?)?) {
     if observe != nil {
       var witnesses = [XyoWitness]()
 
@@ -46,7 +46,7 @@ public class XyoPanel {
   }
 
   public func event(_ event: String, _ closure: XyoPanelReportCallback?) throws -> [XyoPayload] {
-    try report([XyoEventWitness { previousHash in XyoEventPayload(event) }], closure)
+    try report([XyoEventWitness { XyoEventPayload(event) }], closure)
   }
 
   public func report(

@@ -44,7 +44,7 @@ final class PanelTests: XCTestCase {
   }
 
   func testSimplePanelReport() throws {
-    let panel = XyoPanel { _ in
+    let panel = XyoPanel {
       return nil
     }
     let panelExpectation = expectation(description: "Panel Report")
