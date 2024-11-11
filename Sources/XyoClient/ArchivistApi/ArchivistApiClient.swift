@@ -26,6 +26,27 @@ public class XyoArchivistApiClient {
     self.config = config
   }
 
+  public func insert(_ entries: [XyoBoundWitnessJson]) async throws -> XyoBoundWitnessJson {
+    let url = "\(self.config.apiDomain)/\(self.config.apiModule)"
+    let body = entries
+
+    // Perform the request and await the result
+    let responseData = try await AF.request(
+      url,
+      method: .post,
+      parameters: body,
+      encoder: JSONParameterEncoder.default
+    )
+    .validate()
+    .serializingData()
+    .value
+
+    // Attempt to decode the response data into XyoBoundWitnessJson
+    let decodedResponse = try JSONDecoder().decode([XyoBoundWitnessJson].self, from: responseData)
+    // TODO: Return payloads
+    return decodedResponse[0]
+  }
+
   public func postBoundWitnesses(
     _ entries: [XyoBoundWitnessJson]
   ) throws {
