@@ -104,7 +104,7 @@ public class XyoArchivistApiClient {
 
 extension XyoArchivistApiClient {
   static fileprivate let queue = DispatchQueue(
-    label: "requests.queue",
+    label: "network.xyo.requests.queue",
     qos: .utility,
     attributes: [.concurrent]
   )
