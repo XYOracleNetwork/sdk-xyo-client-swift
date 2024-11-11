@@ -31,7 +31,7 @@ public class XyoArchivistApiClient {
   }
 
   public func insert(payloads: [XyoBoundWitnessJson]) async throws -> XyoBoundWitnessJson {
-      // TODO: Build query bound witness
+    // TODO: Build query bound witness
     // Perform the request and await the result
     let responseData = try await AF.request(
       self.url,

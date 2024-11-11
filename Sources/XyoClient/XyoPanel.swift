@@ -87,7 +87,8 @@ public class XyoPanel {
 
   struct Defaults {
     static let apiDomain =
-      ProcessInfo.processInfo.environment["XYO_API_DOMAIN"] ?? "https://beta.api.archivist.xyo.network"
+      ProcessInfo.processInfo.environment["XYO_API_DOMAIN"]
+      ?? "https://beta.api.archivist.xyo.network"
     static let apiModule = ProcessInfo.processInfo.environment["XYO_API_MODULE"] ?? "Archivist"
   }
 
