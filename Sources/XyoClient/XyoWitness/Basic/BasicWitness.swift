@@ -14,12 +14,12 @@ open class XyoBasicWitness: AbstractWitness {
     super.init(address: address)
   }
 
-  public typealias ObserverClosure = ((_ previousHash: String?) -> XyoPayload?)
+  public typealias ObserverClosure = (() -> XyoPayload?)
 
   private let _observer: ObserverClosure
 
   override public func observe() -> [XyoPayload] {
-    if let payload = _observer(previousHash) {
+    if let payload = _observer() {
       previousHash = try? payload.hash().toHex()
       return [payload]
     } else {
