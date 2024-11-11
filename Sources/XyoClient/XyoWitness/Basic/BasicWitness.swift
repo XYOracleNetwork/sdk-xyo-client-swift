@@ -20,7 +20,6 @@ open class XyoBasicWitness: AbstractWitness {
 
   override public func observe() -> [XyoPayload] {
     if let payload = _observer() {
-      previousHash = try? payload.hash().toHex()
       return [payload]
     } else {
       return []

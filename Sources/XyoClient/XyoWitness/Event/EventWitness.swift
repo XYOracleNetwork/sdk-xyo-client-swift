@@ -18,7 +18,6 @@ open class XyoEventWitness: AbstractWitness {
 
   public override func observe() -> [XyoPayload] {
     if let payload = _observer() {
-      previousHash = try? payload.hash().toHex()
       return [payload]
     } else {
       return []

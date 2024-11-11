@@ -67,7 +67,9 @@ public class XyoAddress {
     let message = hash.hexToData()
     guard message != nil else { return nil }
     let sig = self.signature(message!)
-    return sig?.dataRepresentation.toHex()
+    let ret = sig?.dataRepresentation.toHex()
+    _previousHash = hash
+    return ret
   }
 
   public func signature(_ hash: Data) -> secp256k1.Signing.ECDSASignature? {
