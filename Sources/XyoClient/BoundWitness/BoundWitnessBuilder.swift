@@ -11,6 +11,7 @@ public class BoundWitnessBuilder {
   private var _payload_hashes: [String] = []
   private var _payload_schemas: [String] = []
   private var _payloads: [XyoPayload] = []
+  private var _query: String? = nil
 
   public init() {
   }
@@ -34,7 +35,8 @@ public class BoundWitnessBuilder {
       _accounts.map { witness in witness.address },
       _previous_hashes,
       _payload_hashes,
-      _payload_schemas
+      _payload_schemas,
+      _query
     )
   }
 
@@ -49,6 +51,12 @@ public class BoundWitnessBuilder {
     _payloads.append(contentsOf: payloads)
     _payload_hashes.append(contentsOf: try payloads.map { payload in try payload.hash().toHex() })
     _payload_schemas.append(contentsOf: payloads.map { payload in payload.schema })
+    return self
+  }
+
+  public func query(_ payload: XyoPayload) throws -> BoundWitnessBuilder {
+    self._query = try payload.hash().toHex()
+    let _ = try self.payload(payload.schema, payload)
     return self
   }
 

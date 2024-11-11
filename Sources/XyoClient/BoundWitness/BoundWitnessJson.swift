@@ -18,6 +18,7 @@ public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaPr
   public var _hash: String?
   public var _signatures: [String?]?
   public var _previous_hash: String?
+  public var _query: String?
 
   func encodeMetaFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
     try container.encode(_client, forKey: ._client)
@@ -30,6 +31,9 @@ public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaPr
     try container.encode(payload_hashes, forKey: .payload_hashes)
     try container.encode(payload_schemas, forKey: .payload_schemas)
     try container.encode(previous_hashes, forKey: .previous_hashes)
+    if query != nil {
+      try container.encode(query, forKey: .query)
+    }
     try container.encode(schema, forKey: .schema)
   }
 
