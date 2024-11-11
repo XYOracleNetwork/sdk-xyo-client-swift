@@ -56,7 +56,7 @@ public class BoundWitnessBuilder {
     }
   }
 
-  public func build(_ previousHash: String? = nil) throws -> XyoBoundWitnessJson {
+  public func build(_ previousHash: String? = nil) throws -> (XyoBoundWitnessJson, [XyoPayload]) {
     let bw = XyoBoundWitnessJson()
     let hashable = hashableFields()
     let hash = try BoundWitnessBuilder.hash(hashable)
@@ -69,7 +69,7 @@ public class BoundWitnessBuilder {
     bw.previous_hashes = _previous_hashes
     bw.payload_hashes = _payload_hashes
     bw.payload_schemas = _payload_schemas
-    return bw
+    return (bw, _payloads)
   }
 
   static func hash<T: Encodable>(_ json: T) throws -> String {
