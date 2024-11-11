@@ -60,7 +60,7 @@ public class XyoPanel {
     let payloads = witnesses.map { witness in
       witness.observe()
     }
-    let bw = try BoundWitnessBuilder()
+    let (bw, _) = try BoundWitnessBuilder()
       .payloads(payloads.compactMap { $0 })
       .witnesses(witnesses)
       .build(_previous_hash)
@@ -86,7 +86,8 @@ public class XyoPanel {
   }
 
   struct Defaults {
-    static let apiDomain = ProcessInfo.processInfo.environment["XYO_API_DOMAIN"] ?? "https://beta.api.archivist.xyo.network"
+    static let apiDomain =
+      ProcessInfo.processInfo.environment["XYO_API_DOMAIN"] ?? "https://beta.api.archivist.xyo.network"
     static let apiModule = ProcessInfo.processInfo.environment["XYO_API_MODULE"] ?? "Archivist"
   }
 
