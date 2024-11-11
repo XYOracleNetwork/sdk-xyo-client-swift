@@ -103,6 +103,10 @@ public class XyoArchivistApiClient {
 }
 
 extension XyoArchivistApiClient {
-  static fileprivate let queue = DispatchQueue(label: "requests.queue", qos: .utility)
+  static fileprivate let queue = DispatchQueue(
+    label: "requests.queue",
+    qos: .utility,
+    attributes: [.concurrent]
+  )
   static fileprivate let mainQueue = DispatchQueue.main
 }
