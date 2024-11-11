@@ -2,12 +2,14 @@ open class AbstractModule: Module {
 
   private let _account: XyoAddress
 
-  public var address: String? {
-    _account.addressHex
-  }
   public var account: AccountInstance {
     _account
   }
+
+  public var address: String? {
+    _account.addressHex
+  }
+
   public var previousHash: String? {
     _account.previousHash
   }
