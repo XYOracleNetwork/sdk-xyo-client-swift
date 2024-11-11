@@ -59,9 +59,9 @@ public class XyoPanel {
     witnesses.append(contentsOf: self._witnesses)
     let payloads = witnesses.map { witness in
       witness.observe()
-    }
+    }.flatMap({ $0 })
     let (bw, _) = try BoundWitnessBuilder()
-      .payloads(payloads.compactMap { $0 })
+      .payloads(payloads)
       .witnesses(witnesses)
       .build(_previous_hash)
     self._previous_hash = bw._hash
