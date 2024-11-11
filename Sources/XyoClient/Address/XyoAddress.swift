@@ -3,6 +3,7 @@ import secp256k1
 
 public class XyoAddress {
 
+  private var _previousHash: String? = nil
   private var _privateKey: secp256k1.Signing.PrivateKey?
 
   public init(_ privateKey: Data? = generateRandomBytes()) {
@@ -12,6 +13,10 @@ public class XyoAddress {
 
   convenience init(privateKey: String) {
     self.init(privateKey.hexToData())
+  }
+
+  public var previousHash: String? {
+    return _previousHash
   }
 
   public var privateKey: secp256k1.Signing.PrivateKey? {
@@ -91,7 +96,9 @@ public class XyoAddress {
       }
 
       let rawRepresentation = Data(
-        bytes: &signature2.data, count: MemoryLayout.size(ofValue: signature2.data))
+        bytes: &signature2.data,
+        count: MemoryLayout.size(ofValue: signature2.data)
+      )
 
       return try secp256k1.Signing.ECDSASignature(dataRepresentation: rawRepresentation)
     } catch {
