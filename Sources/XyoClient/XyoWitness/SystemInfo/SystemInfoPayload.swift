@@ -4,9 +4,9 @@ open class XyoSystemInfoPayload: XyoPayload {
 
   var wifiInfo: WifiInformation
 
-  public init(_ wifiInfo: WifiInformation, _ previousHash: String? = nil) {
+  public init(_ wifiInfo: WifiInformation) {
     self.wifiInfo = wifiInfo
-    super.init("network.xyo.system.info", previousHash)
+    super.init("network.xyo.system.info")
   }
 
   enum CodingKeys: String, CodingKey {
@@ -21,7 +21,6 @@ open class XyoSystemInfoPayload: XyoPayload {
     try container.encode(XyoSystemInfoDevicePayloadStruct(), forKey: .device)
     try container.encode(XyoSystemInfoNetworkPayloadStruct(wifiInfo), forKey: .network)
     try container.encode(XyoSystemInfoOsPayloadStruct(), forKey: .os)
-    try container.encode(self.previousHash, forKey: .previousHash)
     try container.encode(self.schema, forKey: .schema)
   }
 }

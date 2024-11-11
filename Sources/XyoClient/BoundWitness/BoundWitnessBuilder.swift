@@ -56,20 +56,19 @@ public class BoundWitnessBuilder {
     }
   }
 
-  public func build(_ previousHash: String? = nil) throws -> XyoBoundWitnessJson {
+  public func build(_ previousHash: String? = nil) throws -> (XyoBoundWitnessJson, [XyoPayload]) {
     let bw = XyoBoundWitnessJson()
     let hashable = hashableFields()
     let hash = try BoundWitnessBuilder.hash(hashable)
     bw._signatures = try self.sign(hash)
     bw._hash = hash
     bw._client = "swift"
-    bw._payloads = _payloads
     bw._previous_hash = previousHash
     bw.addresses = _witnesses.map { witness in witness?.addressHex! }
     bw.previous_hashes = _previous_hashes
     bw.payload_hashes = _payload_hashes
     bw.payload_schemas = _payload_schemas
-    return bw
+    return (bw, _payloads)
   }
 
   static func hash<T: Encodable>(_ json: T) throws -> String {

@@ -21,7 +21,7 @@ public class XyoPanel {
     self.init(archivists: [archivist], witnesses: witnesses ?? [])
   }
 
-  public convenience init(observe: ((_ previousHash: String?) -> XyoEventPayload?)?) {
+  public convenience init(observe: (() -> XyoEventPayload?)?) {
     if observe != nil {
       var witnesses = [XyoWitness]()
 
@@ -46,7 +46,7 @@ public class XyoPanel {
   }
 
   public func event(_ event: String, _ closure: XyoPanelReportCallback?) throws -> [XyoPayload] {
-    try report([XyoEventWitness { previousHash in XyoEventPayload(event, previousHash) }], closure)
+    try report([XyoEventWitness { XyoEventPayload(event) }], closure)
   }
 
   public func report(
@@ -59,9 +59,9 @@ public class XyoPanel {
     witnesses.append(contentsOf: self._witnesses)
     let payloads = witnesses.map { witness in
       witness.observe()
-    }
-    let bw = try BoundWitnessBuilder()
-      .payloads(payloads.compactMap { $0 })
+    }.flatMap({ $0 })
+    let (bw, _) = try BoundWitnessBuilder()
+      .payloads(payloads)
       .witnesses(witnesses)
       .build(_previous_hash)
     self._previous_hash = bw._hash
@@ -86,8 +86,10 @@ public class XyoPanel {
   }
 
   struct Defaults {
-    static let apiModule = "Archivist"
-    static let apiDomain = "https://beta.api.archivist.xyo.network"
+    static let apiDomain =
+      ProcessInfo.processInfo.environment["XYO_API_DOMAIN"]
+      ?? "https://beta.api.archivist.xyo.network"
+    static let apiModule = ProcessInfo.processInfo.environment["XYO_API_MODULE"] ?? "Archivist"
   }
 
   private static var defaultArchivist: XyoArchivistApiClient {

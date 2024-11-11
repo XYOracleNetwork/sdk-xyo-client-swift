@@ -9,16 +9,19 @@ open class XyoEventWitness: XyoWitness {
 
   public init(_ address: XyoAddress, _ observer: @escaping ObserverClosure) {
     _observer = observer
-    super.init(address)
+    super.init(address: address)
   }
 
-  public typealias ObserverClosure = ((_ previousHash: String?) -> XyoEventPayload?)
+  public typealias ObserverClosure = (() -> XyoEventPayload?)
 
   private let _observer: ObserverClosure
 
-  override public func observe() -> XyoEventPayload? {
-    let payload = _observer(previousHash)
-    previousHash = try? payload?.hash().toHex()
-    return payload
+  public override func observe() -> [XyoPayload] {
+    if let payload = _observer() {
+      previousHash = try? payload.hash().toHex()
+      return [payload]
+    } else {
+      return []
+    }
   }
 }

@@ -22,8 +22,31 @@ public class XyoArchivistApiClient {
     }
   }
 
+  public var url: String {
+    return "\(self.config.apiDomain)/\(self.config.apiModule)"
+  }
+
   private init(_ config: XyoArchivistApiConfig) {
     self.config = config
+  }
+
+  public func insert(payloads: [XyoBoundWitnessJson]) async throws -> XyoBoundWitnessJson {
+    // TODO: Build query bound witness
+    // Perform the request and await the result
+    let responseData = try await AF.request(
+      self.url,
+      method: .post,
+      parameters: payloads,
+      encoder: JSONParameterEncoder.default
+    )
+    .validate()
+    .serializingData()
+    .value
+
+    // Attempt to decode the response data into XyoBoundWitnessJson
+    let decodedResponse = try JSONDecoder().decode([XyoBoundWitnessJson].self, from: responseData)
+    // TODO: Return payloads instead once they're deserializable
+    return decodedResponse[0]
   }
 
   public func postBoundWitnesses(
@@ -38,7 +61,7 @@ public class XyoArchivistApiClient {
   ) throws {
     let body = entries
     AF.request(
-      "\(self.config.apiDomain)/\(self.config.apiModule)",
+      self.url,
       method: .post,
       parameters: body,
       encoder: JSONParameterEncoder.default
@@ -80,6 +103,10 @@ public class XyoArchivistApiClient {
 }
 
 extension XyoArchivistApiClient {
-  static fileprivate let queue = DispatchQueue(label: "requests.queue", qos: .utility)
+  static fileprivate let queue = DispatchQueue(
+    label: "network.xyo.requests.queue",
+    qos: .utility,
+    attributes: [.concurrent]
+  )
   static fileprivate let mainQueue = DispatchQueue.main
 }

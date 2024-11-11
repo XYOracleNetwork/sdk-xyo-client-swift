@@ -2,17 +2,15 @@ import Foundation
 
 open class XyoSystemInfoWitness: XyoWitness {
 
-  var wifiInfo: WifiInformation
+  var allowPathMonitor: Bool
 
-  public init(_ allowPathMonitor: Bool = false) {
-    self.wifiInfo = WifiInformation(allowPathMonitor)
+  public init(allowPathMonitor: Bool = false) {
+    self.allowPathMonitor = allowPathMonitor
   }
 
-  public typealias ObserverClosure = ((_ previousHash: String?) -> XyoSystemInfoPayload?)
-
-  override public func observe() -> XyoSystemInfoPayload? {
-    let payload = XyoSystemInfoPayload(wifiInfo, previousHash)
+  public override func observe() -> [XyoPayload] {
+    let payload = XyoSystemInfoPayload(WifiInformation(allowPathMonitor))
     previousHash = try? payload.hash().toHex()
-    return payload
+    return [payload]
   }
 }
