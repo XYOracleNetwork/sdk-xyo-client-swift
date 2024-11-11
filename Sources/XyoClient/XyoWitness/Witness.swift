@@ -1,13 +1,17 @@
 import Foundation
 
 public protocol Witness {
-  associatedtype TPayload: XyoPayload
+  associatedtype TPayloadIn: XyoPayload
+  associatedtype TPayloadOut: XyoPayload
   var address: XyoAddress? { get }
   var previousHash: String? { get }
-  func observe() -> [TPayload]
+  func observe(payloads: [TPayloadIn]?) -> [TPayloadOut]
 }
 
-open class XyoWitness: Witness {
+open class XyoWitness<TIn: XyoPayload, TOut: XyoPayload>: Witness {
+  public typealias TPayloadIn = TIn
+  public typealias TPayloadOut = TOut
+
   public let address: XyoAddress?
   public var previousHash: String?
 
@@ -16,7 +20,7 @@ open class XyoWitness: Witness {
     self.previousHash = previousHash
   }
 
-  open func observe() -> [XyoPayload] {
+  open func observe(payloads: [TPayloadIn]?) -> [TPayloadOut] {
     preconditionFailure("This method must be overridden")
   }
 }

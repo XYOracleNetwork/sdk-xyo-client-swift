@@ -58,7 +58,7 @@ public class XyoPanel {
     witnesses.append(contentsOf: adhocWitnesses)
     witnesses.append(contentsOf: self._witnesses)
     let payloads = witnesses.map { witness in
-      witness.observe()
+      witness.observe(payloads: nil)
     }.flatMap({ $0 })
     let (bw, _) = try BoundWitnessBuilder()
       .payloads(payloads)

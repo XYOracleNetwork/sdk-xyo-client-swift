@@ -1,7 +1,6 @@
 import Foundation
 
-open class XyoEventWitness: XyoWitness {
-
+open class XyoEventWitness: XyoWitness<XyoPayload, XyoEventPayload> {
   public init(_ observer: @escaping ObserverClosure) {
     _observer = observer
     super.init()
@@ -16,9 +15,12 @@ open class XyoEventWitness: XyoWitness {
 
   private let _observer: ObserverClosure
 
-  override public func observe() -> XyoEventPayload? {
-    let payload = _observer(previousHash)
-    previousHash = try? payload?.hash().toHex()
-    return payload
+  public func observe(_: [XyoPayload]?) -> [XyoEventPayload] {
+    if let payload = _observer(previousHash) {
+      previousHash = try? payload.hash().toHex()
+      return [payload]
+    } else {
+      return []
+    }
   }
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoSystemInfoWitness: XyoWitness {
+open class XyoSystemInfoWitness: XyoWitness<XyoPayload, XyoSystemInfoPayload> {
 
   var wifiInfo: WifiInformation
 
@@ -10,13 +10,9 @@ open class XyoSystemInfoWitness: XyoWitness {
 
   public typealias ObserverClosure = ((_ previousHash: String?) -> XyoSystemInfoPayload?)
 
-  override public func observe() -> [XyoSystemInfoPayload] {
-    if let payload = XyoSystemInfoPayload(wifiInfo) {
-      previousHash = try? payload.hash().toHex()
-      return [payload]
-    } else {
-      return []
-    }
-
+  public func observe(_: [XyoPayload]?) -> [XyoSystemInfoPayload] {
+    let payload = XyoSystemInfoPayload(wifiInfo)
+    previousHash = try? payload.hash().toHex()
+    return [payload]
   }
 }
