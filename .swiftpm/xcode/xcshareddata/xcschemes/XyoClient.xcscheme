@@ -54,12 +54,12 @@
       allowLocationSimulation = "YES">
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "API_DOMAIN"
+            key = "XYO_API_DOMAIN"
             value = "https://beta.api.archivist.xyo.network"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "API_MODULE"
+            key = "XYO_API_MODULE"
             value = "Archivist"
             isEnabled = "YES">
          </EnvironmentVariable>
