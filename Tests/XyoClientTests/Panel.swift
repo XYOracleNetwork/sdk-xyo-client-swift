@@ -23,7 +23,7 @@ final class PanelTests: XCTestCase {
   }
 
   func testPanelReport() throws {
-    let apiDomain = "https://beta.api.archivist.xyo.network"
+    let apiDomain = "http://localhost:8080"
     let archive = "Archivist"
     _ = XyoAddress()
     let witness = XyoBasicWitness({ _ in
