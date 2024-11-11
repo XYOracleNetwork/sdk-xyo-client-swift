@@ -43,7 +43,7 @@ public class XyoArchivistApiClient {
 
     // Attempt to decode the response data into XyoBoundWitnessJson
     let decodedResponse = try JSONDecoder().decode([XyoBoundWitnessJson].self, from: responseData)
-    // TODO: Return payloads
+    // TODO: Return payloads instead once they're deserialziable
     return decodedResponse[0]
   }
 
