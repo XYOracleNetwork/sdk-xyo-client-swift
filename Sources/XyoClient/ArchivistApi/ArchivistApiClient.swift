@@ -22,17 +22,20 @@ public class XyoArchivistApiClient {
     }
   }
 
+  public var url: String {
+    return "\(self.config.apiDomain)/\(self.config.apiModule)"
+  }
+
   private init(_ config: XyoArchivistApiConfig) {
     self.config = config
   }
 
   public func insert(_ entries: [XyoBoundWitnessJson]) async throws -> XyoBoundWitnessJson {
-    let url = "\(self.config.apiDomain)/\(self.config.apiModule)"
     let body = entries
 
     // Perform the request and await the result
     let responseData = try await AF.request(
-      url,
+      self.url,
       method: .post,
       parameters: body,
       encoder: JSONParameterEncoder.default
@@ -59,7 +62,7 @@ public class XyoArchivistApiClient {
   ) throws {
     let body = entries
     AF.request(
-      "\(self.config.apiDomain)/\(self.config.apiModule)",
+      self.url,
       method: .post,
       parameters: body,
       encoder: JSONParameterEncoder.default
