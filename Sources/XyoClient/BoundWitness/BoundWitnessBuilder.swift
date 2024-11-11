@@ -6,7 +6,7 @@ public enum BoundWitnessBuilderError: Error {
 }
 
 public class BoundWitnessBuilder {
-  private var _witnesses: [AccountInstance] = []
+  private var _accounts: [AccountInstance] = []
   private var _previous_hashes: [String?] = []
   private var _payload_hashes: [String] = []
   private var _payload_schemas: [String] = []
@@ -15,21 +15,23 @@ public class BoundWitnessBuilder {
   public init() {
   }
 
-  public func witness(_ address: XyoAddress, _ previousHash: String? = nil) -> BoundWitnessBuilder {
-    _witnesses.append(address)
+  public func signer(_ account: AccountInstance, _ previousHash: String? = nil)
+    -> BoundWitnessBuilder
+  {
+    _accounts.append(account)
     _previous_hashes.append(previousHash)
     return self
   }
 
-  public func witnesses(_ witnesses: [AbstractWitness]) -> BoundWitnessBuilder {
-    _witnesses.append(contentsOf: witnesses.map { witness in witness.account })
-    _previous_hashes.append(contentsOf: witnesses.map { witness in witness.previousHash })
+  public func signers(_ accounts: [AccountInstance]) -> BoundWitnessBuilder {
+    _accounts.append(contentsOf: accounts)
+    _previous_hashes.append(contentsOf: accounts.map { account in account.previousHash })
     return self
   }
 
   private func hashableFields() -> XyoBoundWitnessBodyJson {
     return XyoBoundWitnessBodyJson(
-      _witnesses.map { witness in witness.address },
+      _accounts.map { witness in witness.address },
       _previous_hashes,
       _payload_hashes,
       _payload_schemas
@@ -51,7 +53,7 @@ public class BoundWitnessBuilder {
   }
 
   public func sign(hash: String) throws -> [String?] {
-    return try self._witnesses.map {
+    return try self._accounts.map {
       try $0.sign(hash: hash)
     }
   }
@@ -64,7 +66,7 @@ public class BoundWitnessBuilder {
     bw._hash = hash
     bw._client = "swift"
     bw._previous_hash = previousHash
-    bw.addresses = _witnesses.map { witness in witness.address }
+    bw.addresses = _accounts.map { witness in witness.address }
     bw.previous_hashes = _previous_hashes
     bw.payload_hashes = _payload_hashes
     bw.payload_schemas = _payload_schemas

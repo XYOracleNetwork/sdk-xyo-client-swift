@@ -62,7 +62,7 @@ public class XyoPanel {
     }.flatMap({ $0 })
     let (bw, _) = try BoundWitnessBuilder()
       .payloads(payloads)
-      .witnesses(witnesses)
+      .signers(witnesses.map({ $0.account }))
       .build(_previous_hash)
     self._previous_hash = bw._hash
     var errors: [String] = []
