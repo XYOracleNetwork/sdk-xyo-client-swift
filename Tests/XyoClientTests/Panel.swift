@@ -23,8 +23,8 @@ final class PanelTests: XCTestCase {
   }
 
   func testPanelReport() throws {
-      let apiDomain = XyoPanel.Defaults.apiDomain
-      let archive = XyoPanel.Defaults.apiModule
+    let apiDomain = XyoPanel.Defaults.apiDomain
+    let archive = XyoPanel.Defaults.apiModule
     _ = XyoAddress()
     let witness = XyoBasicWitness({ _ in
       let payload = XyoPayload("network.xyo.basic")
