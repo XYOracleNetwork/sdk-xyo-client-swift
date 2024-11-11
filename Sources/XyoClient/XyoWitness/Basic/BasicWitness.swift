@@ -16,9 +16,12 @@ open class XyoBasicWitness: XyoWitness {
 
   private let _observer: ObserverClosure
 
-  override public func observe() -> XyoPayload? {
-    let payload = _observer(previousHash)
-    previousHash = try? payload?.hash().toHex()
-    return payload
+  override public func observe() -> [XyoPayload] {
+    if let payload = _observer(previousHash) {
+      previousHash = try? payload.hash().toHex()
+      return [payload]
+    } else {
+      return []
+    }
   }
 }
