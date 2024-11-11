@@ -30,14 +30,12 @@ public class XyoArchivistApiClient {
     self.config = config
   }
 
-  public func insert(_ entries: [XyoBoundWitnessJson]) async throws -> XyoBoundWitnessJson {
-    let body = entries
-
+  public func insert(payloads: [XyoBoundWitnessJson]) async throws -> XyoBoundWitnessJson {
     // Perform the request and await the result
     let responseData = try await AF.request(
       self.url,
       method: .post,
-      parameters: body,
+      parameters: payloads,
       encoder: JSONParameterEncoder.default
     )
     .validate()
