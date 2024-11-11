@@ -10,6 +10,7 @@ public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaPr
     case payload_hashes
     case payload_schemas
     case previous_hashes
+    case query
     case schema
   }
 
