@@ -1,6 +1,10 @@
 import Foundation
 
-open class XyoEventWitness: XyoWitness<XyoPayload, XyoEventPayload> {
+open class XyoEventWitness: XyoWitness {
+
+  public typealias TPayloadIn = XyoPayload
+  public typealias TPayloadOut = XyoEventPayload
+
   public init(_ observer: @escaping ObserverClosure) {
     _observer = observer
     super.init()
@@ -8,7 +12,7 @@ open class XyoEventWitness: XyoWitness<XyoPayload, XyoEventPayload> {
 
   public init(_ address: XyoAddress, _ observer: @escaping ObserverClosure) {
     _observer = observer
-    super.init(address)
+    super.init(address: address)
   }
 
   public typealias ObserverClosure = ((_ previousHash: String?) -> XyoEventPayload?)

@@ -1,6 +1,9 @@
 import Foundation
 
-open class XyoSystemInfoWitness: XyoWitness<XyoPayload, XyoSystemInfoPayload> {
+open class XyoSystemInfoWitness: XyoWitness {
+
+  public typealias TPayloadIn = XyoPayload
+  public typealias TPayloadOut = XyoSystemInfoPayload
 
   var wifiInfo: WifiInformation
 
