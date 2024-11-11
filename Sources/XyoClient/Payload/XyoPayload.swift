@@ -1,14 +1,13 @@
 import Foundation
 
 open class XyoPayload: Encodable {
-
-  public init(_ schema: String, _ previousHash: String? = nil) {
+  public init(_ schema: String) {
     self.schema = schema.lowercased()
-    self.previousHash = previousHash
   }
-
   public var schema: String
-  public var previousHash: String?
+}
+
+extension XyoPayload {
 
   public func hash() throws -> Data {
     let encoder = JSONEncoder()

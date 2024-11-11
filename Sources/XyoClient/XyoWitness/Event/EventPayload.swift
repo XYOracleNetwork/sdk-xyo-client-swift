@@ -5,9 +5,9 @@ open class XyoEventPayload: XyoPayload {
   let time_stamp = Date()
   let event: String
 
-  override init(_ event: String, _ previousHash: String?) {
+  override init(_ event: String) {
     self.event = event
-    super.init("network.xyo.event", previousHash)
+    super.init("network.xyo.event")
   }
 
   enum CodingKeys: String, CodingKey {
