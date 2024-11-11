@@ -55,7 +55,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "XYO_API_DOMAIN"
-            value = "https://beta.api.archivist.xyo.network"
+            value = "http://localhost:8080"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
