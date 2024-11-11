@@ -1,4 +1,4 @@
-open class XyoModule: Module {
+open class AbstractModule: Module {
   public let address: XyoAddress
   public var previousHash: String?
 

@@ -6,13 +6,13 @@ public enum XyoPanelError: Error {
 
 public class XyoPanel {
 
-  public init(archivists: [XyoArchivistApiClient], witnesses: [XyoWitness]) {
+  public init(archivists: [XyoArchivistApiClient], witnesses: [AbstractWitness]) {
     self._archivists = archivists
     self._witnesses = witnesses
   }
 
   public convenience init(
-    archive: String? = nil, apiDomain: String? = nil, witnesses: [XyoWitness]? = nil,
+    archive: String? = nil, apiDomain: String? = nil, witnesses: [AbstractWitness]? = nil,
     token: String? = nil
   ) {
     let apiConfig = XyoArchivistApiConfig(
@@ -23,7 +23,7 @@ public class XyoPanel {
 
   public convenience init(observe: (() -> XyoEventPayload?)?) {
     if observe != nil {
-      var witnesses = [XyoWitness]()
+      var witnesses = [AbstractWitness]()
 
       if let observe = observe {
         witnesses.append(XyoEventWitness(observe))
@@ -38,7 +38,7 @@ public class XyoPanel {
   public typealias XyoPanelReportCallback = (([String]) -> Void)
 
   private var _archivists: [XyoArchivistApiClient]
-  private var _witnesses: [XyoWitness]
+  private var _witnesses: [AbstractWitness]
   private var _previous_hash: String?
 
   public func report() throws -> [XyoPayload] {
@@ -50,11 +50,11 @@ public class XyoPanel {
   }
 
   public func report(
-    _ adhocWitnesses: [XyoWitness], _ closure: XyoPanelReportCallback?
+    _ adhocWitnesses: [AbstractWitness], _ closure: XyoPanelReportCallback?
   ) throws
     -> [XyoPayload]
   {
-    var witnesses: [XyoWitness] = []
+    var witnesses: [AbstractWitness] = []
     witnesses.append(contentsOf: adhocWitnesses)
     witnesses.append(contentsOf: self._witnesses)
     let payloads = witnesses.map { witness in

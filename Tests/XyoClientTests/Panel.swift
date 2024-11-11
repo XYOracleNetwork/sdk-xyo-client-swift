@@ -16,7 +16,7 @@ final class PanelTests: XCTestCase {
     let apiDomain = XyoPanel.Defaults.apiDomain
     let archive = XyoPanel.Defaults.apiModule
     let address = XyoAddress()
-    let witness = XyoWitness(address: address)
+    let witness = AbstractWitness(address: address)
     let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
     XCTAssertNotNil(address)
     XCTAssertNotNil(panel)

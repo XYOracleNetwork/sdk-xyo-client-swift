@@ -1,4 +1,4 @@
-public class XyoApiConfig {
+public class ApiConfig {
   var apiDomain: String
   var token: String?
 

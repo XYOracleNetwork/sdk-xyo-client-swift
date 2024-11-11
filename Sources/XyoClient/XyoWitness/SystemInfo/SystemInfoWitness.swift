@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoSystemInfoWitness: XyoWitness {
+open class XyoSystemInfoWitness: AbstractWitness {
 
   var allowPathMonitor: Bool
 
