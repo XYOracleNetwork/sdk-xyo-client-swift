@@ -46,7 +46,7 @@ public class XyoPanel {
   }
 
   public func event(_ event: String, _ closure: XyoPanelReportCallback?) throws -> [XyoPayload] {
-      try report([XyoEventWitness { previousHash in XyoEventPayload(event) }], closure)
+    try report([XyoEventWitness { previousHash in XyoEventPayload(event) }], closure)
   }
 
   public func report(
