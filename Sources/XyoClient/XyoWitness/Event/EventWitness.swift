@@ -9,7 +9,7 @@ open class XyoEventWitness: AbstractWitness {
 
   public init(_ address: XyoAddress, _ observer: @escaping ObserverClosure) {
     _observer = observer
-    super.init(address: address)
+    super.init(account: address)
   }
 
   public typealias ObserverClosure = (() -> XyoEventPayload?)

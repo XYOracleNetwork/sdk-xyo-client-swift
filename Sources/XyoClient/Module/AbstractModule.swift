@@ -1,11 +1,18 @@
 open class AbstractModule: Module {
 
-  public let address: XyoAddress
+  private let _account: XyoAddress
+
+  public var address: String? {
+    _account.addressHex
+  }
+  public var account: AccountInstance {
+    _account
+  }
   public var previousHash: String? {
-    address.previousHash
+    _account.previousHash
   }
 
-  public init(address: XyoAddress? = nil) {
-    self.address = address ?? XyoAddress()
+  public init(account: XyoAddress? = nil) {
+    self._account = account ?? XyoAddress()
   }
 }
