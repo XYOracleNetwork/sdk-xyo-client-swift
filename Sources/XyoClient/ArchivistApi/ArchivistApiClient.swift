@@ -12,7 +12,7 @@ public class XyoArchivistApiClient {
   private static let ArchivistInsertQuery: XyoPayload = XyoPayload(ArchivistInsertQuerySchema)
 
   let config: XyoArchivistApiConfig
-
+  let queryAccount: AccountInstance
   public var authenticated: Bool {
     return self.token != nil
   }
@@ -30,14 +30,16 @@ public class XyoArchivistApiClient {
     return "\(self.config.apiDomain)/\(self.config.apiModule)"
   }
 
-  private init(_ config: XyoArchivistApiConfig) {
+  private init(_ config: XyoArchivistApiConfig, _ account: AccountInstance?) {
     self.config = config
+    self.queryAccount = account ?? XyoAddress()
   }
 
   public func insert(payloads: [XyoPayload]) async throws -> [XyoPayload] {
     // Build QueryBoundWitness
     let (bw, signed) = try BoundWitnessBuilder()
       .payloads(payloads)
+      .signer(self.queryAccount)
       .query(XyoArchivistApiClient.ArchivistInsertQuery)
       .build()
 
@@ -107,7 +109,7 @@ public class XyoArchivistApiClient {
   }
 
   public static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApiClient {
-    return XyoArchivistApiClient(config)
+    return XyoArchivistApiClient(config, XyoAddress())
   }
 }
 
