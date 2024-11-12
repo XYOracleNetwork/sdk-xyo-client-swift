@@ -1,12 +1,11 @@
 import Foundation
 
-public protocol WalletStatic<T> {
-  associatedtype T: WalletInstance
+public protocol WalletStatic {
 
-  func create(config: XyoPayload) async throws -> T
-  func fromExtendedKey(key: String) async throws -> T
-  func fromMnemonic(mnemonic: String) async throws -> T
-  func fromPhrase(mnemonic: String, path: String?) async throws -> T
-  func fromSeed(seed: Data) async throws -> T
-  func random() -> Any
+  func create(config: XyoPayload) async throws -> WalletInstance
+  func fromExtendedKey(key: String) async throws -> WalletInstance
+  func fromMnemonic(mnemonic: String) async throws -> WalletInstance
+  func fromPhrase(mnemonic: String, path: String?) async throws -> WalletInstance
+  func fromSeed(seed: Data) async throws -> WalletInstance
+  func random() -> WalletInstance
 }

@@ -1,41 +1,49 @@
 import Foundation
 
-public class Account: XyoAddress, AccountInstance, AccountStatic {
-    public typealias T = <#type#>
-    
-    public typealias C = <#type#>
-    
-    public var address: Address = ""
-    
-    public var addressBytes: Data
-    
-    public var previousHash: Hash?
-    
-    public var previousHashBytes: Data?
-    
-    public var `private`: Data?
-    
-    public var `public`: Data?
-    
-    public func sign(hash: Data, previousHash: Data?) async throws -> Data {
-        <#code#>
+public class Account: AccountInstance, AccountStatic {
+  let _account: XyoAddress
+
+  public static func fromPrivateKey(key: Data?) -> AccountInstance {
+    guard let key else {
+      return Account()
     }
-    
-    public func verify(msg: Data, signature: Data) async throws -> Bool {
-        <#code#>
+    let address = XyoAddress(key)
+    return Account(address: address)
+  }
+  public static func random() -> AccountInstance {
+    return Account()
+  }
+
+  init() {
+    self._account = XyoAddress()
+  }
+
+  init(address: XyoAddress) {
+    self._account = address
+  }
+
+  public var address: Address {
+    guard let value = self._account.address else {
+      fatalError("Invalid address")
     }
-    
-    public typealias T = <#type#>
-    
-    public typealias C = <#type#>
-    
-    public static func fromPrivateKey(key: Data) async throws -> any AccountInstance {
-        <#code#>
+    return value as Address
+  }
+
+  public var addressBytes: Data {
+    guard let value = self._account.addressBytes else {
+      fatalError("Invalid addressBytes")
     }
-    
-    public static func random() async throws -> any AccountInstance {
-        <#code#>
+    return value
+  }
+
+  public var previousHash: Hash? {
+    return self._account.previousHash
+  }
+
+  public func sign(hash: Hash) throws -> String {
+    guard let value = try self._account.sign(hash: hash) else {
+      fatalError("Error signing hash")
     }
-    
-    
+    return value
+  }
 }

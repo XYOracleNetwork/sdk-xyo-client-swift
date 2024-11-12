@@ -15,10 +15,10 @@ final class PanelTests: XCTestCase {
   func testCreatePanel() throws {
     let apiDomain = XyoPanel.Defaults.apiDomain
     let archive = XyoPanel.Defaults.apiModule
-    let address = XyoAddress()
-    let witness = AbstractWitness(account: address)
+    let account = Account()
+    let witness = AbstractWitness(account: account)
     let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
-    XCTAssertNotNil(address)
+    XCTAssertNotNil(account)
     XCTAssertNotNil(panel)
   }
 

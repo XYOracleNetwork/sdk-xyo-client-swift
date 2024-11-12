@@ -9,9 +9,9 @@ open class XyoBasicWitness: AbstractWitness {
     super.init()
   }
 
-  public init(address: XyoAddress, observer: @escaping ObserverClosure) {
+  public init(account: AccountInstance, observer: @escaping ObserverClosure) {
     _observer = observer
-    super.init(account: address)
+    super.init(account: account)
   }
 
   public typealias ObserverClosure = (() -> XyoPayload?)

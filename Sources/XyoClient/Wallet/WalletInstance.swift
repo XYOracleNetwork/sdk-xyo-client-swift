@@ -15,4 +15,3 @@ public protocol WalletInstance: AccountInstance {
   func derivePath(path: String) async throws -> WalletInstance
   func neuter() -> WalletInstance
 }
-

@@ -32,7 +32,7 @@ public class XyoArchivistApiClient {
 
   private init(_ config: XyoArchivistApiConfig, _ account: AccountInstance?) {
     self.config = config
-    self.queryAccount = account ?? XyoAddress()
+    self.queryAccount = account ?? Account()
   }
 
   public func insert(payloads: [XyoPayload]) async throws -> [XyoPayload] {
@@ -109,7 +109,7 @@ public class XyoArchivistApiClient {
   }
 
   public static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApiClient {
-    return XyoArchivistApiClient(config, XyoAddress())
+    return XyoArchivistApiClient(config, Account())
   }
 }
 
