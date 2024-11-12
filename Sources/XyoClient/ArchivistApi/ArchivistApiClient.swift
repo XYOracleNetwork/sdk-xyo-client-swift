@@ -54,6 +54,10 @@ public class XyoArchivistApiClient {
 
     return decodedResponse.payloads
   }
+
+  public static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApiClient {
+    return XyoArchivistApiClient(config, Account())
+  }
 }
 
 extension XyoArchivistApiClient {
