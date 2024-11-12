@@ -6,6 +6,7 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, De
     case payload_hashes
     case payload_schemas
     case previous_hashes
+    case query
     case schema
   }
 
@@ -13,16 +14,21 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, De
   public var payload_hashes: [String] = []
   public var payload_schemas: [String] = []
   public var previous_hashes: [String?] = []
+  public var query: String?
   public var schema: String
 
   init(
-    _ addresses: [String?], _ previous_hashes: [String?], _ payload_hashes: [String],
-    _ payload_schemas: [String]
+    _ addresses: [String?],
+    _ previous_hashes: [String?],
+    _ payload_hashes: [String],
+    _ payload_schemas: [String],
+    _ query: String? = nil
   ) {
     self.addresses = addresses
     self.payload_hashes = payload_hashes
     self.payload_schemas = payload_schemas
     self.previous_hashes = previous_hashes
+    self.query = query
     self.schema = "network.xyo.boundwitness"
   }
 
@@ -36,6 +42,7 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, De
     payload_hashes = try values.decode([String].self, forKey: .payload_hashes)
     payload_schemas = try values.decode([String].self, forKey: .payload_schemas)
     previous_hashes = try values.decode([String?].self, forKey: .previous_hashes)
+    query = try values.decode(String?.self, forKey: .query)
     self.schema = "network.xyo.boundwitness"
   }
 
@@ -44,6 +51,9 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, De
     try container.encode(payload_hashes, forKey: .payload_hashes)
     try container.encode(payload_schemas, forKey: .payload_schemas)
     try container.encode(previous_hashes, forKey: .previous_hashes)
+    if query != nil {
+      try container.encode(query, forKey: .query)
+    }
     try container.encode(schema, forKey: .schema)
   }
 

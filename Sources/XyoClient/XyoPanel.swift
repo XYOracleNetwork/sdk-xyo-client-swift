@@ -6,13 +6,13 @@ public enum XyoPanelError: Error {
 
 public class XyoPanel {
 
-  public init(archivists: [XyoArchivistApiClient], witnesses: [XyoWitness]) {
+  public init(archivists: [XyoArchivistApiClient], witnesses: [AbstractWitness]) {
     self._archivists = archivists
     self._witnesses = witnesses
   }
 
   public convenience init(
-    archive: String? = nil, apiDomain: String? = nil, witnesses: [XyoWitness]? = nil,
+    archive: String? = nil, apiDomain: String? = nil, witnesses: [AbstractWitness]? = nil,
     token: String? = nil
   ) {
     let apiConfig = XyoArchivistApiConfig(
@@ -23,7 +23,7 @@ public class XyoPanel {
 
   public convenience init(observe: (() -> XyoEventPayload?)?) {
     if observe != nil {
-      var witnesses = [XyoWitness]()
+      var witnesses = [AbstractWitness]()
 
       if let observe = observe {
         witnesses.append(XyoEventWitness(observe))
@@ -38,7 +38,7 @@ public class XyoPanel {
   public typealias XyoPanelReportCallback = (([String]) -> Void)
 
   private var _archivists: [XyoArchivistApiClient]
-  private var _witnesses: [XyoWitness]
+  private var _witnesses: [AbstractWitness]
   private var _previous_hash: String?
 
   public func report() throws -> [XyoPayload] {
@@ -49,12 +49,44 @@ public class XyoPanel {
     try report([XyoEventWitness { XyoEventPayload(event) }], closure)
   }
 
+  public func report() async throws
+    -> [XyoPayload]
+  {
+    let payloads = self._witnesses.map { witness in
+      witness.observe()
+    }.flatMap({ $0 })
+    let (bw, _) = try BoundWitnessBuilder()
+      .payloads(payloads)
+      .signers(self._witnesses.map({ $0.account }))
+      .build(_previous_hash)
+    self._previous_hash = bw._hash
+    var allResults: [[XyoPayload]] = []
+    await withTaskGroup(of: [XyoPayload]?.self) { group in
+      for instance in _archivists {
+        group.addTask {
+          do {
+            return try await instance.insert(payloads: payloads)
+          } catch {
+            print("Error in insert for instance \(instance): \(error)")
+            return nil
+          }
+        }
+      }
+      for await result in group {
+        if let result = result {
+          allResults.append(result)
+        }
+      }
+    }
+    return allResults.flatMap { $0 }
+  }
+
   public func report(
-    _ adhocWitnesses: [XyoWitness], _ closure: XyoPanelReportCallback?
+    _ adhocWitnesses: [AbstractWitness], _ closure: XyoPanelReportCallback?
   ) throws
     -> [XyoPayload]
   {
-    var witnesses: [XyoWitness] = []
+    var witnesses: [AbstractWitness] = []
     witnesses.append(contentsOf: adhocWitnesses)
     witnesses.append(contentsOf: self._witnesses)
     let payloads = witnesses.map { witness in
@@ -62,7 +94,7 @@ public class XyoPanel {
     }.flatMap({ $0 })
     let (bw, _) = try BoundWitnessBuilder()
       .payloads(payloads)
-      .witnesses(witnesses)
+      .signers(witnesses.map({ $0.account }))
       .build(_previous_hash)
     self._previous_hash = bw._hash
     var errors: [String] = []

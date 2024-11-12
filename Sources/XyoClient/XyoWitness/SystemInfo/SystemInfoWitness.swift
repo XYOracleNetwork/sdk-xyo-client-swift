@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoSystemInfoWitness: XyoWitness {
+open class XyoSystemInfoWitness: AbstractWitness {
 
   var allowPathMonitor: Bool
 
@@ -10,7 +10,6 @@ open class XyoSystemInfoWitness: XyoWitness {
 
   public override func observe() -> [XyoPayload] {
     let payload = XyoSystemInfoPayload(WifiInformation(allowPathMonitor))
-    previousHash = try? payload.hash().toHex()
     return [payload]
   }
 }

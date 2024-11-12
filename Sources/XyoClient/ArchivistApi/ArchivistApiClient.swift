@@ -7,8 +7,12 @@ public struct XyoApiBoundWitnessBody: Encodable {
 }
 
 public class XyoArchivistApiClient {
-  let config: XyoArchivistApiConfig
 
+  private static let ArchivistInsertQuerySchema = "network.xyo.query.archivist.insert"
+  private static let ArchivistInsertQuery: XyoPayload = XyoPayload(ArchivistInsertQuerySchema)
+
+  let config: XyoArchivistApiConfig
+  let queryAccount: AccountInstance
   public var authenticated: Bool {
     return self.token != nil
   }
@@ -26,17 +30,24 @@ public class XyoArchivistApiClient {
     return "\(self.config.apiDomain)/\(self.config.apiModule)"
   }
 
-  private init(_ config: XyoArchivistApiConfig) {
+  private init(_ config: XyoArchivistApiConfig, _ account: AccountInstance?) {
     self.config = config
+    self.queryAccount = account ?? XyoAddress()
   }
 
-  public func insert(payloads: [XyoBoundWitnessJson]) async throws -> XyoBoundWitnessJson {
-    // TODO: Build query bound witness
+  public func insert(payloads: [XyoPayload]) async throws -> [XyoPayload] {
+    // Build QueryBoundWitness
+    let (bw, signed) = try BoundWitnessBuilder()
+      .payloads(payloads)
+      .signer(self.queryAccount)
+      .query(XyoArchivistApiClient.ArchivistInsertQuery)
+      .build()
+
     // Perform the request and await the result
     let responseData = try await AF.request(
       self.url,
       method: .post,
-      parameters: payloads,
+      parameters: ModuleQueryResult(bw: bw, payloads: signed),
       encoder: JSONParameterEncoder.default
     )
     .validate()
@@ -44,9 +55,9 @@ public class XyoArchivistApiClient {
     .value
 
     // Attempt to decode the response data into XyoBoundWitnessJson
-    let decodedResponse = try JSONDecoder().decode([XyoBoundWitnessJson].self, from: responseData)
-    // TODO: Return payloads instead once they're deserializable
-    return decodedResponse[0]
+    let decodedResponse = try JSONDecoder().decode(ModuleQueryResult.self, from: responseData)
+
+    return decodedResponse.payloads
   }
 
   public func postBoundWitnesses(
@@ -98,7 +109,7 @@ public class XyoArchivistApiClient {
   }
 
   public static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApiClient {
-    return XyoArchivistApiClient(config)
+    return XyoArchivistApiClient(config, XyoAddress())
   }
 }
 

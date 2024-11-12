@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoBasicWitness: XyoWitness {
+open class XyoBasicWitness: AbstractWitness {
 
   public typealias TPayloadOut = XyoPayload
 
@@ -11,16 +11,15 @@ open class XyoBasicWitness: XyoWitness {
 
   public init(address: XyoAddress, observer: @escaping ObserverClosure) {
     _observer = observer
-    super.init(address: address)
+    super.init(account: address)
   }
 
-  public typealias ObserverClosure = ((_ previousHash: String?) -> XyoPayload?)
+  public typealias ObserverClosure = (() -> XyoPayload?)
 
   private let _observer: ObserverClosure
 
   override public func observe() -> [XyoPayload] {
-    if let payload = _observer(previousHash) {
-      previousHash = try? payload.hash().toHex()
+    if let payload = _observer() {
       return [payload]
     } else {
       return []

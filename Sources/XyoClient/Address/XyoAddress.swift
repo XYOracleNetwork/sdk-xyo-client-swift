@@ -1,8 +1,9 @@
 import Foundation
 import secp256k1
 
-public class XyoAddress {
+public class XyoAddress: AccountInstance {
 
+  private var _previousHash: String? = nil
   private var _privateKey: secp256k1.Signing.PrivateKey?
 
   public init(_ privateKey: Data? = generateRandomBytes()) {
@@ -12,6 +13,10 @@ public class XyoAddress {
 
   convenience init(privateKey: String) {
     self.init(privateKey.hexToData())
+  }
+
+  public var previousHash: String? {
+    return _previousHash
   }
 
   public var privateKey: secp256k1.Signing.PrivateKey? {
@@ -48,6 +53,10 @@ public class XyoAddress {
     return bytes.toHex(64)
   }
 
+  public var address: String? {
+    return self.addressHex
+  }
+
   public var addressBytes: Data? {
     guard let keccakBytes = keccakBytes else { return nil }
     return keccakBytes.subdata(in: 12..<keccakBytes.count)
@@ -58,11 +67,13 @@ public class XyoAddress {
     return bytes.toHex(40)
   }
 
-  public func sign(_ hash: String) throws -> String? {
+  public func sign(hash: String) throws -> String? {
     let message = hash.hexToData()
     guard message != nil else { return nil }
     let sig = self.signature(message!)
-    return sig?.dataRepresentation.toHex()
+    let ret = sig?.dataRepresentation.toHex()
+    _previousHash = hash
+    return ret
   }
 
   public func signature(_ hash: Data) -> secp256k1.Signing.ECDSASignature? {
@@ -91,7 +102,9 @@ public class XyoAddress {
       }
 
       let rawRepresentation = Data(
-        bytes: &signature2.data, count: MemoryLayout.size(ofValue: signature2.data))
+        bytes: &signature2.data,
+        count: MemoryLayout.size(ofValue: signature2.data)
+      )
 
       return try secp256k1.Signing.ECDSASignature(dataRepresentation: rawRepresentation)
     } catch {
