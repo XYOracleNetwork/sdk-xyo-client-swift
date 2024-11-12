@@ -1,5 +1,5 @@
 {
-  "originHash" : "cea9641f58d9d633c6fa2e1285325a58f7d718edd6fe202ad7b8d75b337aca44",
+  "originHash" : "f3249e1a536ee6e8dbb38e511a584a952ad70dd2ca47f9b2313e3410784259cc",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -17,15 +17,6 @@
       "state" : {
         "revision" : "57ce9af6db14e0114af631ace25231a9d0ccccbd",
         "version" : "0.18.0"
-      }
-    },
-    {
-      "identity" : "wallet-core",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/trustwallet/wallet-core",
-      "state" : {
-        "branch" : "master",
-        "revision" : "6be89c9b0dc46bcafeb57fc68c333148f06df9e0"
       }
     }
   ],

@@ -1,9 +1,8 @@
 import Foundation
-import WalletCore
 
 public class Wallet {
 
-//    public class Wallet: WalletInstance, WalletStatic {
+// public class Wallet: WalletInstance, WalletStatic {
 //  private let _wallet: HDWallet
     
     init() {
