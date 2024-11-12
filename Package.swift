@@ -20,6 +20,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.2.0")),
     .package(url: "https://github.com/21-DOT-DEV/swift-secp256k1", .upToNextMinor(from: "0.18.0")),
+    .package(url: "https://github.com/trustwallet/wallet-core", .upToNextMajor(from: "4.1.16")),
   ],
   targets: [
     // Targets are the basic building blocks of a package. A target can define a module or a test suite.

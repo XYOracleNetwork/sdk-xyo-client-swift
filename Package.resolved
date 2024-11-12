@@ -1,25 +1,33 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Alamofire",
-        "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
-        "state": {
-          "branch": null,
-          "revision": "e16d3481f5ed35f0472cb93350085853d754913f",
-          "version": "5.10.1"
-        }
-      },
-      {
-        "package": "swift-secp256k1",
-        "repositoryURL": "https://github.com/21-DOT-DEV/swift-secp256k1",
-        "state": {
-          "branch": null,
-          "revision": "57ce9af6db14e0114af631ace25231a9d0ccccbd",
-          "version": "0.18.0"
-        }
+  "originHash" : "57e541d221a5f56c5dfca469d43707c035cd9fd66c5b2d49779cda54d3aa00d3",
+  "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire.git",
+      "state" : {
+        "revision" : "e16d3481f5ed35f0472cb93350085853d754913f",
+        "version" : "5.10.1"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "swift-secp256k1",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/21-DOT-DEV/swift-secp256k1",
+      "state" : {
+        "revision" : "57ce9af6db14e0114af631ace25231a9d0ccccbd",
+        "version" : "0.18.0"
+      }
+    },
+    {
+      "identity" : "wallet-core",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/trustwallet/wallet-core",
+      "state" : {
+        "revision" : "c4907d444673e7eb4c131b67ce2ced5b2d2cb09e",
+        "version" : "4.1.16"
+      }
+    }
+  ],
+  "version" : 3
 }
