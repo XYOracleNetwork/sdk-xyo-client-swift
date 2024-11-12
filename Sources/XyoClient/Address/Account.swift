@@ -2,6 +2,7 @@ import Foundation
 
 public class Account: AccountInstance, AccountStatic {
   let _account: XyoAddress
+  var _previousHash: String? = nil
 
   public static func fromPrivateKey(key: Data?) -> AccountInstance {
     guard let key else {
@@ -10,6 +11,7 @@ public class Account: AccountInstance, AccountStatic {
     let address = XyoAddress(key)
     return Account(address: address)
   }
+
   public static func random() -> AccountInstance {
     return Account()
   }
@@ -37,13 +39,14 @@ public class Account: AccountInstance, AccountStatic {
   }
 
   public var previousHash: Hash? {
-    return self._account.previousHash
+    return self._previousHash
   }
 
   public func sign(hash: Hash) throws -> String {
     guard let value = try self._account.sign(hash: hash) else {
       fatalError("Error signing hash")
     }
+    _previousHash = value
     return value
   }
 }
