@@ -23,7 +23,10 @@ public class ModuleQueryResult: Encodable, Decodable {
     var container = try decoder.unkeyedContainer()
     // Decode elements in the expected order from the array
     bw = try container.decode(XyoBoundWitnessJson.self)
-    payloads = try container.decode([XyoPayload].self)
-    errors = try container.decode([XyoPayload].self)
+    // TODO: Decodable Payloads
+    // payloads = try container.decode([XyoPayload].self)
+    // errors = try container.decode([XyoPayload].self)
+    payloads = []
+    errors = []
   }
 }
