@@ -49,6 +49,38 @@ public class XyoPanel {
     try report([XyoEventWitness { XyoEventPayload(event) }], closure)
   }
 
+  public func report() async throws
+    -> [XyoPayload]
+  {
+    let payloads = self._witnesses.map { witness in
+      witness.observe()
+    }.flatMap({ $0 })
+    let (bw, _) = try BoundWitnessBuilder()
+      .payloads(payloads)
+      .signers(self._witnesses.map({ $0.account }))
+      .build(_previous_hash)
+    self._previous_hash = bw._hash
+    var allResults: [[XyoPayload]] = []
+    await withTaskGroup(of: [XyoPayload]?.self) { group in
+      for instance in _archivists {
+        group.addTask {
+          do {
+            return try await instance.insert(payloads: payloads)
+          } catch {
+            print("Error in insert for instance \(instance): \(error)")
+            return nil
+          }
+        }
+      }
+      for await result in group {
+        if let result = result {
+          allResults.append(result)
+        }
+      }
+    }
+    return allResults.flatMap { $0 }
+  }
+
   public func report(
     _ adhocWitnesses: [AbstractWitness], _ closure: XyoPanelReportCallback?
   ) throws
