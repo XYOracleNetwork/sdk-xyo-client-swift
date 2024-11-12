@@ -12,6 +12,6 @@ public protocol WalletInstance: AccountInstance {
   var privateKey: String { get }
   var publicKey: String { get }
 
-  func derivePath(path: String) async throws -> WalletInstance
+  func derivePath(path: String) throws -> WalletInstance
   func neuter() -> WalletInstance
 }

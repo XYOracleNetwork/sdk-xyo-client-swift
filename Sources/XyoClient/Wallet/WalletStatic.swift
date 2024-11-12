@@ -2,10 +2,10 @@ import Foundation
 
 public protocol WalletStatic {
 
-  func create(config: XyoPayload) async throws -> WalletInstance
-  func fromExtendedKey(key: String) async throws -> WalletInstance
-  func fromMnemonic(mnemonic: String) async throws -> WalletInstance
-  func fromPhrase(mnemonic: String, path: String?) async throws -> WalletInstance
-  func fromSeed(seed: Data) async throws -> WalletInstance
+//  func create(config: XyoPayload) throws -> WalletInstance
+//  func fromExtendedKey(key: String) throws -> WalletInstance
+//  func fromMnemonic(mnemonic: String) throws -> WalletInstance
+//  func fromPhrase(mnemonic: String, path: String?) throws -> WalletInstance
+//  func fromSeed(seed: Data) throws -> WalletInstance
   func random() -> WalletInstance
 }
