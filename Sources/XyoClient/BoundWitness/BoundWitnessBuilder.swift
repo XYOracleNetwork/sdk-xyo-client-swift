@@ -78,6 +78,9 @@ public class BoundWitnessBuilder {
     bw.previous_hashes = _previous_hashes
     bw.payload_hashes = _payload_hashes
     bw.payload_schemas = _payload_schemas
+    if _query != nil {
+      bw.query = _query
+    }
     return (bw, _payloads)
   }
 
