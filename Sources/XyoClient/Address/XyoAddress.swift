@@ -1,7 +1,7 @@
 import Foundation
 import secp256k1
 
-public class XyoAddress: AccountInstance {
+public class XyoAddress {
 
   private var _previousHash: String? = nil
   private var _privateKey: secp256k1.Signing.PrivateKey?
