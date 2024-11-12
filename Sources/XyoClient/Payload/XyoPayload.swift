@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoPayload: Encodable {
+open class XyoPayload: Encodable, Decodable {
   public init(_ schema: String) {
     self.schema = schema.lowercased()
   }
