@@ -18,6 +18,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/21-DOT-DEV/swift-secp256k1", .upToNextMinor(from: "0.18.0")),
     .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.2.0")),
+    .package(url: "https://github.com/trustwallet/wallet-core", branch: "master"),
   ],
   targets: [
     .target(name: "keccak"),
@@ -25,6 +26,8 @@ let package = Package(
       name: "XyoClient",
       dependencies: [
         .product(name: "secp256k1", package: "swift-secp256k1"),
+        .product(name: "WalletCore", package: "wallet-core"),
+        .product(name: "SwiftProtobuf", package: "wallet-core"),
         "Alamofire",
         "keccak",
       ]
