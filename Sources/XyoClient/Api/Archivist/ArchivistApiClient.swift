@@ -55,7 +55,14 @@ public class XyoArchivistApiClient {
     // Attempt to decode the response data
     let decodedResponse = try JSONDecoder().decode(
       ApiResponseEnvelope<ModuleQueryResult>.self, from: responseData)
-    return decodedResponse.data?.payloads ?? []
+    if decodedResponse.data?.bw.payload_hashes.count == payloads.count {
+      // TODO: Deeper checks like hash, etc.
+      // TODO: Return Success
+      return decodedResponse.data?.payloads ?? payloads
+    } else {
+      // TODO: Indicate Error
+      return []
+    }
   }
 
   public static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApiClient {
