@@ -22,7 +22,7 @@ final class PanelTests: XCTestCase {
     XCTAssertNotNil(panel)
   }
 
-  func testAsyncReport() async throws {
+  func testAsyncReport() async {
     let apiDomain = XyoPanel.Defaults.apiDomain
     let archive = XyoPanel.Defaults.apiModule
     _ = XyoAddress()
@@ -33,15 +33,19 @@ final class PanelTests: XCTestCase {
     let panel = XyoPanel(
       archive: archive, apiDomain: apiDomain, witnesses: [witness, XyoSystemInfoWitness()])
 
-    // Act: Call the report method
-    let result = try await panel.report()
-    XCTAssertTrue(result.isEmpty, "Expected empty result from report for readonly SDK")
-    // TODO: Deserialize the response
-    // XCTAssertFalse(result.isEmpty, "Expected non-empty result from report")
-    // XCTAssertEqual(result.count, 1, "Expected one payload in the result")
+    do {
+      let result = try await panel.report()
+      XCTAssertTrue(result.isEmpty, "Expected empty result from report for readonly SDK")
+
+      // TODO: Deserialize the response
+      // XCTAssertFalse(result.isEmpty, "Expected non-empty result from report")
+      // XCTAssertEqual(result.count, 1, "Expected one payload in the result")
+    } catch {
+      XCTFail("Report method threw an error: \(error)")
+    }
   }
 
-  func testPanelReport() async throws {
+  func testPanelReport() async {
     let apiDomain = XyoPanel.Defaults.apiDomain
     let archive = XyoPanel.Defaults.apiModule
     _ = XyoAddress()
@@ -51,21 +55,31 @@ final class PanelTests: XCTestCase {
     })
     let panel = XyoPanel(
       archive: archive, apiDomain: apiDomain, witnesses: [witness, XyoSystemInfoWitness()])
-    let result = try await panel.report()
-    XCTAssertTrue(result.isEmpty, "Expected empty result from report for readonly SDK")
-    // TODO: Deserialize the response
-    // XCTAssertFalse(result.isEmpty, "Expected non-empty result from report")
-    // XCTAssertEqual(result.count, 1, "Expected one payload in the result")
+    do {
+      let result = try await panel.report()
+      XCTAssertTrue(result.isEmpty, "Expected empty result from report for readonly SDK")
+
+      // TODO: Deserialize the response
+      // XCTAssertFalse(result.isEmpty, "Expected non-empty result from report")
+      // XCTAssertEqual(result.count, 1, "Expected one payload in the result")
+    } catch {
+      XCTFail("Report method threw an error: \(error)")
+    }
   }
 
-  func testSimplePanelReport() async throws {
+  func testSimplePanelReport() async {
     let panel = XyoPanel {
       return nil
     }
-    let result = try await panel.report()
-    XCTAssertTrue(result.isEmpty, "Expected empty result from report for readonly SDK")
-    // TODO: Deserialize the response
-    // XCTAssertFalse(result.isEmpty, "Expected non-empty result from report")
-    // XCTAssertEqual(result.count, 1, "Expected one payload in the result")
+    do {
+      let result = try await panel.report()
+      XCTAssertTrue(result.isEmpty, "Expected empty result from report for readonly SDK")
+
+      // TODO: Deserialize the response
+      // XCTAssertFalse(result.isEmpty, "Expected non-empty result from report")
+      // XCTAssertEqual(result.count, 1, "Expected one payload in the result")
+    } catch {
+      XCTFail("Report method threw an error: \(error)")
+    }
   }
 }
