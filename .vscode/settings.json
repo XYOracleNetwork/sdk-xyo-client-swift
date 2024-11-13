@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["Alamofire", "keccak", "Protobuf", "secp", "unkeyed"]
+  "cSpell.words": [
+    "Alamofire",
+    "boundwitness",
+    "keccak",
+    "Protobuf",
+    "secp",
+    "unkeyed"
+  ]
 }
