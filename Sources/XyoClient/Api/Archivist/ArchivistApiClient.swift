@@ -49,10 +49,13 @@ public class XyoArchivistApiClient {
     .serializingData()
     .value
 
-    // Attempt to decode the response data into XyoBoundWitnessJson
-    let decodedResponse = try JSONDecoder().decode(ModuleQueryResult.self, from: responseData)
+    // let responseString = String(data: responseData, encoding: .utf8)
+    // print(responseString ?? "Failed to convert response data to String")
 
-    return decodedResponse.payloads
+    // Attempt to decode the response data
+    let decodedResponse = try JSONDecoder().decode(
+      ApiResponseEnvelope<ModuleQueryResult>.self, from: responseData)
+    return decodedResponse.data?.payloads ?? []
   }
 
   public static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApiClient {
