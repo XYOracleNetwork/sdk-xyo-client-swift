@@ -22,7 +22,7 @@ public class BoundWitness: XyoPayload, XyoBoundWitnessBodyProtocol, XyoBoundWitn
 
   public var previous_hashes: [String?] = []
 
-  public var query: String?
+  public var query: String? = nil
 
   init() {
     super.init(BoundWitnessSchema)
@@ -47,7 +47,7 @@ public class BoundWitness: XyoPayload, XyoBoundWitnessBodyProtocol, XyoBoundWitn
     payload_hashes = try values.decode([String].self, forKey: .payload_hashes)
     payload_schemas = try values.decode([String].self, forKey: .payload_schemas)
     previous_hashes = try values.decode([String?].self, forKey: .previous_hashes)
-    query = try values.decode(String?.self, forKey: .query)
+    query = try values.decodeIfPresent(String.self, forKey: .query)
     super.init(BoundWitnessSchema)
   }
 
