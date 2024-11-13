@@ -41,14 +41,6 @@ public class XyoPanel {
   private var _witnesses: [AbstractWitness]
   private var _previous_hash: String?
 
-  public func report() throws -> [XyoPayload] {
-    try report(nil)
-  }
-
-  public func event(_ event: String, _ closure: XyoPanelReportCallback?) throws -> [XyoPayload] {
-    try report([XyoEventWitness { XyoEventPayload(event) }], closure)
-  }
-
   public func report() async throws
     -> [XyoPayload]
   {
@@ -79,42 +71,6 @@ public class XyoPanel {
       }
     }
     return allResults.flatMap { $0 }
-  }
-
-  public func report(
-    _ adhocWitnesses: [AbstractWitness], _ closure: XyoPanelReportCallback?
-  ) throws
-    -> [XyoPayload]
-  {
-    var witnesses: [AbstractWitness] = []
-    witnesses.append(contentsOf: adhocWitnesses)
-    witnesses.append(contentsOf: self._witnesses)
-    let payloads = witnesses.map { witness in
-      witness.observe()
-    }.flatMap({ $0 })
-    let (bw, _) = try BoundWitnessBuilder()
-      .payloads(payloads)
-      .signers(witnesses.map({ $0.account }))
-      .build(_previous_hash)
-    self._previous_hash = bw._hash
-    var errors: [String] = []
-    var archivistCount = _archivists.count
-    try _archivists.forEach { archivist in
-      try archivist.postBoundWitness(bw) { error in
-        archivistCount = archivistCount - 1
-        if let errorExists = error {
-          errors.append(errorExists)
-        }
-        if archivistCount == 0 {
-          closure?(errors)
-        }
-      }
-    }
-    return payloads.compactMap { $0 }
-  }
-
-  public func report(_ closure: XyoPanelReportCallback?) throws -> [XyoPayload] {
-    return try self.report([], closure)
   }
 
   struct Defaults {

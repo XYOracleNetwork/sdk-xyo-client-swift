@@ -1,10 +1,10 @@
 import Foundation
 
 public class ModuleQueryResult: Encodable, Decodable {
-  var bw: XyoBoundWitnessJson
+  var bw: BoundWitness
   var payloads: [XyoPayload]
   var errors: [XyoPayload]
-  init(bw: XyoBoundWitnessJson, payloads: [XyoPayload] = [], errors: [XyoPayload] = []) {
+  init(bw: BoundWitness, payloads: [XyoPayload] = [], errors: [XyoPayload] = []) {
     self.bw = bw
     self.payloads = payloads
     self.errors = errors
@@ -22,7 +22,7 @@ public class ModuleQueryResult: Encodable, Decodable {
   public required init(from decoder: Decoder) throws {
     var container = try decoder.unkeyedContainer()
     // Decode elements in the expected order from the array
-    bw = try container.decode(XyoBoundWitnessJson.self)
+    bw = try container.decode(BoundWitness.self)
     // TODO: Decodable Payloads
     // payloads = try container.decode([XyoPayload].self)
     // errors = try container.decode([XyoPayload].self)

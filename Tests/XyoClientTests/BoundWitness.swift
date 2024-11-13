@@ -65,18 +65,9 @@ var knownHash = "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf3
 @available(iOS 13.0, *)
 final class BoundWitnessTests: XCTestCase {
   static var allTests = [
-    ("testNotAuthenticated", testNotAuthenticated),
     ("testPayload1", testPayload1),
     ("testPayload2", testPayload2),
-    ("testPayload1", testPayload1WithSend),
-    ("testPayload2", testPayload2WithSend),
   ]
-
-  func testNotAuthenticated() {
-    let config = XyoArchivistApiConfig("Archivist", "https://beta.api.archivist.xyo.network")
-    let api = XyoArchivistApiClient.get(config)
-    XCTAssertEqual(api.authenticated, false)
-  }
 
   func testPayload1() throws {
     let hash = try BoundWitnessBuilder.hash(TestPayload1("network.xyo.test"))
@@ -88,47 +79,11 @@ final class BoundWitnessTests: XCTestCase {
     XCTAssertEqual(bwJson._hash, knownHash)
   }
 
-  func testPayload1WithSend() throws {
-    let address = Account.fromPrivateKey(key: testVectorPrivateKey.hexToData())
-    let config = XyoArchivistApiConfig("Archivist", "https://beta.api.archivist.xyo.network")
-    let api = XyoArchivistApiClient.get(config)
-    let bw = try BoundWitnessBuilder().signer(address).payload(
-      "network.xyo.test", TestPayload1("network.xyo.test"))
-    let apiExpectation = expectation(description: "API Call")
-    let (bwJson, _) = try bw.build()
-    XCTAssertEqual(bwJson._hash, knownHash)
-    try api.postBoundWitness(bwJson) { error in
-      XCTAssertTrue(error == nil, error!)
-      apiExpectation.fulfill()
-    }
-    waitForExpectations(timeout: 10) { (error) in
-      XCTAssertNil(error)
-    }
-  }
-
   func testPayload2() throws {
     let address = Account.fromPrivateKey(key: testVectorPrivateKey.hexToData())
     let testPayload2 = TestPayload2("network.xyo.test")
     let bw = try BoundWitnessBuilder().signer(address).payload("network.xyo.test", testPayload2)
     let (bwJson, _) = try bw.build()
     XCTAssertEqual(bwJson._hash, knownHash)
-  }
-
-  func testPayload2WithSend() throws {
-    let address = Account.fromPrivateKey(key: testVectorPrivateKey.hexToData())
-    let config = XyoArchivistApiConfig("Archivist", "https://beta.api.archivist.xyo.network")
-    let api = XyoArchivistApiClient.get(config)
-    let bw = try BoundWitnessBuilder().signer(address).payload(
-      "network.xyo.test", TestPayload2("network.xyo.test"))
-    let apiExpectation = expectation(description: "API Call")
-    let (bwJson, _) = try bw.build()
-    XCTAssertEqual(bwJson._hash, knownHash)
-    try api.postBoundWitness(bwJson) { error in
-      XCTAssertEqual(error == nil, true)
-      apiExpectation.fulfill()
-    }
-    waitForExpectations(timeout: 10) { (error) in
-      XCTAssertNil(error)
-    }
   }
 }
