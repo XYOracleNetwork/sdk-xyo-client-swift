@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoSchemaValidator {
+open class SchemaValidator {
     public var schema: String
     public var parts: [Substring]
 

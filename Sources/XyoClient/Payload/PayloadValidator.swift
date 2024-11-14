@@ -1,12 +1,12 @@
 import Foundation
 
-open class XyoPayloadValidator {
+open class PayloadValidator {
     public var payload: Payload
-    private var schemaValidator: XyoSchemaValidator
+    private var schemaValidator: SchemaValidator
 
     public init(_ payload: Payload) {
         self.payload = payload
-        self.schemaValidator = XyoSchemaValidator(payload.schema)
+        self.schemaValidator = SchemaValidator(payload.schema)
     }
 
     public func allDynamic(closure: (_ errors: [String]) -> Void) {
