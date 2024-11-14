@@ -40,8 +40,7 @@ public class BoundWitnessBuilder {
         )
     }
 
-    public func payload<T: Payload>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder
-    {
+    public func payload<T: Payload>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
         _payloads.append(payload)
         _payload_hashes.append(try payload.hash().toHex())
         _payload_schemas.append(schema)
