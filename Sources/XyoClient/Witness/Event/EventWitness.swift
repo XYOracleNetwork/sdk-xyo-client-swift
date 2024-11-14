@@ -16,7 +16,7 @@ open class XyoEventWitness: AbstractWitness {
 
     private let _observer: ObserverClosure
 
-    public override func observe() -> [XyoPayload] {
+    public override func observe() -> [Payload] {
         if let payload = _observer() {
             return [payload]
         } else {

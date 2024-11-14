@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoEventPayload: XyoPayload {
+open class XyoEventPayload: Payload {
 
     let time_stamp = Date()
     let event: String

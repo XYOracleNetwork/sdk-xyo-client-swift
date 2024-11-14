@@ -1,10 +1,10 @@
 import Foundation
 
 open class XyoPayloadValidator {
-    public var payload: XyoPayload
+    public var payload: Payload
     private var schemaValidator: XyoSchemaValidator
 
-    public init(_ payload: XyoPayload) {
+    public init(_ payload: Payload) {
         self.payload = payload
         self.schemaValidator = XyoSchemaValidator(payload.schema)
     }

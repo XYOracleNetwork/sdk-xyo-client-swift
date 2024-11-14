@@ -10,7 +10,7 @@ public class BoundWitnessBuilder {
     private var _previous_hashes: [String?] = []
     private var _payload_hashes: [String] = []
     private var _payload_schemas: [String] = []
-    private var _payloads: [XyoPayload] = []
+    private var _payloads: [Payload] = []
     private var _query: String? = nil
 
     public init() {
@@ -40,7 +40,7 @@ public class BoundWitnessBuilder {
         )
     }
 
-    public func payload<T: XyoPayload>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder
+    public func payload<T: Payload>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder
     {
         _payloads.append(payload)
         _payload_hashes.append(try payload.hash().toHex())
@@ -48,7 +48,7 @@ public class BoundWitnessBuilder {
         return self
     }
 
-    public func payloads(_ payloads: [XyoPayload]) throws -> BoundWitnessBuilder {
+    public func payloads(_ payloads: [Payload]) throws -> BoundWitnessBuilder {
         _payloads.append(contentsOf: payloads)
         _payload_hashes.append(
             contentsOf: try payloads.map { payload in try payload.hash().toHex() })
@@ -56,7 +56,7 @@ public class BoundWitnessBuilder {
         return self
     }
 
-    public func query(_ payload: XyoPayload) throws -> BoundWitnessBuilder {
+    public func query(_ payload: Payload) throws -> BoundWitnessBuilder {
         self._query = try payload.hash().toHex()
         let _ = try self.payload(payload.schema, payload)
         return self
@@ -68,7 +68,7 @@ public class BoundWitnessBuilder {
         }
     }
 
-    public func build(_ previousHash: String? = nil) throws -> (BoundWitness, [XyoPayload]) {
+    public func build(_ previousHash: String? = nil) throws -> (BoundWitness, [Payload]) {
         let bw = BoundWitness()
         let hashable = hashableFields()
         let hash = try BoundWitnessBuilder.hash(hashable)

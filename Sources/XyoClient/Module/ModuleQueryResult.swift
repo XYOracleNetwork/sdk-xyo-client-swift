@@ -2,9 +2,9 @@ import Foundation
 
 public class ModuleQueryResult: Encodable, Decodable {
     var bw: BoundWitness
-    var payloads: [XyoPayload]
-    var errors: [XyoPayload]
-    init(bw: BoundWitness, payloads: [XyoPayload] = [], errors: [XyoPayload] = []) {
+    var payloads: [Payload]
+    var errors: [Payload]
+    init(bw: BoundWitness, payloads: [Payload] = [], errors: [Payload] = []) {
         self.bw = bw
         self.payloads = payloads
         self.errors = errors

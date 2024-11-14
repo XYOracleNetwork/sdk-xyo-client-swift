@@ -4,7 +4,7 @@ import Foundation
 public class XyoArchivistApiClient {
 
     private static let ArchivistInsertQuerySchema = "network.xyo.query.archivist.insert"
-    private static let ArchivistInsertQuery: XyoPayload = XyoPayload(ArchivistInsertQuerySchema)
+    private static let ArchivistInsertQuery: Payload = Payload(ArchivistInsertQuerySchema)
 
     let config: XyoArchivistApiConfig
     let queryAccount: AccountInstance
@@ -31,7 +31,7 @@ public class XyoArchivistApiClient {
     }
 
     @available(iOS 15, *)
-    public func insert(payloads: [XyoPayload]) async throws -> [XyoPayload] {
+    public func insert(payloads: [Payload]) async throws -> [Payload] {
         // Build QueryBoundWitness
         let (bw, signed) = try BoundWitnessBuilder()
             .payloads(payloads)

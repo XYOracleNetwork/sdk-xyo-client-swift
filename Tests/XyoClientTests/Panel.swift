@@ -44,7 +44,7 @@ final class PanelTests: XCTestCase {
             apiDomain: apiDomain,
             witnesses: [
                 XyoBasicWitness(observer: {
-                    return XyoPayload("network.xyo.basic")
+                    return Payload("network.xyo.basic")
                 })
             ]
         )
@@ -65,7 +65,7 @@ final class PanelTests: XCTestCase {
             apiDomain: apiDomain,
             witnesses: [
                 XyoBasicWitness(observer: {
-                    return XyoPayload("network.xyo.basic")
+                    return Payload("network.xyo.basic")
                 }),
                 XyoSystemInfoWitness(),
             ]

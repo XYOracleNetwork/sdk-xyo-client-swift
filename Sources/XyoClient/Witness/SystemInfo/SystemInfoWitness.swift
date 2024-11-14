@@ -8,7 +8,7 @@ open class XyoSystemInfoWitness: AbstractWitness {
         self.allowPathMonitor = allowPathMonitor
     }
 
-    public override func observe() -> [XyoPayload] {
+    public override func observe() -> [Payload] {
         let payload = XyoSystemInfoPayload(WifiInformation(allowPathMonitor))
         return [payload]
     }

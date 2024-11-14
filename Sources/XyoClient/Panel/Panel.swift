@@ -43,7 +43,7 @@ public class XyoPanel {
 
     @available(iOS 15, *)
     public func report() async throws
-        -> [XyoPayload]
+        -> [Payload]
     {
         let payloads = self._witnesses.map { witness in
             witness.observe()
@@ -53,8 +53,8 @@ public class XyoPanel {
             .signers(self._witnesses.map({ $0.account }))
             .build(_previous_hash)
         self._previous_hash = bw._hash
-        var allResults: [[XyoPayload]] = []
-        await withTaskGroup(of: [XyoPayload]?.self) { group in
+        var allResults: [[Payload]] = []
+        await withTaskGroup(of: [Payload]?.self) { group in
             for instance in _archivists {
                 group.addTask {
                     do {

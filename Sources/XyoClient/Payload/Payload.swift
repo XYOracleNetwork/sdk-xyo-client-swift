@@ -1,13 +1,13 @@
 import Foundation
 
-open class XyoPayload: Encodable {
+open class Payload: Encodable {
     public init(_ schema: String) {
         self.schema = schema.lowercased()
     }
     public var schema: String
 }
 
-extension XyoPayload {
+extension Payload {
 
     /// Generates a SHA-256 hash of the encoded representation of the instance.
     ///

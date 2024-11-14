@@ -1,18 +1,18 @@
 import Foundation
 
 open class AbstractWitness: AbstractModule, Witness {
-    open func observe() -> [XyoPayload] {
+    open func observe() -> [Payload] {
         preconditionFailure("This method must be overridden")
     }
 }
 
 open class AbstractAsyncWitness: AbstractModule, WitnessAsync {
-    open func observe(completion: @escaping ([XyoPayload]?, Error?) -> Void) {
+    open func observe(completion: @escaping ([Payload]?, Error?) -> Void) {
         preconditionFailure("This method must be overridden")
     }
 
     @available(iOS 15, *)
-    open func observe() async throws -> [XyoPayload] {
+    open func observe() async throws -> [Payload] {
         try await withCheckedThrowingContinuation { continuation in
             observe { payloads, error in
                 if let error = error {

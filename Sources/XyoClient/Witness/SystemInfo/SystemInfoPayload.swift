@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoSystemInfoPayload: XyoPayload {
+open class XyoSystemInfoPayload: Payload {
 
     var wifiInfo: WifiInformation
 

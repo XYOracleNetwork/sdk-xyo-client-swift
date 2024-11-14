@@ -7,7 +7,7 @@ class TestPayload1SubObject: Encodable {
     var string_value = "yo"
 }
 
-class TestPayload1: XyoPayload {
+class TestPayload1: Payload {
     var timestamp = 1_618_603_439_107
     var number_field = 1
     var object_field = TestPayload1SubObject()
@@ -36,7 +36,7 @@ class TestPayload2SubObject: Encodable {
     var number_value = 2
 }
 
-class TestPayload2: XyoPayload {
+class TestPayload2: Payload {
     var string_field = "there"
     var object_field = TestPayload1SubObject()
     var timestamp = 1_618_603_439_107
