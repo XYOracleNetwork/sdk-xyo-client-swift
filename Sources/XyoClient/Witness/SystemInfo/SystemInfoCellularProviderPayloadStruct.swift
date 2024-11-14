@@ -1,7 +1,7 @@
 import CoreTelephony
 import Foundation
 
-struct XyoSystemInfoCellularProviderPayloadStruct: Encodable {
+struct SystemInfoCellularProviderPayloadStruct: Encodable {
     var allowVoip: Bool?
     var icc: String?
     var name: String?

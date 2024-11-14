@@ -1,6 +1,6 @@
 import Foundation
 
-struct XyoSystemInfoNetworkWifiPayloadStruct: Encodable {
+struct SystemInfoNetworkWifiPayloadStruct: Encodable {
     var ip: String?
     var mac: String?
     var rssi: Int?

@@ -1,6 +1,6 @@
 import Foundation
 
-struct XyoSystemInfoDevicePayloadStruct: Encodable {
+struct SystemInfoDevicePayloadStruct: Encodable {
     var model: String?
     var nodename: String?
     var release: String?

@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoBasicWitness: AbstractWitness {
+open class BasicWitness: AbstractWitness {
 
     public typealias TPayloadOut = Payload
 

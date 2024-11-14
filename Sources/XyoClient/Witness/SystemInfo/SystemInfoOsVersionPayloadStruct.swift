@@ -1,6 +1,6 @@
 import Foundation
 
-struct XyoSystemInfoOsVersionPayloadStruct: Encodable {
+struct SystemInfoOsVersionPayloadStruct: Encodable {
     var major: Int
     var minor: Int
     var patch: Int

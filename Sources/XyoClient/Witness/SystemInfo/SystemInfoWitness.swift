@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoSystemInfoWitness: AbstractWitness {
+open class SystemInfoWitness: AbstractWitness {
 
     var allowPathMonitor: Bool
 
@@ -9,7 +9,7 @@ open class XyoSystemInfoWitness: AbstractWitness {
     }
 
     public override func observe() -> [Payload] {
-        let payload = XyoSystemInfoPayload(WifiInformation(allowPathMonitor))
+        let payload = SystemInfoPayload(WifiInformation(allowPathMonitor))
         return [payload]
     }
 }

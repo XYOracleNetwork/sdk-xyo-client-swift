@@ -1,8 +1,8 @@
 import Foundation
 
-struct XyoSystemInfoOsPayloadStruct: Encodable {
+struct SystemInfoOsPayloadStruct: Encodable {
     var name: String
-    var version = XyoSystemInfoOsVersionPayloadStruct()
+    var version = SystemInfoOsVersionPayloadStruct()
     init() {
         name = osName()
     }

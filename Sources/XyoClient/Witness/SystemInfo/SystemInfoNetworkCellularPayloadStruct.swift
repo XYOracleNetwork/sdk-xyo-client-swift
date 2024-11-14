@@ -1,9 +1,9 @@
 import CoreTelephony
 import Foundation
 
-struct XyoSystemInfoNetworkCellularPayloadStruct: Encodable {
+struct SystemInfoNetworkCellularPayloadStruct: Encodable {
     var ip: String?
-    var provider = XyoSystemInfoCellularProviderPayloadStruct()
+    var provider = SystemInfoCellularProviderPayloadStruct()
     var radio: String?
     init(_ wifiInfo: WifiInformation?) {
         #if os(iOS)
