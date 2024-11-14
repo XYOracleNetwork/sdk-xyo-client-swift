@@ -6,7 +6,7 @@ let package = Package(
   name: "XyoClient",
   platforms: [
     .macOS(.v12),
-    .iOS(.v15),
+    .iOS(.v13),
     .tvOS(.v15),
     .watchOS(.v8),
   ],
