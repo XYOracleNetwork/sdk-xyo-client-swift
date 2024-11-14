@@ -23,6 +23,7 @@ final class PanelTests: XCTestCase {
     XCTAssertNotNil(panel)
   }
 
+  @available(iOS 15, *)
   func testSimplePanelReport() async {
     let panel = XyoPanel {
       return nil
@@ -34,7 +35,7 @@ final class PanelTests: XCTestCase {
       XCTFail("Report method threw an error: \(error)")
     }
   }
-
+  @available(iOS 15, *)
   func testSingleWitnessPanel() async {
     let apiDomain = XyoPanel.Defaults.apiDomain
     let archive = XyoPanel.Defaults.apiModule
@@ -55,7 +56,7 @@ final class PanelTests: XCTestCase {
       XCTFail("Report method threw an error: \(error)")
     }
   }
-
+  @available(iOS 15, *)
   func testMultiWitnessPanel() async {
     let apiDomain = XyoPanel.Defaults.apiDomain
     let archive = XyoPanel.Defaults.apiModule

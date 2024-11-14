@@ -30,6 +30,7 @@ public class XyoArchivistApiClient {
     self.queryAccount = account ?? Account()
   }
 
+  @available(iOS 15, *)
   public func insert(payloads: [XyoPayload]) async throws -> [XyoPayload] {
     // Build QueryBoundWitness
     let (bw, signed) = try BoundWitnessBuilder()
