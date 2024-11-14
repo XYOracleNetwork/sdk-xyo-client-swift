@@ -41,6 +41,7 @@ public class XyoPanel {
   private var _witnesses: [AbstractWitness]
   private var _previous_hash: String?
 
+  @available(iOS 15, *)
   public func report() async throws
     -> [XyoPayload]
   {
