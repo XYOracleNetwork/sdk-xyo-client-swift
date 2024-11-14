@@ -1,0 +1,53 @@
+import CoreLocation
+
+open class LocationPayload: Payload {
+
+    var location: CLLocation
+
+    public init(_ location: CLLocation) {
+        self.location = location
+        super.init("network.xyo.location.ios")
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case altitude
+        case coordinate
+        case course
+        case courseAccuracy
+        case ellipsoidalAltitude
+        case floor
+        case horizontalAccuracy
+        case schema
+        case sourceInformation
+        case speed
+        case speedAccuracy
+        case timestamp
+        case verticalAccuracy
+    }
+
+    override open func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.schema, forKey: .schema)
+
+        try container.encode(self.location.altitude, forKey: .altitude)
+        try container.encode(
+            LocationCoordinatePayloadStruct(self.location.coordinate), forKey: .coordinate)
+        try container.encode(self.location.course, forKey: .course)
+        try container.encode(self.location.courseAccuracy, forKey: .courseAccuracy)
+        try container.encode(self.location.ellipsoidalAltitude, forKey: .ellipsoidalAltitude)
+        if let floor = self.location.floor{
+            try container.encode(
+                LocationFloorPayloadStruct(floor), forKey: .floor)
+        }
+        try container.encode(self.location.horizontalAccuracy, forKey: .horizontalAccuracy)
+        if let sourceInformation = self.location.sourceInformation {
+            try container.encode(
+                LocationSourceInformationPayloadStruct(sourceInformation), forKey: .sourceInformation)
+        }
+        try container.encode(self.location.speed, forKey: .speed)
+        try container.encode(self.location.speedAccuracy, forKey: .speedAccuracy)
+        try container.encode(self.location.timestamp, forKey: .timestamp)
+        try container.encode(self.location.verticalAccuracy, forKey: .verticalAccuracy)
+
+    }
+}
