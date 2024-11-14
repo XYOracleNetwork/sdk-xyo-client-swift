@@ -46,7 +46,7 @@ open class LocationPayload: Payload {
         }
         try container.encode(self.location.speed, forKey: .speed)
         try container.encode(self.location.speedAccuracy, forKey: .speedAccuracy)
-        try container.encode(self.location.timestamp, forKey: .timestamp)
+        try container.encode(Int(self.location.timestamp.timeIntervalSince1970 * 1000), forKey: .timestamp)
         try container.encode(self.location.verticalAccuracy, forKey: .verticalAccuracy)
 
     }
