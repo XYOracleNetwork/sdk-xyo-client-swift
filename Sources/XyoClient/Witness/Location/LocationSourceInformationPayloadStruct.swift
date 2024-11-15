@@ -1,6 +1,7 @@
 import CoreLocation
 import Foundation
 
+@available(iOS 15.0, *)
 struct LocationSourceInformationPayloadStruct: Encodable {
 
     var sourceInformation: CLLocationSourceInformation
