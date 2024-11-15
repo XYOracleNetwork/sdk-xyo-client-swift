@@ -1,4 +1,4 @@
-public protocol Witness {
+public protocol WitnessSync {
     func observe() -> [Payload]
 }
 
