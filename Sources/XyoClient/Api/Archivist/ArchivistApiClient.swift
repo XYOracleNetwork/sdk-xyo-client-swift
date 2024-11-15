@@ -30,6 +30,60 @@ public class XyoArchivistApiClient {
         self.queryAccount = account ?? Account()
     }
 
+    public func insert(
+        payloads: [Payload],
+        completion: @escaping ([Payload]?, Error?) -> Void
+    ) {
+        do {
+            // Build QueryBoundWitness
+            let (bw, signed) = try BoundWitnessBuilder()
+                .payloads(payloads)
+                .signer(self.queryAccount)
+                .query(XyoArchivistApiClient.ArchivistInsertQuery)
+                .build()
+
+            // Perform the request
+            AF.request(
+                self.url,
+                method: .post,
+                parameters: ModuleQueryResult(bw: bw, payloads: signed),
+                encoder: JSONParameterEncoder.default
+            )
+            .validate()
+            .responseData { response in
+                switch response.result {
+                case .success(let responseData):
+                    do {
+                        // Decode the response data
+                        let decodedResponse = try JSONDecoder().decode(
+                            ApiResponseEnvelope<ModuleQueryResult>.self, from: responseData
+                        )
+                        
+                        // Check if the response data matches the expected result
+                        if decodedResponse.data?.bw.payload_hashes.count == payloads.count {
+                            // Return the payloads array in case of success
+                            completion(payloads, nil)
+                        } else {
+                            // Return an empty array if the counts don't match
+                            completion([], nil)
+                        }
+                    } catch {
+                        // Pass any decoding errors to the completion handler
+                        completion(nil, error)
+                    }
+                    
+                case .failure(let error):
+                    // Pass any request errors to the completion handler
+                    completion(nil, error)
+                }
+            }
+            
+        } catch {
+            // Handle synchronous errors (like errors from the BoundWitnessBuilder)
+            completion(nil, error)
+        }
+    }
+    
     @available(iOS 15, *)
     public func insert(payloads: [Payload]) async throws -> [Payload] {
         // Build QueryBoundWitness
