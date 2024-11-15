@@ -6,13 +6,13 @@ public enum XyoPanelError: Error {
 
 public class XyoPanel {
 
-    public init(archivists: [XyoArchivistApiClient], witnesses: [WitnessModuleSync]) {
+    public init(archivists: [XyoArchivistApiClient], witnesses: [WitnessModule]) {
         self._archivists = archivists
         self._witnesses = witnesses
     }
 
     public convenience init(
-        archive: String? = nil, apiDomain: String? = nil, witnesses: [WitnessModuleSync]? = nil,
+        archive: String? = nil, apiDomain: String? = nil, witnesses: [WitnessModule]? = nil,
         token: String? = nil
     ) {
         let apiConfig = XyoArchivistApiConfig(
