@@ -1,6 +1,6 @@
 import Foundation
 
-open class BasicWitness: AbstractWitness {
+open class BasicWitness: AbstractSyncWitness {
 
     public typealias TPayloadOut = Payload
 

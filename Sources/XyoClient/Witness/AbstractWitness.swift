@@ -1,6 +1,6 @@
 import Foundation
 
-open class AbstractWitness: AbstractModule, WitnessSync {
+open class AbstractSyncWitness: AbstractModule, WitnessSync {
     open func observe() -> [Payload] {
         preconditionFailure("This method must be overridden")
     }
@@ -26,3 +26,8 @@ open class AbstractAsyncWitness: AbstractModule, WitnessAsync {
         }
     }
 }
+
+public protocol Witness {}
+
+extension AbstractSyncWitness: Witness {}
+extension AbstractAsyncWitness: Witness {}
