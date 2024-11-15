@@ -58,7 +58,7 @@ public class XyoArchivistApiClient {
                         let decodedResponse = try JSONDecoder().decode(
                             ApiResponseEnvelope<ModuleQueryResult>.self, from: responseData
                         )
-                        
+
                         // Check if the response data matches the expected result
                         if decodedResponse.data?.bw.payload_hashes.count == payloads.count {
                             // Return the payloads array in case of success
@@ -71,19 +71,19 @@ public class XyoArchivistApiClient {
                         // Pass any decoding errors to the completion handler
                         completion(nil, error)
                     }
-                    
+
                 case .failure(let error):
                     // Pass any request errors to the completion handler
                     completion(nil, error)
                 }
             }
-            
+
         } catch {
             // Handle synchronous errors (like errors from the BoundWitnessBuilder)
             completion(nil, error)
         }
     }
-    
+
     @available(iOS 15, *)
     public func insert(payloads: [Payload]) async throws -> [Payload] {
         // Build QueryBoundWitness

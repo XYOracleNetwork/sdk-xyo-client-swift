@@ -17,7 +17,9 @@ struct LocationSourceInformationPayloadStruct: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        try container.encode(self.sourceInformation.isProducedByAccessory, forKey: .isProducedByAccessory)
-        try container.encode(self.sourceInformation.isSimulatedBySoftware, forKey: .isSimulatedBySoftware)
+        try container.encode(
+            self.sourceInformation.isProducedByAccessory, forKey: .isProducedByAccessory)
+        try container.encode(
+            self.sourceInformation.isSimulatedBySoftware, forKey: .isSimulatedBySoftware)
     }
 }

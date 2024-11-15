@@ -35,18 +35,20 @@ open class LocationPayload: Payload {
         try container.encode(self.location.course, forKey: .course)
         try container.encode(self.location.courseAccuracy, forKey: .courseAccuracy)
         try container.encode(self.location.ellipsoidalAltitude, forKey: .ellipsoidalAltitude)
-        if let floor = self.location.floor{
+        if let floor = self.location.floor {
             try container.encode(
                 LocationFloorPayloadStruct(floor), forKey: .floor)
         }
         try container.encode(self.location.horizontalAccuracy, forKey: .horizontalAccuracy)
         if let sourceInformation = self.location.sourceInformation {
             try container.encode(
-                LocationSourceInformationPayloadStruct(sourceInformation), forKey: .sourceInformation)
+                LocationSourceInformationPayloadStruct(sourceInformation),
+                forKey: .sourceInformation)
         }
         try container.encode(self.location.speed, forKey: .speed)
         try container.encode(self.location.speedAccuracy, forKey: .speedAccuracy)
-        try container.encode(Int(self.location.timestamp.timeIntervalSince1970 * 1000), forKey: .timestamp)
+        try container.encode(
+            Int(self.location.timestamp.timeIntervalSince1970 * 1000), forKey: .timestamp)
         try container.encode(self.location.verticalAccuracy, forKey: .verticalAccuracy)
 
     }

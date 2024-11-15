@@ -40,7 +40,7 @@ public class XyoPanel {
     private var _archivists: [XyoArchivistApiClient]
     private var _witnesses: [WitnessModule]
     private var _previous_hash: String?
-    
+
     @available(iOS 15, *)
     public func report() async throws
         -> [Payload]

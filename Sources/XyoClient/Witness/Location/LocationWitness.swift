@@ -3,7 +3,7 @@ import Foundation
 
 open class LocationWitness: WitnessModuleAsync {
     private let locationService = LocationService()
-    
+
     override open func observe(completion: @escaping ([Payload]?, Error?) -> Void) {
         locationService.requestAuthorization()
         locationService.requestLocation { result in
