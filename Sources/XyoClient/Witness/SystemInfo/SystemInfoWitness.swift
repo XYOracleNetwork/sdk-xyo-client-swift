@@ -1,6 +1,6 @@
 import Foundation
 
-open class SystemInfoWitness: AbstractSyncWitness {
+open class SystemInfoWitness: WitnessModuleSync {
 
     var allowPathMonitor: Bool
 

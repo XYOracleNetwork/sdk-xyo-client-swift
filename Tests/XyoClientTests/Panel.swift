@@ -17,7 +17,7 @@ final class PanelTests: XCTestCase {
         let apiDomain = XyoPanel.Defaults.apiDomain
         let archive = XyoPanel.Defaults.apiModule
         let account = Account()
-        let witness = AbstractSyncWitness(account: account)
+        let witness = WitnessModuleSync(account: account)
         let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
         XCTAssertNotNil(account)
         XCTAssertNotNil(panel)

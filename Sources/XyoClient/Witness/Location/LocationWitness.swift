@@ -1,7 +1,7 @@
 import CoreLocation
 import Foundation
 
-open class LocationWitness: AbstractAsyncWitness {
+open class LocationWitness: WitnessModuleAsync {
     private let locationService = LocationService()
     
     override open func observe(completion: @escaping ([Payload]?, Error?) -> Void) {

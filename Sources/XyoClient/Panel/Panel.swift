@@ -6,13 +6,13 @@ public enum XyoPanelError: Error {
 
 public class XyoPanel {
 
-    public init(archivists: [XyoArchivistApiClient], witnesses: [AbstractSyncWitness]) {
+    public init(archivists: [XyoArchivistApiClient], witnesses: [WitnessModuleSync]) {
         self._archivists = archivists
         self._witnesses = witnesses
     }
 
     public convenience init(
-        archive: String? = nil, apiDomain: String? = nil, witnesses: [AbstractSyncWitness]? = nil,
+        archive: String? = nil, apiDomain: String? = nil, witnesses: [WitnessModuleSync]? = nil,
         token: String? = nil
     ) {
         let apiConfig = XyoArchivistApiConfig(
@@ -23,7 +23,7 @@ public class XyoPanel {
 
     public convenience init(observe: (() -> XyoEventPayload?)?) {
         if observe != nil {
-            var witnesses = [AbstractSyncWitness]()
+            var witnesses = [WitnessModuleSync]()
 
             if let observe = observe {
                 witnesses.append(XyoEventWitness(observe))
@@ -38,7 +38,7 @@ public class XyoPanel {
     public typealias XyoPanelReportCallback = (([String]) -> Void)
 
     private var _archivists: [XyoArchivistApiClient]
-    private var _witnesses: [AbstractSyncWitness]
+    private var _witnesses: [WitnessModuleSync]
     private var _previous_hash: String?
     
     @available(iOS 15, *)

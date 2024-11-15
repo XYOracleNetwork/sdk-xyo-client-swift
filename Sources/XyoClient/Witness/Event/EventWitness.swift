@@ -1,6 +1,6 @@
 import Foundation
 
-open class XyoEventWitness: AbstractSyncWitness {
+open class XyoEventWitness: WitnessModuleSync {
 
     public init(_ observer: @escaping ObserverClosure) {
         _observer = observer
