@@ -41,9 +41,7 @@ public class XyoPanel {
     private var _witnesses: [WitnessModule]
 
     @available(iOS 15, *)
-    public func report() async
-        -> [Payload]
-    {
+    public func report() async -> [Payload] {
         var payloads: [Payload] = []
         // Collect payloads from both synchronous and asynchronous witnesses
         for witness in _witnesses {
@@ -62,7 +60,7 @@ public class XyoPanel {
             }
         }
 
-        // Inisert witnessed results into archivists
+        // Insert witnessed results into archivists
         await withTaskGroup(of: [Payload]?.self) { group in
             for instance in _archivists {
                 group.addTask {
@@ -79,18 +77,23 @@ public class XyoPanel {
     }
 
     @available(iOS 15, *)
-    public func reportQuery() async throws
-        -> ModuleQueryResult
-    {
-        let payloads = await self.report()
+    public func reportQuery() async -> ModuleQueryResult {
+        do {
+            // Report
+            let reportedResults = await self.report()
 
-        // Build the BoundWitness
-        let (bw, _) = try BoundWitnessBuilder()
-            .payloads(payloads)
-            .signers(self._witnesses.map { $0.account })
-            .build()
+            // sign the results
+            let (bw, payloads) = try BoundWitnessBuilder()
+                .payloads(reportedResults)
+                .signers(self._witnesses.map { $0.account })
+                .build()
 
-        return ModuleQueryResult(bw: bw, payloads: payloads, errors: [])
+            return ModuleQueryResult(bw: bw, payloads: payloads, errors: [])
+        } catch {
+            print("Error in reportQuery: \(error)")
+            // Return an empty ModuleQueryResult in case of an error
+            return ModuleQueryResult(bw: BoundWitness(), payloads: [], errors: [])
+        }
     }
 
     struct Defaults {

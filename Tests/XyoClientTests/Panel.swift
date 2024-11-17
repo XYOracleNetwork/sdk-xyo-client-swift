@@ -28,12 +28,8 @@ final class PanelTests: XCTestCase {
         let panel = XyoPanel {
             return nil
         }
-        do {
-            let result = try await panel.reportQuery()
-            XCTAssertTrue(result.payloads.isEmpty, "Expected empty result from report")
-        } catch {
-            XCTFail("Report method threw an error: \(error)")
-        }
+        let result = await panel.reportQuery()
+        XCTAssertTrue(result.payloads.isEmpty, "Expected empty result from report")
     }
     @available(iOS 15, *)
     func testSingleWitnessPanel() async {
@@ -48,13 +44,9 @@ final class PanelTests: XCTestCase {
                 })
             ]
         )
-        do {
-            let result = try await panel.reportQuery()
-            XCTAssertFalse(result.payloads.isEmpty, "Expected non-empty result from report")
-            XCTAssertEqual(result.payloads.count, 1, "Expected one payload in the result")
-        } catch {
-            XCTFail("Report method threw an error: \(error)")
-        }
+        let result = await panel.reportQuery()
+        XCTAssertFalse(result.payloads.isEmpty, "Expected non-empty result from report")
+        XCTAssertEqual(result.payloads.count, 1, "Expected one payload in the result")
     }
     @available(iOS 15, *)
     func testMultiWitnessPanel() async {
@@ -70,12 +62,8 @@ final class PanelTests: XCTestCase {
                 SystemInfoWitness(),
             ]
         )
-        do {
-            let result = try await panel.reportQuery()
-            XCTAssertFalse(result.payloads.isEmpty, "Expected non-empty result from report")
-            XCTAssertEqual(result.payloads.count, 2, "Expected two payloads in the result")
-        } catch {
-            XCTFail("Report method threw an error: \(error)")
-        }
+        let result = await panel.reportQuery()
+        XCTAssertFalse(result.payloads.isEmpty, "Expected non-empty result from report")
+        XCTAssertEqual(result.payloads.count, 2, "Expected two payloads in the result")
     }
 }
