@@ -2,14 +2,19 @@ import XCTest
 
 @testable import XyoClient
 
-
 class AccountServicesTests: XCTestCase {
-    
+
     static var allTests = [
-        ("testGetNamedAccount_CreatesAndReturnsNewAccount_WhenNoExistingAccount", testGetNamedAccount_CreatesAndReturnsNewAccount_WhenNoExistingAccount),
-        ("testGetNamedAccount_ReturnsExistingAccount_WhenAccountExists", testGetNamedAccount_ReturnsExistingAccount_WhenAccountExists),
+        (
+            "testGetNamedAccount_CreatesAndReturnsNewAccount_WhenNoExistingAccount",
+            testGetNamedAccount_CreatesAndReturnsNewAccount_WhenNoExistingAccount
+        ),
+        (
+            "testGetNamedAccount_ReturnsExistingAccount_WhenAccountExists",
+            testGetNamedAccount_ReturnsExistingAccount_WhenAccountExists
+        ),
     ]
-    
+
     func testGetNamedAccount_CreatesAndReturnsNewAccount_WhenNoExistingAccount() {
 
         let accountServices = AccountServices()
@@ -30,7 +35,7 @@ class AccountServicesTests: XCTestCase {
         let accountA = accountServices.getNamedAccount(name: "testAccount")
         // Subsenquent ones retrieve account
         let accountB = accountServices.getNamedAccount(name: "testAccount")
-        
+
         // Asserts
         let addressA = accountA.address
         let addressB = accountB.address
@@ -40,4 +45,3 @@ class AccountServicesTests: XCTestCase {
     }
 
 }
-

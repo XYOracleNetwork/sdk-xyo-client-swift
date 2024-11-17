@@ -44,7 +44,7 @@ extension Data {
 
         return hexString
     }
-    
+
     static func dataFrom(hexString: String) -> Data? {
         var data = Data()
         let hexString = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
