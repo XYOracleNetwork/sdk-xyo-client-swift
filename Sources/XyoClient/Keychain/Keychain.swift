@@ -1,7 +1,7 @@
 import Foundation
 import Security
 
-func saveToKeychain(_ key: String, value: String) -> Bool {
+func saveToKeychain(key: String, value: String) -> Bool {
     let data = value.data(using: .utf8)!
     let query: [String: Any] = [
         kSecClass as String: kSecClassGenericPassword,
@@ -13,7 +13,7 @@ func saveToKeychain(_ key: String, value: String) -> Bool {
     return status == errSecSuccess
 }
 
-func getFromKeychain(_ key: String) -> String? {
+func getFromKeychain(key: String) -> String? {
     let query: [String: Any] = [
         kSecClass as String: kSecClassGenericPassword,
         kSecAttrAccount as String: key,
@@ -28,7 +28,7 @@ func getFromKeychain(_ key: String) -> String? {
     return nil
 }
 
-func removeFromKeychain(_ key: String) -> Bool {
+func removeFromKeychain(key: String) -> Bool {
     let query: [String: Any] = [
         kSecClass as String: kSecClassGenericPassword,
         kSecAttrAccount as String: key,
