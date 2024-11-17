@@ -3,6 +3,7 @@
     "Alamofire",
     "boundwitness",
     "keccak",
+    "Keychain",
     "Protobuf",
     "secp",
     "unkeyed"
