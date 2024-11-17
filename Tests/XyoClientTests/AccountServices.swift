@@ -31,9 +31,9 @@ class AccountServicesTests: XCTestCase {
         let accountServices = AccountServices()
 
         // Act
-        // Inital attempt create account
+        // Initial attempt create account
         let accountA = accountServices.getNamedAccount(name: "testAccount")
-        // Subsenquent ones retrieve account
+        // Subsequent ones retrieve account
         let accountB = accountServices.getNamedAccount(name: "testAccount")
 
         // Asserts
