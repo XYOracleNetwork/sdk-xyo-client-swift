@@ -13,9 +13,10 @@ final class PanelTests: XCTestCase {
         )
     ]
 
+    let apiDomain = XyoPanel.Defaults.apiDomain
+    let archive = XyoPanel.Defaults.apiModule
+
     func testCreatePanel() throws {
-        let apiDomain = XyoPanel.Defaults.apiDomain
-        let archive = XyoPanel.Defaults.apiModule
         let account = Account()
         let witness = WitnessModuleSync(account: account)
         let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
@@ -31,10 +32,9 @@ final class PanelTests: XCTestCase {
         let result = await panel.reportQuery()
         XCTAssertTrue(result.payloads.isEmpty, "Expected empty result from report")
     }
+
     @available(iOS 15, *)
     func testSingleWitnessPanel() async {
-        let apiDomain = XyoPanel.Defaults.apiDomain
-        let archive = XyoPanel.Defaults.apiModule
         let panel = XyoPanel(
             archive: archive,
             apiDomain: apiDomain,
@@ -48,10 +48,9 @@ final class PanelTests: XCTestCase {
         XCTAssertFalse(result.payloads.isEmpty, "Expected non-empty result from report")
         XCTAssertEqual(result.payloads.count, 1, "Expected one payload in the result")
     }
+
     @available(iOS 15, *)
     func testMultiWitnessPanel() async {
-        let apiDomain = XyoPanel.Defaults.apiDomain
-        let archive = XyoPanel.Defaults.apiModule
         let panel = XyoPanel(
             archive: archive,
             apiDomain: apiDomain,
