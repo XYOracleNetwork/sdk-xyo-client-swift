@@ -13,9 +13,10 @@ final class PanelTests: XCTestCase {
         )
     ]
 
+    let apiDomain = XyoPanel.Defaults.apiDomain
+    let archive = XyoPanel.Defaults.apiModule
+
     func testCreatePanel() throws {
-        let apiDomain = XyoPanel.Defaults.apiDomain
-        let archive = XyoPanel.Defaults.apiModule
         let account = Account()
         let witness = WitnessModuleSync(account: account)
         let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
@@ -28,54 +29,44 @@ final class PanelTests: XCTestCase {
         let panel = XyoPanel {
             return nil
         }
-        do {
-            let result = try await panel.report()
-            XCTAssertTrue(result.isEmpty, "Expected empty result from report")
-        } catch {
-            XCTFail("Report method threw an error: \(error)")
-        }
+        let result = await panel.reportQuery()
+        XCTAssertTrue(result.payloads.isEmpty, "Expected empty result from panel report")
     }
+
     @available(iOS 15, *)
     func testSingleWitnessPanel() async {
-        let apiDomain = XyoPanel.Defaults.apiDomain
-        let archive = XyoPanel.Defaults.apiModule
+        let witnesses = [
+            BasicWitness(observer: {
+                return Payload("network.xyo.basic")
+            })
+        ]
         let panel = XyoPanel(
             archive: archive,
             apiDomain: apiDomain,
-            witnesses: [
-                BasicWitness(observer: {
-                    return Payload("network.xyo.basic")
-                })
-            ]
+            witnesses: witnesses
         )
-        do {
-            let result = try await panel.report()
-            XCTAssertFalse(result.isEmpty, "Expected non-empty result from report")
-            XCTAssertEqual(result.count, 1, "Expected one payload in the result")
-        } catch {
-            XCTFail("Report method threw an error: \(error)")
-        }
+        let result = await panel.reportQuery()
+        XCTAssertEqual(
+            result.payloads.count, witnesses.count,
+            "Expected \(witnesses.count) payloads in the panel report result")
     }
+
     @available(iOS 15, *)
     func testMultiWitnessPanel() async {
-        let apiDomain = XyoPanel.Defaults.apiDomain
-        let archive = XyoPanel.Defaults.apiModule
+        let witnesses = [
+            BasicWitness(observer: {
+                return Payload("network.xyo.basic")
+            }),
+            SystemInfoWitness(),
+        ]
         let panel = XyoPanel(
             archive: archive,
             apiDomain: apiDomain,
-            witnesses: [
-                BasicWitness(observer: {
-                    return Payload("network.xyo.basic")
-                }),
-                SystemInfoWitness(),
-            ]
+            witnesses: witnesses
         )
-        do {
-            let result = try await panel.report()
-            XCTAssertFalse(result.isEmpty, "Expected non-empty result from report")
-            XCTAssertEqual(result.count, 2, "Expected two payloads in the result")
-        } catch {
-            XCTFail("Report method threw an error: \(error)")
-        }
+        let result = await panel.reportQuery()
+        XCTAssertEqual(
+            result.payloads.count, witnesses.count,
+            "Expected \(witnesses.count) payloads in the panel report result")
     }
 }

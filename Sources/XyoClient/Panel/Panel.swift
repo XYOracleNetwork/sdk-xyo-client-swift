@@ -39,14 +39,10 @@ public class XyoPanel {
 
     private var _archivists: [XyoArchivistApiClient]
     private var _witnesses: [WitnessModule]
-    private var _previous_hash: String?
 
     @available(iOS 15, *)
-    public func report() async throws
-        -> [Payload]
-    {
+    public func report() async -> [Payload] {
         var payloads: [Payload] = []
-
         // Collect payloads from both synchronous and asynchronous witnesses
         for witness in _witnesses {
             if let syncWitness = witness as? WitnessSync {
@@ -64,15 +60,7 @@ public class XyoPanel {
             }
         }
 
-        // Build the BoundWitness
-        let (bw, _) = try BoundWitnessBuilder()
-            .payloads(payloads)
-            .signers(self._witnesses.map { $0.account })
-            .build(_previous_hash)
-        self._previous_hash = bw._hash
-
-        // Collect results from archivists using async tasks
-        var allResults: [[Payload]] = []
+        // Insert witnessed results into archivists
         await withTaskGroup(of: [Payload]?.self) { group in
             for instance in _archivists {
                 group.addTask {
@@ -84,13 +72,28 @@ public class XyoPanel {
                     }
                 }
             }
-            for await result in group {
-                if let result = result {
-                    allResults.append(result)
-                }
-            }
         }
-        return allResults.flatMap { $0 }
+        return payloads
+    }
+
+    @available(iOS 15, *)
+    public func reportQuery() async -> ModuleQueryResult {
+        do {
+            // Report
+            let reportedResults = await self.report()
+
+            // sign the results
+            let (bw, payloads) = try BoundWitnessBuilder()
+                .payloads(reportedResults)
+                .signers(self._witnesses.map { $0.account })
+                .build()
+
+            return ModuleQueryResult(bw: bw, payloads: payloads, errors: [])
+        } catch {
+            print("Error in reportQuery: \(error)")
+            // Return an empty ModuleQueryResult in case of an error
+            return ModuleQueryResult(bw: BoundWitness(), payloads: [], errors: [])
+        }
     }
 
     struct Defaults {
