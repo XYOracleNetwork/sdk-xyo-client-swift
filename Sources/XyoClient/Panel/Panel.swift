@@ -93,6 +93,59 @@ public class XyoPanel {
         return allResults.flatMap { $0 }
     }
 
+    @available(iOS 15, *)
+    public func reportQuery() async throws
+        -> ModuleQueryResult
+    {
+        var payloads: [Payload] = []
+
+        // Collect payloads from both synchronous and asynchronous witnesses
+        for witness in _witnesses {
+            if let syncWitness = witness as? WitnessSync {
+                // For synchronous witnesses, call the sync `observe` method directly
+                payloads.append(contentsOf: syncWitness.observe())
+            } else if let asyncWitness = witness as? WitnessAsync {
+                // For asynchronous witnesses, call the async `observe` method using `await`
+                do {
+                    let asyncPayloads = try await asyncWitness.observe()
+                    payloads.append(contentsOf: asyncPayloads)
+                } catch {
+                    print("Error observing async witness: \(error)")
+                    // Handle error as needed, possibly continue or throw
+                }
+            }
+        }
+
+        // Build the BoundWitness
+        let (bw, _) = try BoundWitnessBuilder()
+            .payloads(payloads)
+            .signers(self._witnesses.map { $0.account })
+            .build(_previous_hash)
+        self._previous_hash = bw._hash
+
+        // Collect results from archivists using async tasks
+        var allResults: [[Payload]] = []
+        await withTaskGroup(of: [Payload]?.self) { group in
+            for instance in _archivists {
+                group.addTask {
+                    do {
+                        return try await instance.insert(payloads: payloads)
+                    } catch {
+                        print("Error in insert for instance \(instance): \(error)")
+                        return nil
+                    }
+                }
+            }
+            for await result in group {
+                if let result = result {
+                    allResults.append(result)
+                }
+            }
+        }
+        let ret: ModuleQueryResult = .init(bw: bw, payloads: allResults.flatMap { $0 }, errors: [])
+        return ret
+    }
+
     struct Defaults {
         static let apiDomain =
             ProcessInfo.processInfo.environment["XYO_API_DOMAIN"]

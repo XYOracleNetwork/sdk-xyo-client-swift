@@ -29,8 +29,8 @@ final class PanelTests: XCTestCase {
             return nil
         }
         do {
-            let result = try await panel.report()
-            XCTAssertTrue(result.isEmpty, "Expected empty result from report")
+            let result = try await panel.reportQuery()
+            XCTAssertTrue(result.payloads.isEmpty, "Expected empty result from report")
         } catch {
             XCTFail("Report method threw an error: \(error)")
         }
@@ -49,9 +49,9 @@ final class PanelTests: XCTestCase {
             ]
         )
         do {
-            let result = try await panel.report()
-            XCTAssertFalse(result.isEmpty, "Expected non-empty result from report")
-            XCTAssertEqual(result.count, 1, "Expected one payload in the result")
+            let result = try await panel.reportQuery()
+            XCTAssertFalse(result.payloads.isEmpty, "Expected non-empty result from report")
+            XCTAssertEqual(result.payloads.count, 1, "Expected one payload in the result")
         } catch {
             XCTFail("Report method threw an error: \(error)")
         }
@@ -71,9 +71,9 @@ final class PanelTests: XCTestCase {
             ]
         )
         do {
-            let result = try await panel.report()
-            XCTAssertFalse(result.isEmpty, "Expected non-empty result from report")
-            XCTAssertEqual(result.count, 2, "Expected two payloads in the result")
+            let result = try await panel.reportQuery()
+            XCTAssertFalse(result.payloads.isEmpty, "Expected non-empty result from report")
+            XCTAssertEqual(result.payloads.count, 2, "Expected two payloads in the result")
         } catch {
             XCTFail("Report method threw an error: \(error)")
         }
