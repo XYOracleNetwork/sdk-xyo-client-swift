@@ -44,6 +44,31 @@ extension Data {
 
         return hexString
     }
+    
+    static func dataFrom(hexString: String) -> Data? {
+        var data = Data()
+        let hexString = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Ensure the hex string has an even length
+        guard hexString.count % 2 == 0 else {
+            print("Invalid hex string length.")
+            return nil
+        }
+
+        var index = hexString.startIndex
+        while index < hexString.endIndex {
+            let nextIndex = hexString.index(index, offsetBy: 2)
+            let byteString = hexString[index..<nextIndex]
+            if let byte = UInt8(byteString, radix: 16) {
+                data.append(byte)
+            } else {
+                print("Invalid hex character: \(byteString)")
+                return nil
+            }
+            index = nextIndex
+        }
+        return data
+    }
 
     /// - Returns: kaccak256 hash of data
     public func keccak256() -> Data {

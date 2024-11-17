@@ -2,6 +2,7 @@ import Foundation
 
 public class AccountServices {
     func getNamedAccount(name: String = "default") -> AccountInstance {
+//        let _ = removeFromKeychain(key: name)
         if let existingAccount = getStoredAccount(name: name) {
             return existingAccount
         } else {
@@ -20,9 +21,11 @@ public class AccountServices {
     private func getStoredAccount(name: String) -> AccountInstance? {
         // Lookup previously saved private key if it exists
         if let storedPrivateKeyString = getFromKeychain(key: name) {
-            if let parsedPrivateKeyData = storedPrivateKeyString.data(using: .utf8) {
-                return Account.fromPrivateKey(key: parsedPrivateKeyData)
-            }
+//            if let parsedPrivateKeyData = storedPrivateKeyString.data(using: .utf8) {
+                if let parsedPrivateKeyData = Data.dataFrom(hexString: storedPrivateKeyString) {
+                    return Account.fromPrivateKey(key: parsedPrivateKeyData)
+                }
+//            }
         }
         // Otherwise, return nil
         return nil
