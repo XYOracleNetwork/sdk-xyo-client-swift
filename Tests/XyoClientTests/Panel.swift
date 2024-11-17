@@ -30,39 +30,43 @@ final class PanelTests: XCTestCase {
             return nil
         }
         let result = await panel.reportQuery()
-        XCTAssertTrue(result.payloads.isEmpty, "Expected empty result from report")
+        XCTAssertTrue(result.payloads.isEmpty, "Expected empty result from panel report")
     }
 
     @available(iOS 15, *)
     func testSingleWitnessPanel() async {
+        let witnesses = [
+            BasicWitness(observer: {
+                return Payload("network.xyo.basic")
+            })
+        ]
         let panel = XyoPanel(
             archive: archive,
             apiDomain: apiDomain,
-            witnesses: [
-                BasicWitness(observer: {
-                    return Payload("network.xyo.basic")
-                })
-            ]
+            witnesses: witnesses
         )
         let result = await panel.reportQuery()
-        XCTAssertFalse(result.payloads.isEmpty, "Expected non-empty result from report")
-        XCTAssertEqual(result.payloads.count, 1, "Expected one payload in the result")
+        XCTAssertEqual(
+            result.payloads.count, witnesses.count,
+            "Expected \(witnesses.count) payloads in the panel report result")
     }
 
     @available(iOS 15, *)
     func testMultiWitnessPanel() async {
+        let witnesses = [
+            BasicWitness(observer: {
+                return Payload("network.xyo.basic")
+            }),
+            SystemInfoWitness(),
+        ]
         let panel = XyoPanel(
             archive: archive,
             apiDomain: apiDomain,
-            witnesses: [
-                BasicWitness(observer: {
-                    return Payload("network.xyo.basic")
-                }),
-                SystemInfoWitness(),
-            ]
+            witnesses: witnesses
         )
         let result = await panel.reportQuery()
-        XCTAssertFalse(result.payloads.isEmpty, "Expected non-empty result from report")
-        XCTAssertEqual(result.payloads.count, 2, "Expected two payloads in the result")
+        XCTAssertEqual(
+            result.payloads.count, witnesses.count,
+            "Expected \(witnesses.count) payloads in the panel report result")
     }
 }
