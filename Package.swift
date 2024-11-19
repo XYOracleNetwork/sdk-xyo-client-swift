@@ -28,6 +28,9 @@ let package = Package(
                 .product(name: "secp256k1", package: "swift-secp256k1"),
                 "Alamofire",
                 "keccak",
+            ],
+            resources: [
+                .process("Model.xcdatamodeld")
             ]
         ),
         .testTarget(
