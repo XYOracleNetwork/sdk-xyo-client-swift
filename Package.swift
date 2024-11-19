@@ -31,11 +31,20 @@ let package = Package(
             ],
             resources: [
                 .process("Model.xcdatamodeld")
+            ],
+            plugins: [
+                .plugin(name: "CoreDataModelGenerator")
             ]
+        ),
+        .plugin(
+            name: "CoreDataModelGenerator",
+            capability: .buildTool(),
+            dependencies: []
         ),
         .testTarget(
             name: "XyoClientTests",
             dependencies: ["XyoClient"]),
     ],
+    
     swiftLanguageModes: [.v5, .v4_2]
 )
