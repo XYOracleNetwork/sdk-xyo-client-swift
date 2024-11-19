@@ -29,6 +29,7 @@ let package = Package(
                 "Alamofire",
                 "keccak",
             ],
+            sources: [],
             resources: [
                 .process("Model.xcdatamodeld")
             ],

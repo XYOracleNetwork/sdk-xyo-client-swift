@@ -8,19 +8,20 @@ struct CoreDataModelGenerator: BuildToolPlugin {
         let modelPath = target.directory.appending("Model.xcdatamodeld")
 
         // Output directory inside the plugin's work directory
-        let outputPath = context.pluginWorkDirectory.appending("Generated")
+        let outputPath = context.pluginWorkDirectoryURL.appendingPathComponent("Generated")
 
         // Ensure the output directory exists
-        try FileManager.default.createDirectory(atPath: outputPath.string, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(atPath: outputPath.absoluteString, withIntermediateDirectories: true)
 
         // Define the command to generate classes
         return [
             .buildCommand(
                 displayName: "Generate Core Data Classes for \(modelPath.lastComponent)",
-                executable: URL(fileURLWithPath: "/usr/bin/momc"), // Path to `momc`
+                executable: URL(fileURLWithPath: "/usr/bin/xcrun"), // Use `xcrun` to locate `momc`
                 arguments: [
+                    "momc", // The tool to execute via `xcrun`
                     modelPath.string,
-                    outputPath.string
+                    outputPath.absoluteString
                 ],
                 environment: [:]
             )
