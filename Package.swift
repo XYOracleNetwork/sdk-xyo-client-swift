@@ -29,7 +29,11 @@ let package = Package(
                 "Alamofire",
                 "keccak",
             ],
-            sources: [],
+//             sources: [
+// //                "CoreDataPreviousHashStore.swift",
+// //                "../../.build/plugins/outputs/sdk-xyo-client-swift/XyoClient/destination/CoreDataModelGenerator/Generated",
+// //                "Generated" // Include generated files
+//             ],
             resources: [
                 .process("Model.xcdatamodeld")
             ],
