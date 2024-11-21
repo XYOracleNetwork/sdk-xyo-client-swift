@@ -13,13 +13,10 @@ final class PanelTests: XCTestCase {
         )
     ]
 
-    let apiDomain = XyoPanel.Defaults.apiDomain
-    let archive = XyoPanel.Defaults.apiModule
-
     func testCreatePanel() throws {
         let account = Account()
         let witness = WitnessModuleSync(account: account)
-        let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
+        let panel = XyoPanel(witnesses: [witness])
         XCTAssertNotNil(account)
         XCTAssertNotNil(panel)
     }
@@ -41,8 +38,6 @@ final class PanelTests: XCTestCase {
             })
         ]
         let panel = XyoPanel(
-            archive: archive,
-            apiDomain: apiDomain,
             witnesses: witnesses
         )
         let result = await panel.reportQuery()
@@ -60,8 +55,6 @@ final class PanelTests: XCTestCase {
             SystemInfoWitness(),
         ]
         let panel = XyoPanel(
-            archive: archive,
-            apiDomain: apiDomain,
             witnesses: witnesses
         )
         let result = await panel.reportQuery()

@@ -6,19 +6,22 @@ public enum XyoPanelError: Error {
 
 public class XyoPanel {
 
-    public init(archivists: [XyoArchivistApiClient], witnesses: [WitnessModule]) {
+    public init(
+        witnesses: [WitnessModule],
+        archivists: [XyoArchivistApiClient]
+    ) {
         self._archivists = archivists
         self._witnesses = witnesses
     }
 
     public convenience init(
-        archive: String? = nil, apiDomain: String? = nil, witnesses: [WitnessModule]? = nil,
-        token: String? = nil
+        witnesses: [WitnessModule] = [],
+        archive: String = XyoArchivistApiClient.DefaultArchivist,
+        apiDomain: String = XyoArchivistApiClient.DefaultApiDomain
     ) {
-        let apiConfig = XyoArchivistApiConfig(
-            archive ?? XyoPanel.Defaults.apiModule, apiDomain ?? XyoPanel.Defaults.apiDomain)
+        let apiConfig = XyoArchivistApiConfig(archive, apiDomain)
         let archivist = XyoArchivistApiClient.get(apiConfig)
-        self.init(archivists: [archivist], witnesses: witnesses ?? [])
+        self.init(witnesses: witnesses, archivists: [archivist])
     }
 
     public convenience init(observe: (() -> XyoEventPayload?)?) {
