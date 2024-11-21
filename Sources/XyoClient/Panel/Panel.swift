@@ -7,11 +7,11 @@ public class XyoPanel {
     private let _account: AccountInstance
     private let _archivists: [XyoArchivistApiClient]
     private let _witnesses: [WitnessModule]
-    
+
     public var account: AccountInstance {
         _account
     }
-    
+
     public init(
         account: AccountInstance,
         witnesses: [WitnessModule],
@@ -69,7 +69,7 @@ public class XyoPanel {
         }
         return payloads
     }
-    
+
     @available(iOS 15, *)
     public func storeWitnessedResults(payloads: [Payload]) async {
         // Insert witnessed results into archivists
@@ -87,7 +87,7 @@ public class XyoPanel {
         }
         return
     }
-    
+
     @available(iOS 15, *)
     public func report() async -> [Payload] {
         // Report
@@ -109,7 +109,7 @@ public class XyoPanel {
                 .payloads(results)
                 .signers([self._account])
                 .build()
-            
+
             // Insert results into Archivists
             await storeWitnessedResults(payloads: results)
 

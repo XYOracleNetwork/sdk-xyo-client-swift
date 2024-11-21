@@ -2,7 +2,7 @@ import Foundation
 
 public class Account: AccountInstance, AccountStatic {
     public static var previousHashStore: PreviousHashStore = CoreDataPreviousHashStore()
-    
+
     let _account: XyoAddress
 
     public static func fromPrivateKey(key: Data?) -> AccountInstance {
@@ -54,7 +54,6 @@ public class Account: AccountInstance, AccountStatic {
             Account.previousHashStore.setItem(address: self.address, previousHash: previousHash)
         }
     }
-    
 
     public func sign(hash: Hash) throws -> String {
         guard let value = try self._account.sign(hash: hash) else {

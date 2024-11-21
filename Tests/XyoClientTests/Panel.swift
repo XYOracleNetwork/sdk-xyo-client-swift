@@ -12,7 +12,7 @@ final class PanelTests: XCTestCase {
             "multiWitnessPanel", testMultiWitnessPanel
         )
     ]
-    
+
     let basicWitness = BasicWitness(observer: {
         return Payload("network.xyo.basic")
     })
