@@ -1,9 +1,5 @@
 import Foundation
 
-public enum XyoPanelError: Error {
-    case postToArchivistFailed
-}
-
 public class XyoPanel {
 
     public init(
