@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="24B83" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="HashStore" representedClassName="HashStore" syncable="YES" codeGenerationType="class">
+        <attribute name="address" attributeType="String"/>
+        <attribute name="previousHash" optional="YES" attributeType="String"/>
+        <fetchIndex name="byAddressIndex">
+            <fetchIndexElement property="address" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+</model>

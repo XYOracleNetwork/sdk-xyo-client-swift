@@ -1,8 +1,9 @@
 import Foundation
 
 public class Account: AccountInstance, AccountStatic {
+    public static var previousHashStore: PreviousHashStore = CoreDataPreviousHashStore()
+    
     let _account: XyoAddress
-    var _previousHash: String? = nil
 
     public static func fromPrivateKey(key: Data?) -> AccountInstance {
         guard let key else {
@@ -38,15 +39,26 @@ public class Account: AccountInstance, AccountStatic {
         return value
     }
 
-    public var previousHash: Hash? {
-        return self._previousHash
+    public internal(set) var previousHash: Hash? = nil {
+        willSet {
+            // Store to previous hash store
+            persistPreviousHash(newValue: newValue)
+        }
     }
+
+    // Allow only internal updates via a specific method or internal setter
+    internal func persistPreviousHash(newValue: Hash?) {
+        if (previousHash != nil){
+            // TODO: Persist to store
+        }
+    }
+    
 
     public func sign(hash: Hash) throws -> String {
         guard let value = try self._account.sign(hash: hash) else {
             fatalError("Error signing hash")
         }
-        _previousHash = value
+        previousHash = hash
         return value
     }
 }

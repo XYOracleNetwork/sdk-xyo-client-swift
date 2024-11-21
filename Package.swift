@@ -13,7 +13,8 @@ let package = Package(
     products: [
         .library(
             name: "XyoClient",
-            targets: ["XyoClient"])
+            targets: ["XyoClient"]
+        )
     ],
     dependencies: [
         .package(
@@ -34,5 +35,6 @@ let package = Package(
             name: "XyoClientTests",
             dependencies: ["XyoClient"]),
     ],
+    
     swiftLanguageModes: [.v5, .v4_2]
 )
