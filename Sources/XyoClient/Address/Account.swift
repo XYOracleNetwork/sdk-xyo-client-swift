@@ -23,6 +23,9 @@ public class Account: AccountInstance, AccountStatic {
 
     init(address: XyoAddress) {
         self._account = address
+        if let addressString = address.address {
+            self.previousHash = Account.previousHashStore.getItem(address: addressString)
+        }
     }
 
     public var address: Address {
@@ -46,10 +49,9 @@ public class Account: AccountInstance, AccountStatic {
         }
     }
 
-    // Allow only internal updates via a specific method or internal setter
     internal func persistPreviousHash(newValue: Hash?) {
-        if (previousHash != nil){
-            // TODO: Persist to store
+        if let previousHash = newValue {
+            Account.previousHashStore.setItem(address: self.address, previousHash: previousHash)
         }
     }
     
