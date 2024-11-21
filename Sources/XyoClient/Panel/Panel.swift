@@ -46,7 +46,7 @@ public class XyoPanel {
     }
 
     @available(iOS 15, *)
-    public func report() async -> [Payload] {
+    private func witnessAll() async -> [Payload] {
         var payloads: [Payload] = []
         // Collect payloads from both synchronous and asynchronous witnesses
         for witness in _witnesses {
@@ -64,7 +64,11 @@ public class XyoPanel {
                 }
             }
         }
-
+        return payloads
+    }
+    
+    @available(iOS 15, *)
+    public func storeWitnessed(payloads: [Payload]) async {
         // Insert witnessed results into archivists
         await withTaskGroup(of: [Payload]?.self) { group in
             for instance in _archivists {
@@ -78,6 +82,13 @@ public class XyoPanel {
                 }
             }
         }
+        return
+    }
+    
+    @available(iOS 15, *)
+    public func report() async -> [Payload] {
+        let payloads = await witnessAll()
+        await storeWitnessed(payloads: payloads)
         return payloads
     }
 
