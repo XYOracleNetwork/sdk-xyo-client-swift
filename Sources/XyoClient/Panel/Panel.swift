@@ -101,16 +101,4 @@ public class XyoPanel {
             return ModuleQueryResult(bw: BoundWitness(), payloads: [], errors: [])
         }
     }
-
-    struct Defaults {
-        static let apiDomain =
-            ProcessInfo.processInfo.environment["XYO_API_DOMAIN"]
-            ?? "https://beta.api.archivist.xyo.network"
-        static let apiModule = ProcessInfo.processInfo.environment["XYO_API_MODULE"] ?? "Archivist"
-    }
-
-    private static var defaultArchivist: XyoArchivistApiClient {
-        XyoArchivistApiClient.get(
-            XyoArchivistApiConfig(self.Defaults.apiModule, self.Defaults.apiDomain))
-    }
 }
