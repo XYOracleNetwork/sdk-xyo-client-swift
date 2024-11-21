@@ -2,12 +2,15 @@ import Foundation
 
 public class XyoPanel {
 
-    
     public typealias XyoPanelReportCallback = (([String]) -> Void)
 
     private let _account: AccountInstance
     private let _archivists: [XyoArchivistApiClient]
     private let _witnesses: [WitnessModule]
+    
+    public var account: AccountInstance {
+        _account
+    }
     
     public init(
         account: AccountInstance,

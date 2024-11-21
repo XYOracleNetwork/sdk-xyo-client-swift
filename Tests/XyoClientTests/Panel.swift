@@ -29,6 +29,8 @@ final class PanelTests: XCTestCase {
             return nil
         }
         let result = await panel.reportQuery()
+        XCTAssertEqual(result.bw.addresses.count, 1)
+        XCTAssertEqual(result.bw.addresses[0], panel.account.address)
         XCTAssertTrue(result.payloads.isEmpty, "Expected empty result from panel report")
     }
 
@@ -39,6 +41,8 @@ final class PanelTests: XCTestCase {
             witnesses: [basicWitness]
         )
         let result = await panel.reportQuery()
+        XCTAssertEqual(result.bw.addresses.count, 1)
+        XCTAssertEqual(result.bw.addresses[0], panel.account.address)
         XCTAssertEqual(
             result.payloads.count, witnesses.count,
             "Expected \(witnesses.count) payloads in the panel report result")
@@ -51,6 +55,8 @@ final class PanelTests: XCTestCase {
             witnesses: witnesses
         )
         let result = await panel.reportQuery()
+        XCTAssertEqual(result.bw.addresses.count, 1)
+        XCTAssertEqual(result.bw.addresses[0], panel.account.address)
         XCTAssertEqual(
             result.payloads.count, witnesses.count,
             "Expected \(witnesses.count) payloads in the panel report result")
