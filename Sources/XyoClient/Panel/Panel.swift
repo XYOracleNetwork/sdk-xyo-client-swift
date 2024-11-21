@@ -1,24 +1,37 @@
 import Foundation
 
-public enum XyoPanelError: Error {
-    case postToArchivistFailed
-}
-
 public class XyoPanel {
 
-    public init(archivists: [XyoArchivistApiClient], witnesses: [WitnessModule]) {
+    public typealias XyoPanelReportCallback = (([String]) -> Void)
+
+    private let _account: AccountInstance
+    private let _archivists: [XyoArchivistApiClient]
+    private let _witnesses: [WitnessModule]
+
+    public var account: AccountInstance {
+        _account
+    }
+
+    public init(
+        account: AccountInstance,
+        witnesses: [WitnessModule],
+        archivists: [XyoArchivistApiClient]
+    ) {
         self._archivists = archivists
         self._witnesses = witnesses
+        self._account = account
     }
 
     public convenience init(
-        archive: String? = nil, apiDomain: String? = nil, witnesses: [WitnessModule]? = nil,
-        token: String? = nil
+        account: AccountInstance? = nil,
+        witnesses: [WitnessModule] = [],
+        archive: String = XyoArchivistApiClient.DefaultArchivist,
+        apiDomain: String = XyoArchivistApiClient.DefaultApiDomain
     ) {
-        let apiConfig = XyoArchivistApiConfig(
-            archive ?? XyoPanel.Defaults.apiModule, apiDomain ?? XyoPanel.Defaults.apiDomain)
+        let panelAccount = account ?? Account.random()
+        let apiConfig = XyoArchivistApiConfig(archive, apiDomain)
         let archivist = XyoArchivistApiClient.get(apiConfig)
-        self.init(archivists: [archivist], witnesses: witnesses ?? [])
+        self.init(account: panelAccount, witnesses: witnesses, archivists: [archivist])
     }
 
     public convenience init(observe: (() -> XyoEventPayload?)?) {
@@ -35,13 +48,8 @@ public class XyoPanel {
         }
     }
 
-    public typealias XyoPanelReportCallback = (([String]) -> Void)
-
-    private var _archivists: [XyoArchivistApiClient]
-    private var _witnesses: [WitnessModule]
-
     @available(iOS 15, *)
-    public func report() async -> [Payload] {
+    private func witnessAll() async -> [Payload] {
         var payloads: [Payload] = []
         // Collect payloads from both synchronous and asynchronous witnesses
         for witness in _witnesses {
@@ -59,7 +67,11 @@ public class XyoPanel {
                 }
             }
         }
+        return payloads
+    }
 
+    @available(iOS 15, *)
+    public func storeWitnessedResults(payloads: [Payload]) async {
         // Insert witnessed results into archivists
         await withTaskGroup(of: [Payload]?.self) { group in
             for instance in _archivists {
@@ -73,38 +85,40 @@ public class XyoPanel {
                 }
             }
         }
-        return payloads
+        return
+    }
+
+    @available(iOS 15, *)
+    public func report() async -> [Payload] {
+        // Report
+        let results = await witnessAll()
+        // Insert results into Archivists
+        await storeWitnessedResults(payloads: results)
+        // Return signed results
+        return results
     }
 
     @available(iOS 15, *)
     public func reportQuery() async -> ModuleQueryResult {
         do {
             // Report
-            let reportedResults = await self.report()
+            let results = await witnessAll()
 
-            // sign the results
+            // Sign the results
             let (bw, payloads) = try BoundWitnessBuilder()
-                .payloads(reportedResults)
-                .signers(self._witnesses.map { $0.account })
+                .payloads(results)
+                .signers([self._account])
                 .build()
 
+            // Insert results into Archivists
+            await storeWitnessedResults(payloads: results)
+
+            // Return signed results
             return ModuleQueryResult(bw: bw, payloads: payloads, errors: [])
         } catch {
             print("Error in reportQuery: \(error)")
             // Return an empty ModuleQueryResult in case of an error
             return ModuleQueryResult(bw: BoundWitness(), payloads: [], errors: [])
         }
-    }
-
-    struct Defaults {
-        static let apiDomain =
-            ProcessInfo.processInfo.environment["XYO_API_DOMAIN"]
-            ?? "https://beta.api.archivist.xyo.network"
-        static let apiModule = ProcessInfo.processInfo.environment["XYO_API_MODULE"] ?? "Archivist"
-    }
-
-    private static var defaultArchivist: XyoArchivistApiClient {
-        XyoArchivistApiClient.get(
-            XyoArchivistApiConfig(self.Defaults.apiModule, self.Defaults.apiDomain))
     }
 }

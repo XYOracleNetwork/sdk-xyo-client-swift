@@ -31,4 +31,3 @@ public class TestPayload2: Payload {
 
 let testPayload2 = TestPayload2("network.xyo.test")
 let testPayload2Hash: Hash = "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35"
-

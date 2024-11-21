@@ -13,14 +13,13 @@ final class PanelTests: XCTestCase {
         )
     ]
 
-    let apiDomain = XyoPanel.Defaults.apiDomain
-    let archive = XyoPanel.Defaults.apiModule
+    let basicWitness = BasicWitness(observer: {
+        return Payload("network.xyo.basic")
+    })
+    let systemInfoWitness = SystemInfoWitness()
 
     func testCreatePanel() throws {
-        let account = Account()
-        let witness = WitnessModuleSync(account: account)
-        let panel = XyoPanel(archive: archive, apiDomain: apiDomain, witnesses: [witness])
-        XCTAssertNotNil(account)
+        let panel = XyoPanel(witnesses: [basicWitness])
         XCTAssertNotNil(panel)
     }
 
@@ -30,22 +29,20 @@ final class PanelTests: XCTestCase {
             return nil
         }
         let result = await panel.reportQuery()
+        XCTAssertEqual(result.bw.addresses.count, 1)
+        XCTAssertEqual(result.bw.addresses[0], panel.account.address)
         XCTAssertTrue(result.payloads.isEmpty, "Expected empty result from panel report")
     }
 
     @available(iOS 15, *)
     func testSingleWitnessPanel() async {
-        let witnesses = [
-            BasicWitness(observer: {
-                return Payload("network.xyo.basic")
-            })
-        ]
+        let witnesses = [basicWitness]
         let panel = XyoPanel(
-            archive: archive,
-            apiDomain: apiDomain,
-            witnesses: witnesses
+            witnesses: [basicWitness]
         )
         let result = await panel.reportQuery()
+        XCTAssertEqual(result.bw.addresses.count, 1)
+        XCTAssertEqual(result.bw.addresses[0], panel.account.address)
         XCTAssertEqual(
             result.payloads.count, witnesses.count,
             "Expected \(witnesses.count) payloads in the panel report result")
@@ -53,18 +50,13 @@ final class PanelTests: XCTestCase {
 
     @available(iOS 15, *)
     func testMultiWitnessPanel() async {
-        let witnesses = [
-            BasicWitness(observer: {
-                return Payload("network.xyo.basic")
-            }),
-            SystemInfoWitness(),
-        ]
+        let witnesses = [basicWitness, systemInfoWitness]
         let panel = XyoPanel(
-            archive: archive,
-            apiDomain: apiDomain,
             witnesses: witnesses
         )
         let result = await panel.reportQuery()
+        XCTAssertEqual(result.bw.addresses.count, 1)
+        XCTAssertEqual(result.bw.addresses[0], panel.account.address)
         XCTAssertEqual(
             result.payloads.count, witnesses.count,
             "Expected \(witnesses.count) payloads in the panel report result")
