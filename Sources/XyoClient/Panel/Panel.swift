@@ -2,6 +2,13 @@ import Foundation
 
 public class XyoPanel {
 
+    
+    public typealias XyoPanelReportCallback = (([String]) -> Void)
+
+    private var _archivists: [XyoArchivistApiClient]
+    private var _witnesses: [WitnessModule]
+    private let account: AccountInstance
+    
     public init(
         account: AccountInstance,
         witnesses: [WitnessModule],
@@ -9,6 +16,7 @@ public class XyoPanel {
     ) {
         self._archivists = archivists
         self._witnesses = witnesses
+        self.account = account
     }
 
     public convenience init(
@@ -36,11 +44,6 @@ public class XyoPanel {
             self.init()
         }
     }
-
-    public typealias XyoPanelReportCallback = (([String]) -> Void)
-
-    private var _archivists: [XyoArchivistApiClient]
-    private var _witnesses: [WitnessModule]
 
     @available(iOS 15, *)
     public func report() async -> [Payload] {
@@ -87,7 +90,7 @@ public class XyoPanel {
             // sign the results
             let (bw, payloads) = try BoundWitnessBuilder()
                 .payloads(reportedResults)
-                .signers(self._witnesses.map { $0.account })
+                .signers([self.account])
                 .build()
 
             return ModuleQueryResult(bw: bw, payloads: payloads, errors: [])

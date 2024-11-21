@@ -3,9 +3,7 @@ import Foundation
 
 public class XyoArchivistApiClient {
     
-    public static let DefaultApiDomain: String =
-    ProcessInfo.processInfo.environment["XYO_API_DOMAIN"]
-    ?? "https://api.archivist.xyo.network"
+    public static let DefaultApiDomain: String = ProcessInfo.processInfo.environment["XYO_API_DOMAIN"] ?? "https://api.archivist.xyo.network"
     public static let DefaultArchivist: String = ProcessInfo.processInfo.environment["XYO_API_MODULE"] ?? "Archivist"
 
     private static let ArchivistInsertQuerySchema = "network.xyo.query.archivist.insert"
