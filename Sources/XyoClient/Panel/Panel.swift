@@ -94,7 +94,7 @@ public class XyoPanel {
         let results = await witnessAll()
         // Insert results into Archivists
         await storeWitnessedResults(payloads: results)
-        // Return signed results
+        // Return results
         return results
     }
 
@@ -110,8 +110,9 @@ public class XyoPanel {
                 .signers([self._account])
                 .build()
 
-            // Insert results into Archivists
-            await storeWitnessedResults(payloads: results)
+            // Insert signed results into Archivists
+            let toStore = [bw] + payloads
+            await storeWitnessedResults(payloads: toStore)
 
             // Return signed results
             return ModuleQueryResult(bw: bw, payloads: payloads, errors: [])
