@@ -25,8 +25,8 @@ public class XyoPanel {
     public convenience init(
         account: AccountInstance? = nil,
         witnesses: [WitnessModule] = [],
-        archive: String = XyoArchivistApiClient.DefaultArchivist,
-        apiDomain: String = XyoArchivistApiClient.DefaultApiDomain
+        apiDomain: String = XyoArchivistApiClient.DefaultApiDomain,
+        archive: String = XyoArchivistApiClient.DefaultArchivist
     ) {
         let panelAccount = account ?? Account.random()
         let apiConfig = XyoArchivistApiConfig(archive, apiDomain)
