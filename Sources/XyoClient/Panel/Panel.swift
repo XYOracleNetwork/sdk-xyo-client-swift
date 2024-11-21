@@ -68,7 +68,7 @@ public class XyoPanel {
     }
     
     @available(iOS 15, *)
-    public func storeWitnessed(payloads: [Payload]) async {
+    public func storeWitnessedResults(payloads: [Payload]) async {
         // Insert witnessed results into archivists
         await withTaskGroup(of: [Payload]?.self) { group in
             for instance in _archivists {
@@ -87,23 +87,30 @@ public class XyoPanel {
     
     @available(iOS 15, *)
     public func report() async -> [Payload] {
-        let payloads = await witnessAll()
-        await storeWitnessed(payloads: payloads)
-        return payloads
+        // Report
+        let results = await witnessAll()
+        // Insert results into Archivists
+        await storeWitnessedResults(payloads: results)
+        // Return signed results
+        return results
     }
 
     @available(iOS 15, *)
     public func reportQuery() async -> ModuleQueryResult {
         do {
             // Report
-            let reportedResults = await self.report()
+            let results = await witnessAll()
 
-            // sign the results
+            // Sign the results
             let (bw, payloads) = try BoundWitnessBuilder()
-                .payloads(reportedResults)
+                .payloads(results)
                 .signers([self._account])
                 .build()
+            
+            // Insert results into Archivists
+            await storeWitnessedResults(payloads: results)
 
+            // Return signed results
             return ModuleQueryResult(bw: bw, payloads: payloads, errors: [])
         } catch {
             print("Error in reportQuery: \(error)")
