@@ -13,7 +13,8 @@ let package = Package(
     products: [
         .library(
             name: "XyoClient",
-            targets: ["XyoClient"])
+            targets: ["XyoClient"]
+        )
     ],
     dependencies: [
         .package(
@@ -28,23 +29,7 @@ let package = Package(
                 .product(name: "secp256k1", package: "swift-secp256k1"),
                 "Alamofire",
                 "keccak",
-            ],
-//             sources: [
-// //                "CoreDataPreviousHashStore.swift",
-// //                "../../.build/plugins/outputs/sdk-xyo-client-swift/XyoClient/destination/CoreDataModelGenerator/Generated",
-// //                "Generated" // Include generated files
-//             ],
-            resources: [
-                .process("Model.xcdatamodeld")
-            ],
-            plugins: [
-                .plugin(name: "CoreDataModelGenerator")
             ]
-        ),
-        .plugin(
-            name: "CoreDataModelGenerator",
-            capability: .buildTool(),
-            dependencies: []
         ),
         .testTarget(
             name: "XyoClientTests",
