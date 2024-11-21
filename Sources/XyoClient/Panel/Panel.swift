@@ -5,9 +5,9 @@ public class XyoPanel {
     
     public typealias XyoPanelReportCallback = (([String]) -> Void)
 
-    private var _archivists: [XyoArchivistApiClient]
-    private var _witnesses: [WitnessModule]
-    private let account: AccountInstance
+    private let _account: AccountInstance
+    private let _archivists: [XyoArchivistApiClient]
+    private let _witnesses: [WitnessModule]
     
     public init(
         account: AccountInstance,
@@ -16,7 +16,7 @@ public class XyoPanel {
     ) {
         self._archivists = archivists
         self._witnesses = witnesses
-        self.account = account
+        self._account = account
     }
 
     public convenience init(
@@ -90,7 +90,7 @@ public class XyoPanel {
             // sign the results
             let (bw, payloads) = try BoundWitnessBuilder()
                 .payloads(reportedResults)
-                .signers([self.account])
+                .signers([self._account])
                 .build()
 
             return ModuleQueryResult(bw: bw, payloads: payloads, errors: [])
