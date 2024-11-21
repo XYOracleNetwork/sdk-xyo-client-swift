@@ -7,4 +7,5 @@ public protocol AccountStatic {
     // static func create(options: C?) async throws -> T
     static func fromPrivateKey(key: Data?) -> AccountInstance
     static func random() -> AccountInstance
+    static var previousHashStore: PreviousHashStore { get set }
 }

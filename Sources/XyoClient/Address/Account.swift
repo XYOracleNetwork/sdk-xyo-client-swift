@@ -1,6 +1,8 @@
 import Foundation
 
 public class Account: AccountInstance, AccountStatic {
+    public static var previousHashStore: PreviousHashStore = CoreDataPreviousHashStore()
+    
     let _account: XyoAddress
 
     public static func fromPrivateKey(key: Data?) -> AccountInstance {
