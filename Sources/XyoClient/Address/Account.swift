@@ -58,7 +58,7 @@ public class Account: AccountInstance, AccountStatic {
         guard let value = try self._account.sign(hash: hash) else {
             fatalError("Error signing hash")
         }
-        previousHash = value
+        previousHash = hash
         return value
     }
 }
