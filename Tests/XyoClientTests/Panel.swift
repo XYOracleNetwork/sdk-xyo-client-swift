@@ -12,12 +12,14 @@ final class PanelTests: XCTestCase {
             "multiWitnessPanel", testMultiWitnessPanel
         )
     ]
+    
+    let basicWitness = BasicWitness(observer: {
+        return Payload("network.xyo.basic")
+    })
+    let systemInfoWitness = SystemInfoWitness()
 
     func testCreatePanel() throws {
-        let account = Account()
-        let witness = WitnessModuleSync(account: account)
-        let panel = XyoPanel(witnesses: [witness])
-        XCTAssertNotNil(account)
+        let panel = XyoPanel(witnesses: [basicWitness])
         XCTAssertNotNil(panel)
     }
 
@@ -32,13 +34,9 @@ final class PanelTests: XCTestCase {
 
     @available(iOS 15, *)
     func testSingleWitnessPanel() async {
-        let witnesses = [
-            BasicWitness(observer: {
-                return Payload("network.xyo.basic")
-            })
-        ]
+        let witnesses = [basicWitness]
         let panel = XyoPanel(
-            witnesses: witnesses
+            witnesses: [basicWitness]
         )
         let result = await panel.reportQuery()
         XCTAssertEqual(
@@ -48,12 +46,7 @@ final class PanelTests: XCTestCase {
 
     @available(iOS 15, *)
     func testMultiWitnessPanel() async {
-        let witnesses = [
-            BasicWitness(observer: {
-                return Payload("network.xyo.basic")
-            }),
-            SystemInfoWitness(),
-        ]
+        let witnesses = [basicWitness, systemInfoWitness]
         let panel = XyoPanel(
             witnesses: witnesses
         )

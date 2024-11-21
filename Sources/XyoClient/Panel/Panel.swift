@@ -7,6 +7,7 @@ public enum XyoPanelError: Error {
 public class XyoPanel {
 
     public init(
+        account: AccountInstance,
         witnesses: [WitnessModule],
         archivists: [XyoArchivistApiClient]
     ) {
@@ -15,13 +16,15 @@ public class XyoPanel {
     }
 
     public convenience init(
+        account: AccountInstance? = nil,
         witnesses: [WitnessModule] = [],
         archive: String = XyoArchivistApiClient.DefaultArchivist,
         apiDomain: String = XyoArchivistApiClient.DefaultApiDomain
     ) {
+        let panelAccount = account ?? Account.random()
         let apiConfig = XyoArchivistApiConfig(archive, apiDomain)
         let archivist = XyoArchivistApiClient.get(apiConfig)
-        self.init(witnesses: witnesses, archivists: [archivist])
+        self.init(account: panelAccount, witnesses: witnesses, archivists: [archivist])
     }
 
     public convenience init(observe: (() -> XyoEventPayload?)?) {
