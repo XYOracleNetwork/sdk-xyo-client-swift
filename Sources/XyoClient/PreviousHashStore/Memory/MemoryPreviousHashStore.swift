@@ -1,4 +1,4 @@
-public class InMemoryPreviousHashStore: PreviousHashStore {
+public class MemoryPreviousHashStore: PreviousHashStore {
     private var store: [Address: Hash] = [:]
 
     public func getItem(address: Address) -> Hash? {
