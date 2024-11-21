@@ -111,8 +111,8 @@ public class XyoPanel {
                 .build()
 
             // Insert signed results into Archivists
-            let toStore = [bw] + payloads
-            await storeWitnessedResults(payloads: toStore)
+            let signedResults = [bw] + payloads
+            await storeWitnessedResults(payloads: signedResults)
 
             // Return signed results
             return ModuleQueryResult(bw: bw, payloads: payloads, errors: [])
