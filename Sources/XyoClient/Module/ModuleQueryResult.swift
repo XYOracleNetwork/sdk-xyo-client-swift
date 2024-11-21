@@ -1,9 +1,9 @@
 import Foundation
 
 public class ModuleQueryResult: Encodable, Decodable {
-    var bw: BoundWitness
-    var payloads: [Payload]
-    var errors: [Payload]
+    public let bw: BoundWitness
+    public let payloads: [Payload]
+    public let errors: [Payload]
     init(bw: BoundWitness, payloads: [Payload] = [], errors: [Payload] = []) {
         self.bw = bw
         self.payloads = payloads
