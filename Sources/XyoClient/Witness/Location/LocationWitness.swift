@@ -10,8 +10,9 @@ open class LocationWitness: WitnessModuleAsync {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let location):
-                    let payload = IosLocationPayload(location)
-                    completion([payload], nil)
+                    let iosLocationPayload = IosLocationPayload(location)
+                    let locationPayload = LocationPayload(location)
+                    completion([iosLocationPayload, locationPayload], nil)
                 case .failure(let error):
                     completion(nil, error)
                 }
