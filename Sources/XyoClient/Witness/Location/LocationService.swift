@@ -1,7 +1,7 @@
 import CoreLocation
 import Foundation
 
-public class LocationService: NSObject, CLLocationManagerDelegate {
+public class LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProtocol {
     private let locationManager = CLLocationManager()
     private var locationCompletion: ((Result<CLLocation, Error>) -> Void)?
 
@@ -23,7 +23,7 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
     }
 
     // CLLocationManagerDelegate methods
-    public func locationManager(
+    @objc public func locationManager(
         _ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]
     ) {
         if let location = locations.last {
@@ -31,7 +31,7 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
         }
     }
 
-    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    @objc public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         locationCompletion?(.failure(error))
     }
 }
