@@ -2,16 +2,27 @@ import CoreLocation
 import Foundation
 
 open class LocationWitness: WitnessModuleAsync {
-    private var locationService: LocationService = LocationService()
+    private var _locationService: LocationServiceProtocol?
     
-    override init(account: AccountInstance?) {
-        self.locationService = LocationService()
+    private var locationService: LocationServiceProtocol {
+        get {
+            if let service = _locationService {
+                return service
+            } else {
+                let initialized = LocationService()
+                self._locationService = initialized
+                return initialized
+            }
+        }
+    }
+    
+    override init(account: AccountInstance? = nil) {
         super.init(account: account)
     }
     
-    convenience init(locationService: LocationService) {
+    convenience init(locationService: LocationServiceProtocol) {
         self.init(account: nil)
-        self.locationService = locationService
+        self._locationService = locationService
     }
 
     override open func observe(completion: @escaping ([Payload]?, Error?) -> Void) {
