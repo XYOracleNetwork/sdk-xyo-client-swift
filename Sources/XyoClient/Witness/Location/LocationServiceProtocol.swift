@@ -1,7 +1,7 @@
 import CoreLocation
 import Foundation
 
-protocol LocationServiceProtocol {
+public protocol LocationServiceProtocol {
     func requestAuthorization()
     func requestLocation(completion: @escaping (Result<CLLocation, Error>) -> Void)
 }

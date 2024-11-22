@@ -14,11 +14,11 @@ open class LocationWitness: WitnessModuleAsync {
         }
     }
 
-    override init(account: AccountInstance? = nil) {
+    override public init(account: AccountInstance? = nil) {
         super.init(account: account)
     }
 
-    convenience init(locationService: LocationServiceProtocol) {
+    public convenience init(locationService: LocationServiceProtocol) {
         self.init(account: nil)
         self._locationService = locationService
     }

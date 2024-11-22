@@ -32,7 +32,8 @@ final class LocationWitnessTests: XCTestCase {
         let locationServiceMock = MockLocationService()
         let lattitiude: Double = 1
         let longitude: Double = 2
-        locationServiceMock.simulatedResult = .success(CLLocation(latitude: lattitiude, longitude: longitude))
+        locationServiceMock.simulatedResult = .success(
+            CLLocation(latitude: lattitiude, longitude: longitude))
         let sut = LocationWitness(locationService: locationServiceMock)
         let results = try await sut.observe()
         XCTAssertEqual(results.count, 2)
