@@ -3,10 +3,10 @@ import XCTest
 
 @testable import XyoClient
 
-fileprivate class MockLocationService: LocationServiceProtocol {
+private class MockLocationService: LocationServiceProtocol {
     var didRequestAuthorization = false
     var simulatedResult: Result<CLLocation, Error>?
-    
+
     func requestAuthorization() {
         didRequestAuthorization = true
     }
@@ -18,12 +18,12 @@ fileprivate class MockLocationService: LocationServiceProtocol {
     }
 }
 
-
 @available(iOS 13.0, *)
 final class LocationWitnessTests: XCTestCase {
     static var allTests = [
         (
-            "observe:returnsMultipleLocationPayloads", testLocationWitness_observe_returnsMultipleLocationPayloads
+            "observe:returnsMultipleLocationPayloads",
+            testLocationWitness_observe_returnsMultipleLocationPayloads
         )
     ]
 
@@ -32,7 +32,14 @@ final class LocationWitnessTests: XCTestCase {
         let locationServiceMock = MockLocationService()
         locationServiceMock.simulatedResult = .success(CLLocation(latitude: 1, longitude: 2))
         let sut = LocationWitness(locationService: locationServiceMock)
-        let result = try await sut.observe()
-        XCTAssertEqual(result.count, 2)
+        let results = try await sut.observe()
+        XCTAssertEqual(results.count, 2)
+        let locationPayload = try XCTUnwrap(
+            results.compactMap { $0 as? LocationPayload }.first, "Missing location payload.")
+        XCTAssertEqual(locationPayload.schema, "network.xyo.location")
+        let iosLocationPayload = try XCTUnwrap(
+            results.compactMap { $0 as? IosLocationPayload }.first, "Missing iOS location payload.")
+        XCTAssertEqual(iosLocationPayload.schema, "network.xyo.location.ios")
+
     }
 }

@@ -17,7 +17,7 @@ open class LocationPayload: Payload {
     override open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.schema, forKey: .schema)
-        
+
         let coords: CoordinatesStruct = CoordinatesStruct(
             accuracy: self.location.horizontalAccuracy,
             altitude: self.location.altitude,
@@ -28,7 +28,8 @@ open class LocationPayload: Payload {
             speed: self.location.speed
         )
         let timestamp = self.location.timestamp
-        let currentLocation: CurrentLocationStruct = CurrentLocationStruct(coords: coords, timestamp: timestamp)
+        let currentLocation: CurrentLocationStruct = CurrentLocationStruct(
+            coords: coords, timestamp: timestamp)
         try container.encode(currentLocation, forKey: .currentLocation)
     }
 }

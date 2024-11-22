@@ -3,23 +3,21 @@ import Foundation
 
 open class LocationWitness: WitnessModuleAsync {
     private var _locationService: LocationServiceProtocol?
-    
+
     private var locationService: LocationServiceProtocol {
-        get {
-            if let service = _locationService {
-                return service
-            } else {
-                let initialized = LocationService()
-                self._locationService = initialized
-                return initialized
-            }
+        if let service = _locationService {
+            return service
+        } else {
+            let initialized = LocationService()
+            self._locationService = initialized
+            return initialized
         }
     }
-    
+
     override init(account: AccountInstance? = nil) {
         super.init(account: account)
     }
-    
+
     convenience init(locationService: LocationServiceProtocol) {
         self.init(account: nil)
         self._locationService = locationService
