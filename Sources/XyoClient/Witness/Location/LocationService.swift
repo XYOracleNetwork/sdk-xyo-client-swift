@@ -23,7 +23,7 @@ public class LocationService: NSObject, CLLocationManagerDelegate, LocationServi
     }
 
     // CLLocationManagerDelegate methods
-    public func locationManager(
+    @objc public func locationManager(
         _ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]
     ) {
         if let location = locations.last {
@@ -31,7 +31,7 @@ public class LocationService: NSObject, CLLocationManagerDelegate, LocationServi
         }
     }
 
-    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    @objc public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         locationCompletion?(.failure(error))
     }
 }
