@@ -2,7 +2,17 @@ import CoreLocation
 import Foundation
 
 open class LocationWitness: WitnessModuleAsync {
-    private let locationService = LocationService()
+    private var locationService: LocationService = LocationService()
+    
+    override init(account: AccountInstance?) {
+        self.locationService = LocationService()
+        super.init(account: account)
+    }
+    
+    convenience init(locationService: LocationService) {
+        self.init(account: nil)
+        self.locationService = locationService
+    }
 
     override open func observe(completion: @escaping ([Payload]?, Error?) -> Void) {
         locationService.requestAuthorization()
