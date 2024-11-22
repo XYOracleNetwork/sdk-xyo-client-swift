@@ -1,12 +1,14 @@
 import CoreLocation
 
 open class LocationPayload: Payload {
+    
+    public static let schema: String = "network.xyo.location"
 
     var location: CLLocation
 
     public init(_ location: CLLocation) {
         self.location = location
-        super.init("network.xyo.location")
+        super.init(LocationPayload.schema)
     }
 
     enum CodingKeys: String, CodingKey {

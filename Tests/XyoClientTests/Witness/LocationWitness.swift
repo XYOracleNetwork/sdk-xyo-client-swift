@@ -30,16 +30,22 @@ final class LocationWitnessTests: XCTestCase {
     @available(iOS 15, *)
     func testLocationWitness_observe_returnsMultipleLocationPayloads() async throws {
         let locationServiceMock = MockLocationService()
-        locationServiceMock.simulatedResult = .success(CLLocation(latitude: 1, longitude: 2))
+        let lattitiude: Double = 1
+        let longitude: Double = 2
+        locationServiceMock.simulatedResult = .success(CLLocation(latitude: lattitiude, longitude: longitude))
         let sut = LocationWitness(locationService: locationServiceMock)
         let results = try await sut.observe()
         XCTAssertEqual(results.count, 2)
         let locationPayload = try XCTUnwrap(
             results.compactMap { $0 as? LocationPayload }.first, "Missing location payload.")
-        XCTAssertEqual(locationPayload.schema, "network.xyo.location")
+        XCTAssertEqual(locationPayload.schema, LocationPayload.schema)
+        XCTAssertEqual(locationPayload.location.coordinate.latitude, lattitiude)
+        XCTAssertEqual(locationPayload.location.coordinate.longitude, longitude)
         let iosLocationPayload = try XCTUnwrap(
             results.compactMap { $0 as? IosLocationPayload }.first, "Missing iOS location payload.")
-        XCTAssertEqual(iosLocationPayload.schema, "network.xyo.location.ios")
+        XCTAssertEqual(iosLocationPayload.schema, IosLocationPayload.schema)
+        XCTAssertEqual(iosLocationPayload.location.coordinate.latitude, lattitiude)
+        XCTAssertEqual(iosLocationPayload.location.coordinate.longitude, longitude)
 
     }
 }
