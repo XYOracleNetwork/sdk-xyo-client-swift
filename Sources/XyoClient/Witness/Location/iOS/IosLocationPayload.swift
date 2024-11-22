@@ -1,12 +1,14 @@
 import CoreLocation
 
-open class LocationPayload: Payload {
+open class IosLocationPayload: Payload {
+    
+    public static let schema: String = "network.xyo.location.ios"
 
     var location: CLLocation
 
     public init(_ location: CLLocation) {
         self.location = location
-        super.init("network.xyo.location.ios")
+        super.init(IosLocationPayload.schema)
     }
 
     enum CodingKeys: String, CodingKey {
@@ -31,7 +33,7 @@ open class LocationPayload: Payload {
 
         try container.encode(self.location.altitude, forKey: .altitude)
         try container.encode(
-            LocationCoordinatePayloadStruct(self.location.coordinate), forKey: .coordinate)
+            IosLocationCoordinatePayloadStruct(self.location.coordinate), forKey: .coordinate)
         try container.encode(self.location.course, forKey: .course)
         if #available(iOS 13.4, *) {
             try container.encode(self.location.courseAccuracy, forKey: .courseAccuracy)
@@ -41,13 +43,13 @@ open class LocationPayload: Payload {
         }
         if let floor = self.location.floor {
             try container.encode(
-                LocationFloorPayloadStruct(floor), forKey: .floor)
+                IosLocationFloorPayloadStruct(floor), forKey: .floor)
         }
         try container.encode(self.location.horizontalAccuracy, forKey: .horizontalAccuracy)
         if #available(iOS 15.0, *) {
             if let sourceInformation = self.location.sourceInformation {
                 try container.encode(
-                    LocationSourceInformationPayloadStruct(sourceInformation),
+                    IosLocationSourceInformationPayloadStruct(sourceInformation),
                     forKey: .sourceInformation)
             }
         }

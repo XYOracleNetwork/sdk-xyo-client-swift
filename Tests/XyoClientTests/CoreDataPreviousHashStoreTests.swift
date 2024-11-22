@@ -22,8 +22,8 @@ final class CoreDataPreviousHashStoreTests: XCTestCase {
     }
 
     func testSetItemAndGetItem() {
-        let address = "0x123456"
-        let hash = "0xabcdef"
+        let address = "2d0fb5708b9d68bfaa96c6e426cbc66a341f117d"
+        let hash = "fb2b2ed349278d35b2cf32ec719227cf2a0f099f3a3305307bce15362eca32b9"
 
         // Set an item
         store.setItem(address: address, previousHash: hash)
@@ -34,8 +34,8 @@ final class CoreDataPreviousHashStoreTests: XCTestCase {
     }
 
     func testRemoveItem() {
-        let address = "0x123456"
-        let hash = "0xabcdef"
+        let address = "f90b9ad30ea94d3df17d51c727c416b46faf18b6"
+        let hash = "8a76ed3fa2507859e43f24ea0e6c03acb1782281429294bb8123b6d9e73f1710"
 
         // Set an item
         store.setItem(address: address, previousHash: hash)
@@ -49,9 +49,9 @@ final class CoreDataPreviousHashStoreTests: XCTestCase {
     }
 
     func testUpdateItem() {
-        let address = "0x123456"
-        let initialHash = "0xabcdef"
-        let updatedHash = "0x123abc"
+        let address = "85e7a0494c1feb184a80d64aca7bef07d8efd960"
+        let initialHash = "6c509659288d86d4961906299692239d40e5e3a8834ab89a473d9031e50703e0"
+        let updatedHash = "c2842590d989afae0bf2970b31d0323f97fe68c71a1c9d13bf275bbed13cf92c"
 
         // Set an initial item
         store.setItem(address: address, previousHash: initialHash)
@@ -65,7 +65,7 @@ final class CoreDataPreviousHashStoreTests: XCTestCase {
     }
 
     func testGetItemNonExistentAddress() {
-        let address = "0x789abc"
+        let address = "f8ede235dbc41c06936d46a26d9038a58ba254a1"
 
         // Try to get an item that doesn't exist
         let retrievedHash = store.getItem(address: address)
