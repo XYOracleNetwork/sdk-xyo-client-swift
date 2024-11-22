@@ -65,7 +65,7 @@ final class CoreDataPreviousHashStoreTests: XCTestCase {
     }
 
     func testGetItemNonExistentAddress() {
-        let address = "0x789abc"
+        let address = "f8ede235dbc41c06936d46a26d9038a58ba254a1"
 
         // Try to get an item that doesn't exist
         let retrievedHash = store.getItem(address: address)
