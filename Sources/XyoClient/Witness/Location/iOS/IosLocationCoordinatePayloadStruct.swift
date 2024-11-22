@@ -1,7 +1,7 @@
 import CoreLocation
 import Foundation
 
-struct LocationCoordinatePayloadStruct: Encodable {
+struct IosLocationCoordinatePayloadStruct: Encodable {
 
     var coordinate: CLLocationCoordinate2D
 

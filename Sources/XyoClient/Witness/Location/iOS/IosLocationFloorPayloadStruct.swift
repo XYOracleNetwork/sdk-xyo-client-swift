@@ -1,7 +1,7 @@
 import CoreLocation
 import Foundation
 
-struct LocationFloorPayloadStruct: Encodable {
+struct IosLocationFloorPayloadStruct: Encodable {
 
     var floor: CLFloor
 
