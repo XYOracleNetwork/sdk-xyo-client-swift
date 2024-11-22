@@ -10,52 +10,25 @@ open class LocationPayload: Payload {
     }
 
     enum CodingKeys: String, CodingKey {
-        case altitude
-        case coordinate
-        case course
-        case courseAccuracy
-        case ellipsoidalAltitude
-        case floor
-        case horizontalAccuracy
+        case currentLocation
         case schema
-        case sourceInformation
-        case speed
-        case speedAccuracy
-        case timestamp
-        case verticalAccuracy
     }
 
     override open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.schema, forKey: .schema)
-
-        try container.encode(self.location.altitude, forKey: .altitude)
-        try container.encode(
-            IosLocationCoordinatePayloadStruct(self.location.coordinate), forKey: .coordinate)
-        try container.encode(self.location.course, forKey: .course)
-        if #available(iOS 13.4, *) {
-            try container.encode(self.location.courseAccuracy, forKey: .courseAccuracy)
-        }
-        if #available(iOS 15, *) {
-            try container.encode(self.location.ellipsoidalAltitude, forKey: .ellipsoidalAltitude)
-        }
-        if let floor = self.location.floor {
-            try container.encode(
-                IosLocationFloorPayloadStruct(floor), forKey: .floor)
-        }
-        try container.encode(self.location.horizontalAccuracy, forKey: .horizontalAccuracy)
-        if #available(iOS 15.0, *) {
-            if let sourceInformation = self.location.sourceInformation {
-                try container.encode(
-                    IosLocationSourceInformationPayloadStruct(sourceInformation),
-                    forKey: .sourceInformation)
-            }
-        }
-        try container.encode(self.location.speed, forKey: .speed)
-        try container.encode(self.location.speedAccuracy, forKey: .speedAccuracy)
-        try container.encode(
-            Int(self.location.timestamp.timeIntervalSince1970 * 1000), forKey: .timestamp)
-        try container.encode(self.location.verticalAccuracy, forKey: .verticalAccuracy)
-
+        
+        let coords: CoordinatesStruct = CoordinatesStruct(
+            accuracy: self.location.horizontalAccuracy,
+            altitude: self.location.altitude,
+            altitudeAccuracy: self.location.altitude,
+            heading: self.location.course,
+            latitude: self.location.coordinate.latitude,
+            longitude: self.location.coordinate.longitude,
+            speed: self.location.speed
+        )
+        let timestamp = self.location.timestamp
+        let currentLocation: CurrentLocationStruct = CurrentLocationStruct(coords: coords, timestamp: timestamp)
+        try container.encode(currentLocation, forKey: .currentLocation)
     }
 }
