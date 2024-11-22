@@ -17,7 +17,7 @@ class AccountServicesTests: XCTestCase {
 
     func testGetNamedAccount_CreatesAndReturnsNewAccount_WhenNoExistingAccount() {
         // Act
-        let account = AccountServices.getNamedAccount(name: "testAccount")
+        let account = AccountServices.getNamedAccount(name: "testAccount1")
 
         // Assert
         XCTAssertNotNil(account)
@@ -27,9 +27,9 @@ class AccountServicesTests: XCTestCase {
     func testGetNamedAccount_ReturnsExistingAccount_WhenAccountExists() {
         // Act
         // Initial attempt create account
-        let accountA = AccountServices.getNamedAccount(name: "testAccount")
+        let accountA = AccountServices.getNamedAccount(name: "testAccount2")
         // Subsequent ones retrieve account
-        let accountB = AccountServices.getNamedAccount(name: "testAccount")
+        let accountB = AccountServices.getNamedAccount(name: "testAccount2")
 
         // Asserts
         let addressA = accountA.address
