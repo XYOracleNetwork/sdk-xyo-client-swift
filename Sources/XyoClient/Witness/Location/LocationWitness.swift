@@ -12,8 +12,9 @@ open class LocationWitness: WitnessModuleAsync {
                 switch result {
                 case .success(let location):
                     let iosLocationPayload = IosLocationPayload(location)
-                    let locationPayload = LocationPayload(location)
-                    completion([iosLocationPayload, locationPayload], nil)
+                    //                    let locationPayload = LocationPayload(location)
+                    //                    completion([iosLocationPayload, locationPayload], nil)
+                    completion([iosLocationPayload], nil)
                 case .failure(let error):
                     completion(nil, error)
                 }
