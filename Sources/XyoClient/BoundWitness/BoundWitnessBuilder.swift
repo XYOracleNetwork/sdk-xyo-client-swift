@@ -30,8 +30,8 @@ public class BoundWitnessBuilder {
         return self
     }
 
-    private func hashableFields() -> XyoBoundWitnessBodyJson {
-        return XyoBoundWitnessBodyJson(
+    private func hashableFields() -> BoundWitnessBodyJson {
+        return BoundWitnessBodyJson(
             addresses: _accounts.map { witness in witness.address },
             payload_hashes: _payload_hashes,
             payload_schemas: _payload_schemas,

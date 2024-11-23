@@ -1,6 +1,6 @@
 import Foundation
 
-public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaProtocol {
+public class XyoBoundWitnessJson: BoundWitnessBodyJson, BoundWitnessMeta {
     enum CodingKeys: String, CodingKey {
         case _client
         case _hash

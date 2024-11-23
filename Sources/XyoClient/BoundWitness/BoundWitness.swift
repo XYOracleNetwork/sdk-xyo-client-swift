@@ -2,7 +2,7 @@ import Foundation
 
 let BoundWitnessSchema = "network.xyo.boundwitness"
 
-public class BoundWitness: Payload, BoundWitnessBody, XyoBoundWitnessMetaProtocol,
+public class BoundWitness: Payload, BoundWitnessBody, BoundWitnessMeta,
     Decodable
 {
 
