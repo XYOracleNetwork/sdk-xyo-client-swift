@@ -49,9 +49,9 @@ public class BoundWitness: Payload, XyoBoundWitnessBodyProtocol, XyoBoundWitness
     }
 
     func encodeMetaFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
-        try container.encodeIfNotNil(_client, forKey: ._client)
-        try container.encodeIfNotNil(_hash, forKey: ._hash)
-        try container.encodeIfNotNil(_signatures, forKey: ._signatures)
+        try container.encodeIfPresent(_client, forKey: ._client)
+        try container.encodeIfPresent(_hash, forKey: ._hash)
+        try container.encodeIfPresent(_signatures, forKey: ._signatures)
     }
 
     func encodeBodyFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
@@ -59,7 +59,7 @@ public class BoundWitness: Payload, XyoBoundWitnessBodyProtocol, XyoBoundWitness
         try container.encode(payload_hashes, forKey: .payload_hashes)
         try container.encode(payload_schemas, forKey: .payload_schemas)
         try container.encode(previous_hashes, forKey: .previous_hashes)
-        try container.encodeIfNotNil(query, forKey: .query)
+        try container.encodeIfPresent(query, forKey: .query)
         try container.encode(schema, forKey: .schema)
     }
 
