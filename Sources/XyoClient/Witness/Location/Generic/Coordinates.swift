@@ -51,3 +51,4 @@ struct CoordinatesStruct: Encodable {
         try container.encodeIfValidNumeric(self.speed, forKey: .speed)
     }
 }
+    
