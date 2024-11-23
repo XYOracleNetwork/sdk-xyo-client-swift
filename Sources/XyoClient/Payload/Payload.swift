@@ -23,11 +23,26 @@ extension Payload {
     public func hash() throws -> Data {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
+
+        // Encode `self` to JSON data
         let data = try encoder.encode(self)
 
-        guard let str = String(data: data, encoding: .utf8) else {
+        // Decode the JSON into a dictionary and filter keys
+        guard let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
             throw BoundWitnessBuilderError.encodingError
         }
-        return try str.sha256()
+
+        let filteredJSON = jsonObject.filter { !$0.key.hasPrefix("_") }
+
+        // Encode the filtered dictionary back into JSON data
+        let filteredData = try JSONSerialization.data(withJSONObject: filteredJSON, options: [.sortedKeys])
+
+        // Convert the JSON data into a string
+        guard let jsonString = String(data: filteredData, encoding: .utf8) else {
+            throw BoundWitnessBuilderError.encodingError
+        }
+
+        // Hash the JSON string
+        return try jsonString.sha256()
     }
 }
