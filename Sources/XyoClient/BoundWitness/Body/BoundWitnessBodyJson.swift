@@ -18,11 +18,11 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, De
     public var schema: String
 
     init(
-        _ addresses: [String],
-        _ previous_hashes: [String?],
-        _ payload_hashes: [String],
-        _ payload_schemas: [String],
-        _ query: String? = nil
+        addresses: [String],
+        payload_hashes: [String],
+        payload_schemas: [String],
+        previous_hashes: [String?],
+        query: String? = nil
     ) {
         self.addresses = addresses
         self.payload_hashes = payload_hashes
