@@ -83,15 +83,10 @@ class LocationPayloadTests: XCTestCase {
         {
           "currentLocation" : {
             "coords" : {
-              "accuracy" : 0,
-              "altitude" : 0,
-              "altitudeAccuracy" : 0,
-              "heading" : 0,
               "latitude" : 0,
-              "longitude" : 0,
-              "speed" : 0
+              "longitude" : 0
             },
-            "timestamp" : "1970-01-01T00:00:00Z"
+            "timestamp" : 0
           },
           "schema" : "network.xyo.location"
         }
