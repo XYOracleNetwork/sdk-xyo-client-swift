@@ -33,4 +33,13 @@ final class BoundWitnessTests: XCTestCase {
         let (bwJson, _) = try bw.build()
         XCTAssertEqual(bwJson._hash, "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
     }
+    
+    func testPayload_hash_returnsExpectedHashWhenNested() throws {
+        let hash = try BoundWitnessBuilder.hash(testPayload2)
+        XCTAssertEqual(hash, testPayload2Hash)
+        let address = Account.fromPrivateKey(key: testVectorPrivateKey.hexToData())
+        let bw = try BoundWitnessBuilder().signer(address).payload("network.xyo.test", testPayload2)
+        let (bwJson, _) = try bw.build()
+        XCTAssertEqual(bwJson._hash, "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
+    }
 }
