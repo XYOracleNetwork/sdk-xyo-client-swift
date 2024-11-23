@@ -42,12 +42,22 @@ struct CoordinatesStruct: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        try container.encode(self.accuracy, forKey: .accuracy)
-        try container.encode(self.altitude, forKey: .altitude)
-        try container.encode(self.altitudeAccuracy, forKey: .altitudeAccuracy)
-        try container.encode(self.heading, forKey: .heading)
+        if let accuracy = self.accuracy {
+            try container.encode(accuracy, forKey: .accuracy)
+        }
+        if let altitude = self.altitude {
+            try container.encode(altitude, forKey: .altitude)
+        }
+        if let altitudeAccuracy = self.altitudeAccuracy {
+            try container.encode(altitudeAccuracy, forKey: .altitudeAccuracy)
+        }
+        if let heading = self.heading {
+            try container.encode(heading, forKey: .heading)
+        }
         try container.encode(self.latitude, forKey: .latitude)
         try container.encode(self.longitude, forKey: .longitude)
-        try container.encode(self.speed, forKey: .speed)
+        if let speed = self.speed {
+            try container.encode(speed, forKey: .speed)
+        }
     }
 }
