@@ -3,6 +3,7 @@ import XyoClient
 public class TestPayload2SubObject: Encodable {
     var string_value = "yo"
     var number_value = 2
+    var optional_field: String? = nil
 }
 
 public class TestPayload2: Payload {
@@ -17,6 +18,7 @@ public class TestPayload2: Payload {
         case object_field
         case timestamp
         case number_field
+        case optional_field
     }
 
     public override func encode(to encoder: Encoder) throws {
