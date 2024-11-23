@@ -1,6 +1,6 @@
 import Foundation
 
-public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, Decodable {
+public class BoundWitnessBodyJson: BoundWitnessBody, Encodable, Decodable {
     enum CodingKeys: String, CodingKey {
         case addresses
         case payload_hashes

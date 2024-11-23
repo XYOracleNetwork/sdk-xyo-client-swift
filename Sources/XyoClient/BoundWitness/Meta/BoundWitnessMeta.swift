@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol XyoBoundWitnessMetaProtocol {
+public protocol BoundWitnessMeta {
     var _client: String? { get set }
     var _hash: String? { get set }
     var _signatures: [String]? { get set }
