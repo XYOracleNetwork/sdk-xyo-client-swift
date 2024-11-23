@@ -8,21 +8,29 @@ final class BoundWitnessTests: XCTestCase {
         ("testPayload_hash_returnsExpectedHash1", testPayload_hash_returnsExpectedHash1),
         ("testPayload_hash_returnsExpectedHash2", testPayload_hash_returnsExpectedHash2),
     ]
+    
+    override func setUp() {
+        super.setUp()
+        // Ensure previousHash = nil for tests addresses
+        Account.previousHashStore = MemoryPreviousHashStore()
+    }
 
     func testPayload_hash_returnsExpectedHash1() throws {
         let hash = try BoundWitnessBuilder.hash(testPayload1)
-        XCTAssertEqual(hash, "c915c56dd93b5e0db509d1a63ca540cfb211e11f03039b05e19712267bb8b6db")
+        XCTAssertEqual(hash, testPayload1Hash)
         let address = Account.fromPrivateKey(key: testVectorPrivateKey.hexToData())
         let bw = try BoundWitnessBuilder().signer(address).payload(
             "network.xyo.test", TestPayload1("network.xyo.test"))
         let (bwJson, _) = try bw.build()
-        XCTAssertEqual(bwJson._hash, testPayload1Hash)
+        XCTAssertEqual(bwJson._hash, "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
     }
 
     func testPayload_hash_returnsExpectedHash2() throws {
+        let hash = try BoundWitnessBuilder.hash(testPayload2)
+        XCTAssertEqual(hash, testPayload2Hash)
         let address = Account.fromPrivateKey(key: testVectorPrivateKey.hexToData())
         let bw = try BoundWitnessBuilder().signer(address).payload("network.xyo.test", testPayload2)
         let (bwJson, _) = try bw.build()
-        XCTAssertEqual(bwJson._hash, testPayload2Hash)
+        XCTAssertEqual(bwJson._hash, "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
     }
 }

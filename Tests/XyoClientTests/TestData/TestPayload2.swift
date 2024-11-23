@@ -3,6 +3,7 @@ import XyoClient
 public class TestPayload2SubObject: Encodable {
     var string_value = "yo"
     var number_value = 2
+    var optional_field: String? = nil
 }
 
 public class TestPayload2: Payload {
@@ -17,6 +18,7 @@ public class TestPayload2: Payload {
         case object_field
         case timestamp
         case number_field
+        case optional_field
     }
 
     public override func encode(to encoder: Encoder) throws {
@@ -30,4 +32,4 @@ public class TestPayload2: Payload {
 }
 
 let testPayload2 = TestPayload2("network.xyo.test")
-let testPayload2Hash: Hash = "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35"
+let testPayload2Hash: Hash = "c915c56dd93b5e0db509d1a63ca540cfb211e11f03039b05e19712267bb8b6db"

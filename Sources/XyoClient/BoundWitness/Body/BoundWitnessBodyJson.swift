@@ -18,11 +18,11 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, De
     public var schema: String
 
     init(
-        _ addresses: [String],
-        _ previous_hashes: [String?],
-        _ payload_hashes: [String],
-        _ payload_schemas: [String],
-        _ query: String? = nil
+        addresses: [String],
+        payload_hashes: [String],
+        payload_schemas: [String],
+        previous_hashes: [String?],
+        query: String? = nil
     ) {
         self.addresses = addresses
         self.payload_hashes = payload_hashes
@@ -51,9 +51,7 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, De
         try container.encode(payload_hashes, forKey: .payload_hashes)
         try container.encode(payload_schemas, forKey: .payload_schemas)
         try container.encode(previous_hashes, forKey: .previous_hashes)
-        if query != nil {
-            try container.encode(query, forKey: .query)
-        }
+        try container.encodeIfPresent(query, forKey: .query)
         try container.encode(schema, forKey: .schema)
     }
 
