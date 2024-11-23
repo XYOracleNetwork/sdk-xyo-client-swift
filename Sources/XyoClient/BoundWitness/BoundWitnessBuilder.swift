@@ -87,11 +87,37 @@ public class BoundWitnessBuilder {
     static func hash<T: Encodable>(_ json: T) throws -> String {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
+
+        // Encode `self` to JSON data
         let data = try encoder.encode(json)
 
-        guard let str = String(data: data, encoding: .utf8) else {
+        // Decode the JSON into a dictionary and filter keys
+        guard
+            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+                as? [String: Any]
+        else {
             throw BoundWitnessBuilderError.encodingError
         }
-        return try str.sha256().toHex()
+
+        let filteredJSON = jsonObject.filter { !$0.key.hasPrefix("_") }
+
+        // Encode the filtered dictionary back into JSON data
+        let filteredData = try JSONSerialization.data(
+            withJSONObject: filteredJSON, options: [.sortedKeys])
+
+        // Convert the JSON data into a string
+        guard let jsonString = String(data: filteredData, encoding: .utf8) else {
+            throw BoundWitnessBuilderError.encodingError
+        }
+
+        // Hash the JSON string
+        let prefixesRemoved = try jsonString.sha256().toHex()
+        print(prefixesRemoved)
+        let withoutPrefixesRemoved = data.sha256().toHex()
+        print(withoutPrefixesRemoved)
+        if prefixesRemoved != withoutPrefixesRemoved {
+            print("Error")
+        }
+        return prefixesRemoved
     }
 }
