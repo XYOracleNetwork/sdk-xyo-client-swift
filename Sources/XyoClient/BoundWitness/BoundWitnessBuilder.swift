@@ -92,14 +92,18 @@ public class BoundWitnessBuilder {
         let data = try encoder.encode(json)
 
         // Decode the JSON into a dictionary and filter keys
-        guard let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+        guard
+            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+                as? [String: Any]
+        else {
             throw BoundWitnessBuilderError.encodingError
         }
 
         let filteredJSON = jsonObject.filter { !$0.key.hasPrefix("_") }
 
         // Encode the filtered dictionary back into JSON data
-        let filteredData = try JSONSerialization.data(withJSONObject: filteredJSON, options: [.sortedKeys])
+        let filteredData = try JSONSerialization.data(
+            withJSONObject: filteredJSON, options: [.sortedKeys])
 
         // Convert the JSON data into a string
         guard let jsonString = String(data: filteredData, encoding: .utf8) else {
@@ -111,6 +115,9 @@ public class BoundWitnessBuilder {
         print(prefixesRemoved)
         let withoutPrefixesRemoved = data.sha256().toHex()
         print(withoutPrefixesRemoved)
+        if prefixesRemoved != withoutPrefixesRemoved {
+            print("Error")
+        }
         return prefixesRemoved
     }
 }
