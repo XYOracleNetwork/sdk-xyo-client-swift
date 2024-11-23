@@ -51,9 +51,7 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, De
         try container.encode(payload_hashes, forKey: .payload_hashes)
         try container.encode(payload_schemas, forKey: .payload_schemas)
         try container.encode(previous_hashes, forKey: .previous_hashes)
-        if query != nil {
-            try container.encode(query, forKey: .query)
-        }
+        try container.encodeIfPresent(query, forKey: .query)
         try container.encode(schema, forKey: .schema)
     }
 
