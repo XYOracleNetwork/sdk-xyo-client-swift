@@ -42,19 +42,12 @@ struct CoordinatesStruct: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        // Helper function to check and encode non-NaN Double values
-        func encodeIfValid(_ value: Double?, forKey key: CodingKeys) throws {
-            if let value = value, !value.isNaN {
-                try container.encode(value, forKey: key)
-            }
-        }
-
-        try encodeIfValid(self.accuracy, forKey: .accuracy)
-        try encodeIfValid(self.altitude, forKey: .altitude)
-        try encodeIfValid(self.altitudeAccuracy, forKey: .altitudeAccuracy)
-        try encodeIfValid(self.heading, forKey: .heading)
+        try container.encodeIfValidNumeric(self.accuracy, forKey: .accuracy)
+        try container.encodeIfValidNumeric(self.altitude, forKey: .altitude)
+        try container.encodeIfValidNumeric(self.altitudeAccuracy, forKey: .altitudeAccuracy)
+        try container.encodeIfValidNumeric(self.heading, forKey: .heading)
         try container.encode(self.latitude, forKey: .latitude) // Always encode latitude
         try container.encode(self.longitude, forKey: .longitude) // Always encode longitude
-        try encodeIfValid(self.speed, forKey: .speed)
+        try container.encodeIfValidNumeric(self.speed, forKey: .speed)
     }
 }
