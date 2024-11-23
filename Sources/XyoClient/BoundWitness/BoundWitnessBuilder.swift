@@ -42,7 +42,7 @@ public class BoundWitnessBuilder {
 
     public func payload<T: Payload>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
         _payloads.append(payload)
-        _payload_hashes.append(try payload.hash().toHex())
+        _payload_hashes.append(try payload.hash())
         _payload_schemas.append(schema)
         return self
     }
@@ -50,13 +50,13 @@ public class BoundWitnessBuilder {
     public func payloads(_ payloads: [Payload]) throws -> BoundWitnessBuilder {
         _payloads.append(contentsOf: payloads)
         _payload_hashes.append(
-            contentsOf: try payloads.map { payload in try payload.hash().toHex() })
+            contentsOf: try payloads.map { payload in try payload.hash() })
         _payload_schemas.append(contentsOf: payloads.map { payload in payload.schema })
         return self
     }
 
     public func query(_ payload: Payload) throws -> BoundWitnessBuilder {
-        self._query = try payload.hash().toHex()
+        self._query = try payload.hash()
         let _ = try self.payload(payload.schema, payload)
         return self
     }

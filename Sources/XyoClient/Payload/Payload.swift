@@ -20,7 +20,7 @@ extension Payload {
     ///     converted to a UTF-8 string after encoding.
     ///   - Any error thrown by the `sha256()` function if the hashing process fails.
     /// - Returns: A `Data` object containing the SHA-256 hash of the encoded instance.
-    public func hash() throws -> Data {
+    public func hash() throws -> String {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
 
@@ -38,11 +38,11 @@ extension Payload {
         let filteredData = try JSONSerialization.data(withJSONObject: filteredJSON, options: [.sortedKeys])
 
         // Convert the JSON data into a string
-        guard let jsonString = String(data: filteredData, encoding: .utf16) else {
+        guard let jsonString = String(data: filteredData, encoding: .utf8) else {
             throw BoundWitnessBuilderError.encodingError
         }
 
         // Hash the JSON string
-        return try jsonString.sha256()
+        return try jsonString.sha256().toHex()
     }
 }
