@@ -12,8 +12,6 @@ public class BoundWitness: Payload, XyoBoundWitnessBodyProtocol, XyoBoundWitness
 
     public var _signatures: [String?]? = nil
 
-    public var _previous_hash: String? = nil
-
     public var addresses: [String?] = []
 
     public var payload_hashes: [String] = []
