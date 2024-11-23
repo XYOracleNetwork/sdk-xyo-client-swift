@@ -38,7 +38,7 @@ extension Payload {
         let filteredData = try JSONSerialization.data(withJSONObject: filteredJSON, options: [.sortedKeys])
 
         // Convert the JSON data into a string
-        guard let jsonString = String(data: filteredData, encoding: .utf8) else {
+        guard let jsonString = String(data: filteredData, encoding: .utf16) else {
             throw BoundWitnessBuilderError.encodingError
         }
 
