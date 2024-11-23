@@ -16,11 +16,11 @@ public class BoundWitnessBuilder {
     public init() {
     }
 
-    public func signer(_ account: AccountInstance, _ previousHash: String? = nil)
+    public func signer(_ account: AccountInstance)
         -> BoundWitnessBuilder
     {
         _accounts.append(account)
-        _previous_hashes.append(previousHash)
+        _previous_hashes.append(account.previousHash)
         return self
     }
 
@@ -67,14 +67,13 @@ public class BoundWitnessBuilder {
         }
     }
 
-    public func build(_ previousHash: String? = nil) throws -> (BoundWitness, [Payload]) {
+    public func build() throws -> (BoundWitness, [Payload]) {
         let bw = BoundWitness()
         let hashable = hashableFields()
         let hash = try BoundWitnessBuilder.hash(hashable)
         bw._signatures = try self.sign(hash: hash)
         bw._hash = hash
         bw._client = "swift"
-        bw._previous_hash = previousHash
         bw.addresses = _accounts.map { witness in witness.address }
         bw.previous_hashes = _previous_hashes
         bw.payload_hashes = _payload_hashes
