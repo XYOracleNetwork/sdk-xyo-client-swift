@@ -10,7 +10,7 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, De
         case schema
     }
 
-    public var addresses: [String?] = []
+    public var addresses: [String] = []
     public var payload_hashes: [String] = []
     public var payload_schemas: [String] = []
     public var previous_hashes: [String?] = []
@@ -18,7 +18,7 @@ public class XyoBoundWitnessBodyJson: XyoBoundWitnessBodyProtocol, Encodable, De
     public var schema: String
 
     init(
-        _ addresses: [String?],
+        _ addresses: [String],
         _ previous_hashes: [String?],
         _ payload_hashes: [String],
         _ payload_schemas: [String],
