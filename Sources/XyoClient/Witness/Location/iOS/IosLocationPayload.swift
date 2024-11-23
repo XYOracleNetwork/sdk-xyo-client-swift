@@ -36,16 +36,19 @@ open class IosLocationPayload: Payload {
             IosLocationCoordinatePayloadStruct(self.location.coordinate), forKey: .coordinate)
         try container.encode(self.location.course, forKey: .course)
         if #available(iOS 13.4, *) {
-            try container.encodeIfValidNumeric(self.location.courseAccuracy, forKey: .courseAccuracy)
+            try container.encodeIfValidNumeric(
+                self.location.courseAccuracy, forKey: .courseAccuracy)
         }
         if #available(iOS 15, *) {
-            try container.encodeIfValidNumeric(self.location.ellipsoidalAltitude, forKey: .ellipsoidalAltitude)
+            try container.encodeIfValidNumeric(
+                self.location.ellipsoidalAltitude, forKey: .ellipsoidalAltitude)
         }
         if let floor = self.location.floor {
             try container.encode(
                 IosLocationFloorPayloadStruct(floor), forKey: .floor)
         }
-        try container.encodeIfValidNumeric(self.location.horizontalAccuracy, forKey: .horizontalAccuracy)
+        try container.encodeIfValidNumeric(
+            self.location.horizontalAccuracy, forKey: .horizontalAccuracy)
         if #available(iOS 15.0, *) {
             if let sourceInformation = self.location.sourceInformation {
                 try container.encode(
@@ -57,7 +60,8 @@ open class IosLocationPayload: Payload {
         try container.encodeIfValidNumeric(self.location.speedAccuracy, forKey: .speedAccuracy)
         try container.encode(
             Int(self.location.timestamp.timeIntervalSince1970 * 1000), forKey: .timestamp)
-        try container.encodeIfValidNumeric(self.location.verticalAccuracy, forKey: .verticalAccuracy)
+        try container.encodeIfValidNumeric(
+            self.location.verticalAccuracy, forKey: .verticalAccuracy)
 
     }
 }

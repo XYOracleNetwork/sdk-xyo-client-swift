@@ -46,9 +46,8 @@ struct CoordinatesStruct: Encodable {
         try container.encodeIfValidNumeric(self.altitude, forKey: .altitude)
         try container.encodeIfValidNumeric(self.altitudeAccuracy, forKey: .altitudeAccuracy)
         try container.encodeIfValidNumeric(self.heading, forKey: .heading)
-        try container.encode(self.latitude, forKey: .latitude) // Always encode latitude
-        try container.encode(self.longitude, forKey: .longitude) // Always encode longitude
+        try container.encode(self.latitude, forKey: .latitude)  // Always encode latitude
+        try container.encode(self.longitude, forKey: .longitude)  // Always encode longitude
         try container.encodeIfValidNumeric(self.speed, forKey: .speed)
     }
 }
-    

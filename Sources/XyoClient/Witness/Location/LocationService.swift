@@ -1,7 +1,7 @@
 import CoreLocation
 import Foundation
 
-public class LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProtocol {
+public class LocationService: NSObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     private var locationCompletion: ((Result<CLLocation, Error>) -> Void)?
 

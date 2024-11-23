@@ -1,5 +1,5 @@
-import XCTest
 import CoreLocation
+import XCTest
 
 @testable import XyoClient
 
@@ -28,34 +28,34 @@ class LocationPayloadTests: XCTestCase {
             verticalAccuracy: 3.0,
             course: 90.0,
             speed: 2.5,
-            timestamp: Date(timeIntervalSince1970: 1609459200) // Jan 1, 2021
+            timestamp: Date(timeIntervalSince1970: 1_609_459_200)  // Jan 1, 2021
         )
         let payload = LocationPayload(location)
 
         // Act: Encode the LocationPayload instance into JSON
         let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys, .prettyPrinted] // Consistent output for tests
+        encoder.outputFormatting = [.sortedKeys, .prettyPrinted]  // Consistent output for tests
         let jsonData = try encoder.encode(payload)
 
         // Assert: Verify the serialized JSON matches expectations
         let jsonString = String(data: jsonData, encoding: .utf8)!
         let expectedJSON = """
-        {
-          "currentLocation" : {
-            "coords" : {
-              "accuracy" : 5,
-              "altitude" : 15,
-              "altitudeAccuracy" : 15,
-              "heading" : 90,
-              "latitude" : 37.7749,
-              "longitude" : -122.4194,
-              "speed" : 2.5
-            },
-            "timestamp" : 1609459200000
-          },
-          "schema" : "network.xyo.location"
-        }
-        """
+            {
+              "currentLocation" : {
+                "coords" : {
+                  "accuracy" : 5,
+                  "altitude" : 15,
+                  "altitudeAccuracy" : 15,
+                  "heading" : 90,
+                  "latitude" : 37.7749,
+                  "longitude" : -122.4194,
+                  "speed" : 2.5
+                },
+                "timestamp" : 1609459200000
+              },
+              "schema" : "network.xyo.location"
+            }
+            """
         XCTAssertEqual(jsonString, expectedJSON)
     }
 
@@ -80,17 +80,17 @@ class LocationPayloadTests: XCTestCase {
         // Assert: Verify the serialized JSON handles NaN values gracefully (e.g., omitted or replaced)
         let jsonString = String(data: jsonData, encoding: .utf8)!
         let expectedJSON = """
-        {
-          "currentLocation" : {
-            "coords" : {
-              "latitude" : 0,
-              "longitude" : 0
-            },
-            "timestamp" : 0
-          },
-          "schema" : "network.xyo.location"
-        }
-        """
+            {
+              "currentLocation" : {
+                "coords" : {
+                  "latitude" : 0,
+                  "longitude" : 0
+                },
+                "timestamp" : 0
+              },
+              "schema" : "network.xyo.location"
+            }
+            """
         XCTAssertEqual(jsonString, expectedJSON)
     }
 }
