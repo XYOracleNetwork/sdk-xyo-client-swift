@@ -45,7 +45,7 @@ final class LocationWitnessTests: XCTestCase {
         let iosLocationPayload = try XCTUnwrap(
             results.compactMap { $0 as? IosLocationPayload }.first, "Missing iOS location payload.")
         XCTAssertEqual(iosLocationPayload.schema, IosLocationPayload.schema)
-        XCTAssertEqual(iosLocationPayload.location.coordinate.latitude, lattitiude)
+        XCTAssertEqual(iosLocationPayload.location.coordinate.latitude, latitude)
         XCTAssertEqual(iosLocationPayload.location.coordinate.longitude, longitude)
 
     }
