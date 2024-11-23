@@ -10,7 +10,7 @@ public class BoundWitness: Payload, XyoBoundWitnessBodyProtocol, XyoBoundWitness
 
     public var _hash: String? = nil
 
-    public var _signatures: [String?]? = nil
+    public var _signatures: [String]? = nil
 
     public var addresses: [String] = []
 
@@ -29,7 +29,6 @@ public class BoundWitness: Payload, XyoBoundWitnessBodyProtocol, XyoBoundWitness
     enum CodingKeys: String, CodingKey {
         case _client
         case _hash
-        case _previous_hash
         case _signatures
         case addresses
         case payload_hashes
@@ -50,9 +49,9 @@ public class BoundWitness: Payload, XyoBoundWitnessBodyProtocol, XyoBoundWitness
     }
 
     func encodeMetaFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
-        try container.encode(_client, forKey: ._client)
-        try container.encode(_hash, forKey: ._hash)
-        try container.encode(_signatures, forKey: ._signatures)
+        try container.encodeIfNotNil(_client, forKey: ._client)
+        try container.encodeIfNotNil(_hash, forKey: ._hash)
+        try container.encodeIfNotNil(_signatures, forKey: ._signatures)
     }
 
     func encodeBodyFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
@@ -60,9 +59,7 @@ public class BoundWitness: Payload, XyoBoundWitnessBodyProtocol, XyoBoundWitness
         try container.encode(payload_hashes, forKey: .payload_hashes)
         try container.encode(payload_schemas, forKey: .payload_schemas)
         try container.encode(previous_hashes, forKey: .previous_hashes)
-        if query != nil {
-            try container.encode(query, forKey: .query)
-        }
+        try container.encodeIfNotNil(query, forKey: .query)
         try container.encode(schema, forKey: .schema)
     }
 

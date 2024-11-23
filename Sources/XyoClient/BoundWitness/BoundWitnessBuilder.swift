@@ -61,7 +61,7 @@ public class BoundWitnessBuilder {
         return self
     }
 
-    public func sign(hash: String) throws -> [String?] {
+    public func sign(hash: String) throws -> [String] {
         return try self._accounts.map {
             try $0.sign(hash: hash)
         }

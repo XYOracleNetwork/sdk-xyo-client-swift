@@ -16,7 +16,7 @@ public class XyoBoundWitnessJson: XyoBoundWitnessBodyJson, XyoBoundWitnessMetaPr
 
     public var _client: String?
     public var _hash: String?
-    public var _signatures: [String?]?
+    public var _signatures: [String]?
     public var _previous_hash: String?
     public var _query: String?
 
