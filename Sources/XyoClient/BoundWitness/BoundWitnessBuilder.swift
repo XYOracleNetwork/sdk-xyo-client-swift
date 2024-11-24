@@ -83,41 +83,84 @@ public class BoundWitnessBuilder {
         }
         return (bw, _payloads)
     }
+    
+    private static func filterUnderscoreKeys(_ jsonObject: Any) -> Any {
+        if let dictionary = jsonObject as? [String: Any] {
+            // Process dictionaries: filter and sort keys
+            let filteredDictionary = dictionary
+                .filter { !$0.key.hasPrefix("_") } // Remove keys starting with "_"
+                .sorted { $0.key < $1.key }        // Sort keys lexicographically
+                .reduce(into: [String: Any]()) { result, pair in
+                    result[pair.key] = filterUnderscoreKeys(pair.value) // Recurse on values
+                }
+            return filteredDictionary
+        } else if let array = jsonObject as? [Any] {
+            // Process arrays: recursively process each element
+            return array.map { filterUnderscoreKeys($0) }
+        } else {
+            // Primitives (String, Number, etc.)
+            return jsonObject
+        }
+    }
 
     static func hash<T: Encodable>(_ json: T) throws -> String {
+//        let encoder = JSONEncoder()
+//        encoder.outputFormatting = .sortedKeys
+//
+//        // Encode `self` to JSON data
+//        let data = try encoder.encode(json)
+//
+//        // Decode the JSON into a dictionary and filter keys
+//        guard
+//            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+//                as? [String: Any]
+//        else {
+//            throw BoundWitnessBuilderError.encodingError
+//        }
+//
+//        let filteredJSON = jsonObject.filter { !$0.key.hasPrefix("_") }
+//
+//        // Encode the filtered dictionary back into JSON data
+//        let filteredData = try JSONSerialization.data(
+//            withJSONObject: filteredJSON, options: [.sortedKeys])
+//
+//        // Convert the JSON data into a string
+//        guard let jsonString = String(data: filteredData, encoding: .utf8) else {
+//            throw BoundWitnessBuilderError.encodingError
+//        }
+//
+//        // Hash the JSON string
+//        let prefixesRemoved = try filteredData.sha256().toHex()
+//        print(prefixesRemoved)
+//        let withoutPrefixesRemoved = data.sha256().toHex()
+//        print(withoutPrefixesRemoved)
+//        if prefixesRemoved != withoutPrefixesRemoved {
+//            print("Error")
+//        }
+//        return prefixesRemoved
+        
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
 
-        // Encode `self` to JSON data
+        // Encode the object to JSON data
         let data = try encoder.encode(json)
 
-        // Decode the JSON into a dictionary and filter keys
-        guard
-            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-                as? [String: Any]
-        else {
+        // Decode the JSON into a dictionary, array, or primitive
+        guard let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
             throw BoundWitnessBuilderError.encodingError
         }
 
-        let filteredJSON = jsonObject.filter { !$0.key.hasPrefix("_") }
+        // Recursively filter keys starting with "_"
+        let filteredJSON = filterUnderscoreKeys(jsonObject)
 
-        // Encode the filtered dictionary back into JSON data
+        // Encode the filtered JSON back to data
         let filteredData = try JSONSerialization.data(
-            withJSONObject: filteredJSON, options: [.sortedKeys])
-
-        // Convert the JSON data into a string
-        guard let jsonString = String(data: filteredData, encoding: .utf8) else {
-            throw BoundWitnessBuilderError.encodingError
-        }
+            withJSONObject: filteredJSON,
+            options: [.sortedKeys]
+        )
 
         // Hash the JSON string
-        let prefixesRemoved = try jsonString.sha256().toHex()
-        print(prefixesRemoved)
-        let withoutPrefixesRemoved = data.sha256().toHex()
-        print(withoutPrefixesRemoved)
-        if prefixesRemoved != withoutPrefixesRemoved {
-            print("Error")
-        }
-        return prefixesRemoved
+        return try filteredData.sha256().toHex()
+//        return try data.sha256().toHex()
     }
 }
