@@ -86,7 +86,7 @@ public class BoundWitnessBuilder {
     
     private static func filterUnderscoreKeys(_ jsonObject: Any) -> Any {
         if let dictionary = jsonObject as? [String: Any] {
-            // Process dictionaries: filter and sort keys
+            // Process dictionaries: filter keys, sort, and recurse
             let filteredDictionary = dictionary
                 .filter { !$0.key.hasPrefix("_") } // Remove keys starting with "_"
                 .sorted { $0.key < $1.key }        // Sort keys lexicographically
@@ -98,7 +98,7 @@ public class BoundWitnessBuilder {
             // Process arrays: recursively process each element
             return array.map { filterUnderscoreKeys($0) }
         } else {
-            // Primitives (String, Number, etc.)
+            // Return primitives (String, Number, etc.)
             return jsonObject
         }
     }
@@ -144,6 +144,7 @@ public class BoundWitnessBuilder {
 
         // Encode the object to JSON data
         let data = try encoder.encode(json)
+        let testPre = String(data: data, encoding: .utf8)
 
         // Decode the JSON into a dictionary, array, or primitive
         guard let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
@@ -158,9 +159,11 @@ public class BoundWitnessBuilder {
             withJSONObject: filteredJSON,
             options: [.sortedKeys]
         )
+        
+        let testPost = String(data: filteredData, encoding: .utf8)
 
         // Hash the JSON string
-        return try filteredData.sha256().toHex()
-//        return try data.sha256().toHex()
+        return filteredData.sha256().toHex()
+//        return data.sha256().toHex()
     }
 }
