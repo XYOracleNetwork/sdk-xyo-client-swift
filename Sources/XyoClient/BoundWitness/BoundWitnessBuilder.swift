@@ -104,47 +104,28 @@ public class BoundWitnessBuilder {
     }
 
     static func hash<T: Encodable>(_ json: T) throws -> String {
-//        let encoder = JSONEncoder()
-//        encoder.outputFormatting = .sortedKeys
-//
-//        // Encode `self` to JSON data
-//        let data = try encoder.encode(json)
-//
-//        // Decode the JSON into a dictionary and filter keys
-//        guard
-//            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-//                as? [String: Any]
-//        else {
-//            throw BoundWitnessBuilderError.encodingError
-//        }
-//
-//        let filteredJSON = jsonObject.filter { !$0.key.hasPrefix("_") }
-//
-//        // Encode the filtered dictionary back into JSON data
-//        let filteredData = try JSONSerialization.data(
-//            withJSONObject: filteredJSON, options: [.sortedKeys])
-//
-//        // Convert the JSON data into a string
-//        guard let jsonString = String(data: filteredData, encoding: .utf8) else {
-//            throw BoundWitnessBuilderError.encodingError
-//        }
-//
-//        // Hash the JSON string
-//        let prefixesRemoved = try filteredData.sha256().toHex()
-//        print(prefixesRemoved)
-//        let withoutPrefixesRemoved = data.sha256().toHex()
-//        print(withoutPrefixesRemoved)
-//        if prefixesRemoved != withoutPrefixesRemoved {
-//            print("Error")
-//        }
-//        return prefixesRemoved
+        if let bw = json as? BoundWitness {
+            return try hashWithoutUnderscores(bw)
+        } else {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .sortedKeys
+
+            // Encode the object to JSON data
+            let data = try encoder.encode(json)
+            return data.sha256().toHex()
+        }
+    }
+    
+    // NOTE: Temporary fix until we have a custom JSON Serializer
+    // this method currently has issues with round tripping of floating
+    // point numbers as precision doesn't round trip
+    static private func hashWithoutUnderscores<T: Encodable>(_ json: T) throws -> String {
         
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
 
         // Encode the object to JSON data
         let data = try encoder.encode(json)
-        let testPre = String(data: data, encoding: .utf8)
 
         // Decode the JSON into a dictionary, array, or primitive
         guard let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
@@ -159,11 +140,7 @@ public class BoundWitnessBuilder {
             withJSONObject: filteredJSON,
             options: [.sortedKeys]
         )
-        
-        let testPost = String(data: filteredData, encoding: .utf8)
-
         // Hash the JSON string
         return filteredData.sha256().toHex()
-//        return data.sha256().toHex()
     }
 }
