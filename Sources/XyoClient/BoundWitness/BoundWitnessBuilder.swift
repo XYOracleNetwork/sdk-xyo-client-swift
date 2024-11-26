@@ -83,19 +83,19 @@ public class BoundWitnessBuilder {
         }
         return (bw, _payloads)
     }
-    
-    private static func isMetaField(_ key: String) -> Bool {
+
+    private static func isDataField(_ key: String) -> Bool {
         // Remove keys starting with "_"
-        return key.hasPrefix("_") ||
+        return !key.hasPrefix("_") &&
             // Remove keys starting with "$"
-            key.hasPrefix("$")
+            !key.hasPrefix("$")
     }
     
     private static func dataHashableFields(_ jsonObject: Any) -> Any {
         if let dictionary = jsonObject as? [String: Any] {
             // Process dictionaries: filter keys, sort, and recurse
             let filteredDictionary = dictionary
-                .filter { !isMetaField($0.key) }    // Filter meta fields
+                .filter { isDataField($0.key) }    // Filter meta fields
                 .sorted { $0.key < $1.key }        // Sort keys lexicographically
                 .reduce(into: [String: Any]()) { result, pair in
                     result[pair.key] = dataHashableFields(pair.value) // Recurse on values
