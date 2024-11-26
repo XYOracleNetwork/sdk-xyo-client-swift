@@ -34,20 +34,6 @@ public class XyoPanel {
         self.init(account: panelAccount, witnesses: witnesses, archivists: [archivist])
     }
 
-    public convenience init(observe: (() -> XyoEventPayload?)?) {
-        if observe != nil {
-            var witnesses = [WitnessModuleSync]()
-
-            if let observe = observe {
-                witnesses.append(XyoEventWitness(observe))
-            }
-
-            self.init(witnesses: witnesses)
-        } else {
-            self.init()
-        }
-    }
-
     @available(iOS 15, *)
     private func witnessAll() async -> [Payload] {
         var payloads: [Payload] = []
