@@ -26,10 +26,10 @@ public class XyoPanel {
         account: AccountInstance? = nil,
         witnesses: [WitnessModule] = [],
         apiDomain: String = XyoArchivistApiClient.DefaultApiDomain,
-        archive: String = XyoArchivistApiClient.DefaultArchivist
+        apiModule: String = XyoArchivistApiClient.DefaultArchivist
     ) {
-        let panelAccount = account ?? Account.random()
-        let apiConfig = XyoArchivistApiConfig(archive, apiDomain)
+        let panelAccount = account ?? AccountServices.getNamedAccount(name: "DefaultPanelAccount")
+        let apiConfig = XyoArchivistApiConfig(apiModule, apiDomain)
         let archivist = XyoArchivistApiClient.get(apiConfig)
         self.init(account: panelAccount, witnesses: witnesses, archivists: [archivist])
     }

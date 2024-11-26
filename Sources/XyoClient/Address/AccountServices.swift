@@ -1,7 +1,7 @@
 import Foundation
 
 public class AccountServices {
-    public static func getNamedAccount(name: String = "default") -> AccountInstance {
+    public static func getNamedAccount(name: String = "DefaultAccount") -> AccountInstance {
         //        let _ = removeFromKeychain(key: name)
         if let existingAccount = getStoredAccount(name: name) {
             return existingAccount
