@@ -94,5 +94,7 @@ class LocationPayloadTests: XCTestCase {
             }
             """
         XCTAssertEqual(jsonString, expectedJSON)
+        let hash = try BoundWitnessBuilder.hash(payload)
+        XCTAssertEqual(hash, "c1bd7396f998a50d20401efd4b5da0cf6670f9418c6f60b42f4c54f3663305c3")
     }
 }
