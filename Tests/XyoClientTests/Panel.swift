@@ -25,7 +25,7 @@ final class PanelTests: XCTestCase {
 
     @available(iOS 15, *)
     func testSimplePanelReport() async {
-        let panel = XyoPanel ()
+        let panel = XyoPanel()
         let result = await panel.reportQuery()
         XCTAssertEqual(result.bw.addresses.count, 1)
         XCTAssertEqual(result.bw.addresses[0], panel.account.address)

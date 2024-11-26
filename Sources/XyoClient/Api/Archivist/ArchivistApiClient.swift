@@ -32,7 +32,8 @@ public class XyoArchivistApiClient {
 
     private init(_ config: XyoArchivistApiConfig, _ account: AccountInstance?) {
         self.config = config
-        self.queryAccount = account ?? AccountServices.getNamedAccount(name: "DefaultArchivistApiClientAccount")
+        self.queryAccount =
+            account ?? AccountServices.getNamedAccount(name: "DefaultArchivistApiClientAccount")
     }
 
     public func insert(
