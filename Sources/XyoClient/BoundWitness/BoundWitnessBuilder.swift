@@ -71,7 +71,7 @@ public class BoundWitnessBuilder {
         let bw = BoundWitness()
         let hashable = hashableFields()
         let hash = try BoundWitnessBuilder.hash(hashable)
-        bw._signatures = try self.sign(hash: hash)
+        bw.signatures = try self.sign(hash: hash)
         bw._hash = hash
         bw._client = "swift"
         bw.addresses = _accounts.map { witness in witness.address }
