@@ -2,7 +2,7 @@ import CoreLocation
 
 open class LocationPayload: Payload {
 
-    public static let schema: String = "network.xyo.location"
+    public static let schema: String = "network.xyo.location.current"
 
     var location: CLLocation
 

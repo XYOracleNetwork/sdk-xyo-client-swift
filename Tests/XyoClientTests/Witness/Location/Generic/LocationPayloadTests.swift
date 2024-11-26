@@ -53,12 +53,12 @@ class LocationPayloadTests: XCTestCase {
                 },
                 "timestamp" : 1609459200000
               },
-              "schema" : "network.xyo.location"
+              "schema" : "network.xyo.location.current"
             }
             """
         XCTAssertEqual(jsonString, expectedJSON)
         let hash = try BoundWitnessBuilder.hash(payload)
-        XCTAssertEqual(hash, "d9c4af75352658783d1b9b86d647a57d29de611261de8a3fc27019dfc3ef0dc9")
+        XCTAssertEqual(hash, "0c1f0c80481b0f391a677eab542a594a192081325b6416acc3dc99db23355ee2")
     }
 
     func testLocationPayloadEncodingHandlesNilValues() throws {
@@ -90,7 +90,7 @@ class LocationPayloadTests: XCTestCase {
                 },
                 "timestamp" : 0
               },
-              "schema" : "network.xyo.location"
+              "schema" : "network.xyo.location.current"
             }
             """
         XCTAssertEqual(jsonString, expectedJSON)
