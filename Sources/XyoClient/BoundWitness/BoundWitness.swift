@@ -10,7 +10,7 @@ public class BoundWitness: Payload, BoundWitnessBody, BoundWitnessMeta,
 
     public var _hash: String? = nil
 
-    public var _signatures: [String]? = nil
+    public var signatures: [String]? = nil
 
     public var addresses: [String] = []
 
@@ -29,8 +29,8 @@ public class BoundWitness: Payload, BoundWitnessBody, BoundWitnessMeta,
     enum CodingKeys: String, CodingKey {
         case _client
         case _hash
-        case _signatures
         case addresses
+        case meta = "$meta"
         case payload_hashes
         case payload_schemas
         case previous_hashes
@@ -51,7 +51,10 @@ public class BoundWitness: Payload, BoundWitnessBody, BoundWitnessMeta,
     func encodeMetaFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
         try container.encodeIfPresent(_client, forKey: ._client)
         try container.encodeIfPresent(_hash, forKey: ._hash)
-        try container.encodeIfPresent(_signatures, forKey: ._signatures)
+        let meta = [
+            "signatures": signatures
+        ]
+        try container.encode(meta, forKey: .meta)
     }
 
     func encodeBodyFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {

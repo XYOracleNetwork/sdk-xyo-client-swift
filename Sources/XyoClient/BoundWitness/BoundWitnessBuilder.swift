@@ -71,7 +71,7 @@ public class BoundWitnessBuilder {
         let bw = BoundWitness()
         let hashable = hashableFields()
         let hash = try BoundWitnessBuilder.hash(hashable)
-        bw._signatures = try self.sign(hash: hash)
+        bw.signatures = try self.sign(hash: hash)
         bw._hash = hash
         bw._client = "swift"
         bw.addresses = _accounts.map { witness in witness.address }
@@ -83,20 +83,28 @@ public class BoundWitnessBuilder {
         }
         return (bw, _payloads)
     }
-    
-    private static func filterUnderscoreKeys(_ jsonObject: Any) -> Any {
+
+    private static func isDataField(_ key: String) -> Bool {
+        // Remove keys starting with "_"
+        return !key.hasPrefix("_")
+            // Remove keys starting with "$"
+            && !key.hasPrefix("$")
+    }
+
+    private static func dataHashableFields(_ jsonObject: Any) -> Any {
         if let dictionary = jsonObject as? [String: Any] {
             // Process dictionaries: filter keys, sort, and recurse
-            let filteredDictionary = dictionary
-                .filter { !$0.key.hasPrefix("_") } // Remove keys starting with "_"
-                .sorted { $0.key < $1.key }        // Sort keys lexicographically
+            let filteredDictionary =
+                dictionary
+                .filter { isDataField($0.key) }  // Filter meta fields
+                .sorted { $0.key < $1.key }  // Sort keys lexicographically
                 .reduce(into: [String: Any]()) { result, pair in
-                    result[pair.key] = filterUnderscoreKeys(pair.value) // Recurse on values
+                    result[pair.key] = dataHashableFields(pair.value)  // Recurse on values
                 }
             return filteredDictionary
         } else if let array = jsonObject as? [Any] {
             // Process arrays: recursively process each element
-            return array.map { filterUnderscoreKeys($0) }
+            return array.map { dataHashableFields($0) }
         } else {
             // Return primitives (String, Number, etc.)
             return jsonObject
@@ -115,12 +123,12 @@ public class BoundWitnessBuilder {
             return data.sha256().toHex()
         }
     }
-    
+
     // NOTE: Temporary fix until we have a custom JSON Serializer
     // this method currently has issues with round tripping of floating
     // point numbers as precision doesn't round trip
     static private func hashWithoutUnderscores<T: Encodable>(_ json: T) throws -> String {
-        
+
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
 
@@ -128,12 +136,15 @@ public class BoundWitnessBuilder {
         let data = try encoder.encode(json)
 
         // Decode the JSON into a dictionary, array, or primitive
-        guard let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+        guard
+            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+                as? [String: Any]
+        else {
             throw BoundWitnessBuilderError.encodingError
         }
 
-        // Recursively filter keys starting with "_"
-        let filteredJSON = filterUnderscoreKeys(jsonObject)
+        // Recursively filter keys that are data hashable
+        let filteredJSON = dataHashableFields(jsonObject)
 
         // Encode the filtered JSON back to data
         let filteredData = try JSONSerialization.data(
