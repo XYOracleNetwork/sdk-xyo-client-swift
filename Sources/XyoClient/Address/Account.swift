@@ -1,5 +1,4 @@
 import Foundation
-import BigInt
 import secp256k1
 
 public func dataFromHex(_ hex: String) -> Data? {
@@ -131,16 +130,6 @@ public class Account: AccountInstance, AccountStatic {
 
     init(_ privateKey: Data, _ previousHash: Hash? = nil) {
         self.privateKey = privateKey
-        self._previousHash = previousHash
-    }
-
-    init(_ privateKey: BigUInt, _ previousHash: Hash? = nil) {
-        self.privateKey = Data(privateKey.serializeToBuffer())
-        self._previousHash = previousHash
-    }
-    
-    init(_ privateKey: BigInt, _ previousHash: Hash? = nil) {
-        self.privateKey = Data(privateKey.serializeToBuffer())
         self._previousHash = previousHash
     }
 
