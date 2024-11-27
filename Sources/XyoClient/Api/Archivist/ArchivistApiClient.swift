@@ -127,7 +127,7 @@ public class XyoArchivistApiClient {
     }
 
     public static func get(_ config: XyoArchivistApiConfig) -> XyoArchivistApiClient {
-        return XyoArchivistApiClient(config, Account())
+        return XyoArchivistApiClient(config, Account.random())
     }
 }
 

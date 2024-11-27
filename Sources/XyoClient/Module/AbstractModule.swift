@@ -6,7 +6,7 @@ open class AbstractModule: Module {
         _account
     }
 
-    public var address: Address {
+    public var address: Address? {
         _account.address
     }
 
@@ -15,6 +15,6 @@ open class AbstractModule: Module {
     }
 
     public init(account: AccountInstance? = nil) {
-        self._account = account ?? Account()
+        self._account = account ?? Account.random()
     }
 }

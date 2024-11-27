@@ -1,14 +1,19 @@
 import Foundation
 
-public protocol AccountInstance {
-    var address: Address { get }
-    var addressBytes: Data { get }
-    var previousHash: Hash? { get }
-    // var previousHashBytes: Data? { get set }
-    // var `private`: Data? { get }
-    // var `public`: Data? { get }
+public typealias Signature = Data
 
-    func sign(hash: Hash) throws -> String
-    // func sign(hash: Data, previousHash: Data?) async throws -> Data
-    // func verify(msg: Data, signature: Data) async throws -> Bool
+public protocol PublicKeyInstance {
+    var address: Address? { get }
+    func verify(_ msg: Data, _ signature: Signature) -> Bool
+}
+
+public protocol PrivateKeyInstance: PublicKeyInstance {
+    func sign(_ hash: Hash) throws -> Signature
+}
+
+public protocol AccountInstance: PrivateKeyInstance {
+    var previousHash: Hash? { get }
+    var privateKey: Data? { get }
+    var publicKey: Data? { get }
+    
 }

@@ -1,4 +1,5 @@
 import XyoClient
+import Foundation
 
 public class TestPayload1SubObject: Encodable {
     var number_value = 2
@@ -30,4 +31,4 @@ public class TestPayload1: Payload {
 }
 
 let testPayload1 = TestPayload1("network.xyo.test")
-let testPayload1Hash: Hash = "c915c56dd93b5e0db509d1a63ca540cfb211e11f03039b05e19712267bb8b6db"
+let testPayload1Hash: Hash = Hash("c915c56dd93b5e0db509d1a63ca540cfb211e11f03039b05e19712267bb8b6db")!

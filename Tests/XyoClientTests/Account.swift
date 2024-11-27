@@ -35,7 +35,7 @@ class AccountTests: XCTestCase {
     func testAccount_PreviousHash_IsPreviousHash_WhenPreviouslySigned1() throws {
         // Arrange
         let account = Account.random()
-        let _ = try account.sign(hash: testPayload1Hash)
+        let _ = try account.sign(testPayload1Hash)
 
         // Assert
         XCTAssertEqual(account.previousHash, testPayload1Hash)
@@ -45,15 +45,15 @@ class AccountTests: XCTestCase {
         // Arrange
         let account = XyoAddress()
         let hexString = account.privateKeyHex!
-        let key = Data.dataFrom(hexString: hexString)
+        let key = Data.dataFrom(hexString: hexString)!
 
         // Act
         // Create an account from the private key
-        let account1 = Account.fromPrivateKey(key: key)
+        let account1 = Account.fromPrivateKey(key)
         // Sign something so the previousHash is stored
-        let _ = try account1.sign(hash: testPayload2Hash)
+        let _ = try account1.sign(testPayload2Hash)
         // Next account creation should hydrate previousHash from store
-        let account2 = Account.fromPrivateKey(key: key)
+        let account2 = Account.fromPrivateKey(key)
 
         // Assert
         XCTAssertEqual(account1.previousHash, account2.previousHash)

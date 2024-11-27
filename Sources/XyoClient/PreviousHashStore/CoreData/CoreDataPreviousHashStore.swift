@@ -9,12 +9,13 @@ public class CoreDataPreviousHashStore: PreviousHashStore {
 
     public func getItem(address: Address) -> Hash? {
         let fetchRequest: NSFetchRequest<HashStore> = HashStore.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "address == %@", address)
+        fetchRequest.predicate = NSPredicate(format: "address == %@", address.toHex())
         fetchRequest.fetchLimit = 1
 
         do {
             let results = try context.fetch(fetchRequest)
-            return results.first?.previousHash
+            guard let previousHash = results.first?.previousHash else { return nil }
+            return Hash(previousHash)
         } catch {
             print("Failed to fetch item for address \(address): \(error)")
             return nil
@@ -23,7 +24,7 @@ public class CoreDataPreviousHashStore: PreviousHashStore {
 
     public func removeItem(address: Address) {
         let fetchRequest: NSFetchRequest<HashStore> = HashStore.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "address == %@", address)
+        fetchRequest.predicate = NSPredicate(format: "address == %@", address.toHex())
 
         do {
             let results = try context.fetch(fetchRequest)
@@ -38,18 +39,18 @@ public class CoreDataPreviousHashStore: PreviousHashStore {
 
     public func setItem(address: Address, previousHash: Hash) {
         let fetchRequest: NSFetchRequest<HashStore> = HashStore.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "address == %@", address)
+        fetchRequest.predicate = NSPredicate(format: "address == %@", address.toHex())
         fetchRequest.fetchLimit = 1
 
         do {
             let results = try context.fetch(fetchRequest)
 
             if let existingEntry = results.first {
-                existingEntry.previousHash = previousHash
+                existingEntry.previousHash = previousHash.toHex()
             } else {
                 let newEntry = HashStore(context: context)
-                newEntry.address = address
-                newEntry.previousHash = previousHash
+                newEntry.address = address.toHex()
+                newEntry.previousHash = previousHash.toHex()
             }
 
             try context.save()

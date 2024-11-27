@@ -1,1 +1,3 @@
-public typealias Hash = String
+import Foundation
+
+public typealias Hash = Data

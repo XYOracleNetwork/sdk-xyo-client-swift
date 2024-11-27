@@ -8,7 +8,7 @@ open class Payload: Encodable {
 }
 
 extension Payload {
-    public func hash() throws -> String {
+    public func hash() throws -> Hash {
         return try BoundWitnessBuilder.hash(self)
     }
 }

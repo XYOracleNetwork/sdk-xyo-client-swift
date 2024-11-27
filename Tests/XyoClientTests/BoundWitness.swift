@@ -18,7 +18,7 @@ final class BoundWitnessTests: XCTestCase {
     func testPayload_hash_returnsExpectedHash1() throws {
         let hash = try BoundWitnessBuilder.hash(testPayload1)
         XCTAssertEqual(hash, testPayload1Hash)
-        let address = Account.fromPrivateKey(key: testVectorPrivateKey.hexToData())
+        let address = Account.fromPrivateKey(testVectorPrivateKey.hexToData()!)
         let bw = try BoundWitnessBuilder().signer(address).payload(
             "network.xyo.test", TestPayload1("network.xyo.test"))
         let (bwJson, _) = try bw.build()
@@ -29,7 +29,7 @@ final class BoundWitnessTests: XCTestCase {
     func testPayload_hash_returnsExpectedHash2() throws {
         let hash = try BoundWitnessBuilder.hash(testPayload2)
         XCTAssertEqual(hash, testPayload2Hash)
-        let address = Account.fromPrivateKey(key: testVectorPrivateKey.hexToData())
+        let address = Account.fromPrivateKey(testVectorPrivateKey.hexToData()!)
         let bw = try BoundWitnessBuilder().signer(address).payload("network.xyo.test", testPayload2)
         let (bwJson, _) = try bw.build()
         XCTAssertEqual(
@@ -39,7 +39,7 @@ final class BoundWitnessTests: XCTestCase {
     func testPayload_hash_returnsExpectedHashWhenNested() throws {
         let hash = try BoundWitnessBuilder.hash(testPayload2)
         XCTAssertEqual(hash, testPayload2Hash)
-        let address = Account.fromPrivateKey(key: testVectorPrivateKey.hexToData())
+        let address = Account.fromPrivateKey(testVectorPrivateKey.hexToData()!)
         let bw = try BoundWitnessBuilder().signer(address).payload("network.xyo.test", testPayload2)
         let (bwJson, _) = try bw.build()
         XCTAssertEqual(
