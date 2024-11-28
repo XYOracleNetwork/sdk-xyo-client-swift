@@ -22,6 +22,12 @@ final class BoundWitnessTests: XCTestCase {
         let bw = try BoundWitnessBuilder().signer(address).payload(
             "network.xyo.test", TestPayload1("network.xyo.test"))
         let (bwJson, _) = try bw.build()
+        let e = try? bwJson.toJson()
+        if (e != nil) {
+            print("\n")
+            print(e!)
+            print("\n")
+        }
         XCTAssertEqual(
             bwJson._hash, "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
     }

@@ -5,7 +5,7 @@ open class LocationWitness: WitnessModuleAsync {
 
     private var locationService: LocationService = LocationService()
 
-    override open func observe(completion: @escaping ([Payload]?, Error?) -> Void) {
+    override open func observe(completion: @escaping ([EncodablePayload]?, Error?) -> Void) {
         locationService.requestAuthorization()
         locationService.requestLocation { result in
             DispatchQueue.main.async {

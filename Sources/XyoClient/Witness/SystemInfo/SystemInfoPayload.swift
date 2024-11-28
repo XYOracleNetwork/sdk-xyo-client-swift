@@ -1,6 +1,6 @@
 import Foundation
 
-open class SystemInfoPayload: Payload {
+open class SystemInfoPayload: EncodablePayload {
 
     var wifiInfo: WifiInformation
 

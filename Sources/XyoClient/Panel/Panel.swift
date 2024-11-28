@@ -35,8 +35,8 @@ public class XyoPanel {
     }
 
     @available(iOS 15, *)
-    private func witnessAll() async -> [Payload] {
-        var payloads: [Payload] = []
+    private func witnessAll() async -> [EncodablePayload] {
+        var payloads: [EncodablePayload] = []
         // Collect payloads from both synchronous and asynchronous witnesses
         for witness in _witnesses {
             if let syncWitness = witness as? WitnessSync {
@@ -57,9 +57,9 @@ public class XyoPanel {
     }
 
     @available(iOS 15, *)
-    public func storeWitnessedResults(payloads: [Payload]) async {
+    public func storeWitnessedResults(payloads: [EncodablePayload]) async {
         // Insert witnessed results into archivists
-        await withTaskGroup(of: [Payload]?.self) { group in
+        await withTaskGroup(of: [EncodablePayload]?.self) { group in
             for instance in _archivists {
                 group.addTask {
                     do {
@@ -75,7 +75,7 @@ public class XyoPanel {
     }
 
     @available(iOS 15, *)
-    public func report() async -> [Payload] {
+    public func report() async -> [EncodablePayload] {
         // Report
         let results = await witnessAll()
         // Insert results into Archivists
@@ -105,7 +105,7 @@ public class XyoPanel {
         } catch {
             print("Error in reportQuery: \(error)")
             // Return an empty ModuleQueryResult in case of an error
-            return ModuleQueryResult(bw: BoundWitness(), payloads: [], errors: [])
+            return ModuleQueryResult(bw: BoundWitnessWithMeta(), payloads: [], errors: [])
         }
     }
 }

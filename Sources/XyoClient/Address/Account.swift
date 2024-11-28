@@ -54,8 +54,6 @@ enum AccountError: Error {
 public class Account: AccountInstance, AccountStatic {
     public let privateKey: Data?
     
-    private var _previousHash: Hash?
-    
     public var publicKey: Data? {
         guard let privateKey = self.privateKey else {return nil}
         return try? Account.privateKeyObjectFromKey(privateKey).publicKey.dataRepresentation
@@ -102,7 +100,9 @@ public class Account: AccountInstance, AccountStatic {
             count: MemoryLayout.size(ofValue: signature2.data)
         )
 
-        return try secp256k1.Signing.ECDSASignature(dataRepresentation: rawRepresentation).dataRepresentation
+        let result = try secp256k1.Signing.ECDSASignature(dataRepresentation: rawRepresentation).dataRepresentation
+        try self.storePreviousHash(hash)
+        return result
     }
     
     public func verify(_ msg: Data, _ signature: Signature) -> Bool {
@@ -118,7 +118,7 @@ public class Account: AccountInstance, AccountStatic {
         return keccakBytes.subdata(in: 12..<keccakBytes.count)
     }
     
-    public static var previousHashStore: PreviousHashStore? = CoreDataPreviousHashStore()
+    public static var previousHashStore: PreviousHashStore = CoreDataPreviousHashStore()
 
     public static func fromPrivateKey(_ key: Data) -> any AccountInstance {
         return Account(key)
@@ -128,16 +128,12 @@ public class Account: AccountInstance, AccountStatic {
         return Account(generateRandomBytes())
     }
 
-    init(_ privateKey: Data, _ previousHash: Hash? = nil) {
+    init(_ privateKey: Data) {
         self.privateKey = privateKey
-        self._previousHash = previousHash
     }
-
-    public internal(set) var previousHash: Hash? = nil {
-        willSet {
-            // Store to previous hash store
-            try? persistPreviousHash(newValue: newValue)
-        }
+    
+    public var previousHash: Hash? {
+        return try? retreivePreviousHash()
     }
     
     public static func privateKeyObjectFromKey(_ key: Data) throws -> secp256k1.Signing.PrivateKey {
@@ -145,10 +141,15 @@ public class Account: AccountInstance, AccountStatic {
             dataRepresentation: key, format: .uncompressed)
     }
 
-    internal func persistPreviousHash(newValue: Hash?) throws {
+    internal func storePreviousHash(_ newValue: Hash?) throws {
         guard let address = self.address else { throw AccountError.invalidAddress }
         if let previousHash = newValue {
-            Account.previousHashStore?.setItem(address: address, previousHash: previousHash)
+            Account.previousHashStore.setItem(address: address, previousHash: previousHash)
         }
+    }
+    
+    internal func retreivePreviousHash() throws -> Hash? {
+        guard let address = self.address else { throw AccountError.invalidAddress }
+        return Account.previousHashStore.getItem(address: address)
     }
 }

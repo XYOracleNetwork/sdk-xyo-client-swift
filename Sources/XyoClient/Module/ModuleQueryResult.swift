@@ -1,10 +1,10 @@
 import Foundation
 
 public class ModuleQueryResult: Encodable, Decodable {
-    public let bw: BoundWitness
-    public let payloads: [Payload]
-    public let errors: [Payload]
-    init(bw: BoundWitness, payloads: [Payload] = [], errors: [Payload] = []) {
+    public let bw: BoundWitnessWithMeta
+    public let payloads: [EncodablePayload]
+    public let errors: [EncodablePayload]
+    init(bw: BoundWitnessWithMeta, payloads: [EncodablePayload] = [], errors: [EncodablePayload] = []) {
         self.bw = bw
         self.payloads = payloads
         self.errors = errors
@@ -22,7 +22,7 @@ public class ModuleQueryResult: Encodable, Decodable {
     public required init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         // Decode elements in the expected order from the array
-        bw = try container.decode(BoundWitness.self)
+        bw = try container.decode(BoundWitnessWithMeta.self)
         // TODO: Decodable Payloads
         // payloads = try container.decode([XyoPayload].self)
         // errors = try container.decode([XyoPayload].self)

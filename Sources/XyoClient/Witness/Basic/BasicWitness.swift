@@ -14,11 +14,11 @@ open class BasicWitness: WitnessModuleSync {
         super.init(account: account)
     }
 
-    public typealias ObserverClosure = (() -> Payload?)
+    public typealias ObserverClosure = (() -> EncodablePayload?)
 
     private let _observer: ObserverClosure
 
-    override public func observe() -> [Payload] {
+    override public func observe() -> [EncodablePayload] {
         if let payload = _observer() {
             return [payload]
         } else {

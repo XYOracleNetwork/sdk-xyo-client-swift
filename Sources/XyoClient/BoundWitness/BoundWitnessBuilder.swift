@@ -10,7 +10,7 @@ public class BoundWitnessBuilder {
     private var _previous_hashes: [Hash?] = []
     private var _payload_hashes: [Hash] = []
     private var _payload_schemas: [String] = []
-    private var _payloads: [Payload] = []
+    private var _payloads: [EncodablePayload] = []
     private var _query: Hash? = nil
 
     public init() {
@@ -30,24 +30,14 @@ public class BoundWitnessBuilder {
         return self
     }
 
-    private func hashableFields() -> BoundWitnessBodyJson {
-        return BoundWitnessBodyJson(
-            addresses: _accounts.map { account in account.address!.toHex() },
-            payload_hashes: _payload_hashes.map { hash in hash.toHex() },
-            payload_schemas: _payload_schemas,
-            previous_hashes: _previous_hashes.map { hash in hash?.toHex() },
-            query: _query?.toHex()
-        )
-    }
-
-    public func payload<T: Payload>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
+    public func payload<T: EncodablePayload>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
         _payloads.append(payload)
         _payload_hashes.append(try payload.hash())
         _payload_schemas.append(schema)
         return self
     }
 
-    public func payloads(_ payloads: [Payload]) throws -> BoundWitnessBuilder {
+    public func payloads(_ payloads: [EncodablePayload]) throws -> BoundWitnessBuilder {
         _payloads.append(contentsOf: payloads)
         _payload_hashes.append(
             contentsOf: try payloads.map { payload in try payload.hash() })
@@ -55,7 +45,7 @@ public class BoundWitnessBuilder {
         return self
     }
 
-    public func query(_ payload: Payload) throws -> BoundWitnessBuilder {
+    public func query(_ payload: EncodablePayload) throws -> BoundWitnessBuilder {
         self._query = try payload.hash()
         let _ = try self.payload(payload.schema, payload)
         return self
@@ -67,13 +57,8 @@ public class BoundWitnessBuilder {
         }
     }
 
-    public func build() throws -> (BoundWitness, [Payload]) {
+    public func build() throws -> (BoundWitnessWithMeta, [EncodablePayload]) {
         let bw = BoundWitness()
-        let hashable = hashableFields()
-        let hash = try BoundWitnessBuilder.hash(hashable)
-        bw.signatures = try self.sign(hash: hash).map {signature in signature.toHex()}
-        bw._hash = hash.toHex()
-        bw._client = "swift"
         bw.addresses = _accounts.map { account in account.address!.toHex() }
         bw.previous_hashes = _previous_hashes.map { hash in hash?.toHex()}
         bw.payload_hashes = _payload_hashes.map { hash in hash.toHex() }
@@ -81,7 +66,10 @@ public class BoundWitnessBuilder {
         if _query != nil {
             bw.query = _query?.toHex()
         }
-        return (bw, _payloads)
+        let signatures = try self.sign(hash: bw.hash()).map {signature in signature.toHex()}
+        let meta = BoundWitnessMeta(signatures)
+        let bwWithMeta = BoundWitnessWithMeta(boundWitness: bw, meta: meta)
+        return (bwWithMeta, _payloads)
     }
 
     private static func isDataField(_ key: String) -> Bool {

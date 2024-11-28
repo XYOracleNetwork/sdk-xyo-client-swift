@@ -9,7 +9,7 @@ public class XyoArchivistApiClient {
         ProcessInfo.processInfo.environment["XYO_API_MODULE"] ?? "Archivist"
 
     private static let ArchivistInsertQuerySchema = "network.xyo.query.archivist.insert"
-    private static let ArchivistInsertQuery: Payload = Payload(ArchivistInsertQuerySchema)
+    private static let ArchivistInsertQuery: EncodablePayload = EncodablePayload(ArchivistInsertQuerySchema)
 
     let config: XyoArchivistApiConfig
     let queryAccount: AccountInstance
@@ -37,8 +37,8 @@ public class XyoArchivistApiClient {
     }
 
     public func insert(
-        payloads: [Payload],
-        completion: @escaping ([Payload]?, Error?) -> Void
+        payloads: [EncodablePayload],
+        completion: @escaping ([EncodablePayload]?, Error?) -> Void
     ) {
         do {
             // Build QueryBoundWitness
@@ -66,7 +66,7 @@ public class XyoArchivistApiClient {
                         )
 
                         // Check if the response data matches the expected result
-                        if decodedResponse.data?.bw.payload_hashes.count == payloads.count {
+                        if decodedResponse.data?.bw.boundWitness.payload_hashes.count == payloads.count {
                             // Return the payloads array in case of success
                             completion(payloads, nil)
                         } else {
@@ -91,7 +91,7 @@ public class XyoArchivistApiClient {
     }
 
     @available(iOS 15, *)
-    public func insert(payloads: [Payload]) async throws -> [Payload] {
+    public func insert(payloads: [EncodablePayload]) async throws -> [EncodablePayload] {
         // Build QueryBoundWitness
         let (bw, signed) = try BoundWitnessBuilder()
             .payloads(payloads)
@@ -116,7 +116,7 @@ public class XyoArchivistApiClient {
         // Attempt to decode the response data
         let decodedResponse = try JSONDecoder().decode(
             ApiResponseEnvelope<ModuleQueryResult>.self, from: responseData)
-        if decodedResponse.data?.bw.payload_hashes.count == payloads.count {
+        if decodedResponse.data?.bw.boundWitness.payload_hashes.count == payloads.count {
             // TODO: Deeper guard checks like hash, etc.
             // TODO: Return Success
             return payloads
