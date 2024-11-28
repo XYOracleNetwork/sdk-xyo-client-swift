@@ -36,12 +36,4 @@ public class BoundWitnessWithMeta: Payload
         try _boundWitness.encode(to: encoder)
         try super.encode(to: encoder)
     }
-    
-    public func toJson() throws -> String {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .sortedKeys
-        let data = try encoder.encode(self)
-        guard let result = String(data: data, encoding: .utf8) else { throw BoundWitnessError.convertionFailed }
-        return result
-    }
 }

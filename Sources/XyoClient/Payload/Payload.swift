@@ -10,11 +10,18 @@ open class EncodablePayload: Encodable {
     }
     
     public var schema: String
-}
-
-extension EncodablePayload {
+    
+    
     public func hash() throws -> Hash {
-        return try BoundWitnessBuilder.hash(self)
+        return try PayloadBuilder.hash(from: self)
+    }
+    
+    public func dataHash() throws -> Hash {
+        return try PayloadBuilder.dataHash(from: self)
+    }
+    
+    public func toJson() throws -> String {
+        return try PayloadBuilder.toJson(from: self)
     }
 }
 

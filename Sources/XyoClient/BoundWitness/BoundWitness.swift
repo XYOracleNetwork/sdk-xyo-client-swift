@@ -2,10 +2,6 @@ import Foundation
 
 let BoundWitnessSchema = "network.xyo.boundwitness"
 
-enum BoundWitnessError: Error {
-    case convertionFailed
-}
-
 public class BoundWitness: Payload
 {    
     public var signatures: [String]? = nil
@@ -52,13 +48,5 @@ public class BoundWitness: Payload
         try container.encode(previous_hashes, forKey: .previous_hashes)
         try container.encodeIfPresent(query, forKey: .query)
         try super.encode(to: encoder)
-    }
-    
-    public func toJson() throws -> String {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .sortedKeys
-        let data = try encoder.encode(self)
-        guard let result = String(data: data, encoding: .utf8) else { throw BoundWitnessError.convertionFailed }
-        return result
     }
 }
