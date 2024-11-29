@@ -16,7 +16,7 @@ open class XyoEventWitness: WitnessModuleSync {
 
     private let _observer: ObserverClosure
 
-    public override func observe() -> [EncodablePayload] {
+    public override func observe() -> [EncodablePayloadInstance] {
         if let payload = _observer() {
             return [payload]
         } else {

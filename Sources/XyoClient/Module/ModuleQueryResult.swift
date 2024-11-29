@@ -1,10 +1,10 @@
 import Foundation
 
-public class ModuleQueryResult: Encodable, Decodable {
-    public let bw: BoundWitnessWithMeta
-    public let payloads: [EncodablePayload]
-    public let errors: [EncodablePayload]
-    init(bw: BoundWitnessWithMeta, payloads: [EncodablePayload] = [], errors: [EncodablePayload] = []) {
+public class ModuleQueryResult: Codable {
+    public let bw: EncodableBoundWitnessWithMeta
+    public let payloads: [EncodablePayloadInstance]
+    public let errors: [EncodablePayloadInstance]
+    init(bw: EncodableBoundWitnessWithMeta, payloads: [EncodablePayloadInstance] = [], errors: [EncodablePayloadInstance] = []) {
         self.bw = bw
         self.payloads = payloads
         self.errors = errors

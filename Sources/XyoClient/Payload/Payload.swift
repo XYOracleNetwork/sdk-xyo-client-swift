@@ -1,6 +1,14 @@
 import Foundation
 
-open class EncodablePayload: Encodable {
+public protocol PayloadFields : Encodable {
+    var schema: String { get }
+}
+
+public protocol EncodablePayload: PayloadFields {}
+
+public protocol Payload: PayloadFields, EncodablePayload, Decodable {}
+
+open class EncodablePayloadInstance: EncodablePayload {
     public init(_ schema: String) {
         self.schema = schema.lowercased()
     }
@@ -11,21 +19,12 @@ open class EncodablePayload: Encodable {
     
     public var schema: String
     
-    
-    public func hash() throws -> Hash {
-        return try PayloadBuilder.hash(from: self)
-    }
-    
-    public func dataHash() throws -> Hash {
-        return try PayloadBuilder.dataHash(from: self)
-    }
-    
     public func toJson() throws -> String {
         return try PayloadBuilder.toJson(from: self)
     }
 }
 
-open class Payload: EncodablePayload, Decodable {
+open class PayloadInstance: EncodablePayloadInstance, Payload {
     
     override public init(_ schema: String) {
         super.init(schema)

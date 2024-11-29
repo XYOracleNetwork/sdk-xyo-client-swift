@@ -16,12 +16,13 @@ final class BoundWitnessTests: XCTestCase {
     }
 
     func testPayload_hash_returnsExpectedHash1() throws {
-        let hash = try PayloadBuilder.hash(from: testPayload1)
-        XCTAssertEqual(hash, testPayload1Hash)
+        let dataHash = try PayloadBuilder.dataHash(from: testPayload1)
+        XCTAssertEqual(dataHash, testPayload1Hash)
         let address = Account.fromPrivateKey(testVectorPrivateKey.hexToData()!)
         let bw = try BoundWitnessBuilder().signer(address).payload(
             "network.xyo.test", TestPayload1("network.xyo.test"))
         let (bwJson, _) = try bw.build()
+        let hash = try PayloadBuilder.hash(from: bwJson)
         let e = try? bwJson.toJson()
         if (e != nil) {
             print("\n")
@@ -29,7 +30,7 @@ final class BoundWitnessTests: XCTestCase {
             print("\n")
         }
         XCTAssertEqual(
-            bwJson._hash, "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
+            hash.toHex(), "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
     }
 
     func testPayload_hash_returnsExpectedHash2() throws {
@@ -38,8 +39,9 @@ final class BoundWitnessTests: XCTestCase {
         let address = Account.fromPrivateKey(testVectorPrivateKey.hexToData()!)
         let bw = try BoundWitnessBuilder().signer(address).payload("network.xyo.test", testPayload2)
         let (bwJson, _) = try bw.build()
+        let bwJsonHash = try PayloadBuilder.hash(from: bwJson)
         XCTAssertEqual(
-            bwJson._hash, "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
+            bwJsonHash.toHex(), "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
     }
 
     func testPayload_hash_returnsExpectedHashWhenNested() throws {
@@ -48,7 +50,8 @@ final class BoundWitnessTests: XCTestCase {
         let address = Account.fromPrivateKey(testVectorPrivateKey.hexToData()!)
         let bw = try BoundWitnessBuilder().signer(address).payload("network.xyo.test", testPayload2)
         let (bwJson, _) = try bw.build()
+        let bwJsonHash = try PayloadBuilder.hash(from: bwJson)
         XCTAssertEqual(
-            bwJson._hash, "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
+            bwJsonHash.toHex(), "a5bd50ec40626d390017646296f6a6ac2938ff2e952b2a27b1467a7ef44cdf35")
     }
 }

@@ -8,7 +8,7 @@ open class SystemInfoWitness: WitnessModuleSync {
         self.allowPathMonitor = allowPathMonitor
     }
 
-    public override func observe() -> [EncodablePayload] {
+    public override func observe() -> [EncodablePayloadInstance] {
         let payload = SystemInfoPayload(WifiInformation(allowPathMonitor))
         return [payload]
     }

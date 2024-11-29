@@ -2,8 +2,19 @@ import Foundation
 
 let BoundWitnessSchema = "network.xyo.boundwitness"
 
-public class BoundWitness: Payload
-{    
+public protocol BoundWitnessFields {
+    var addresses: [String] { get }
+    var payload_hashes: [String] { get }
+    var payload_schemas: [String] { get }
+    var previous_hashes: [String?] { get }
+}
+
+public protocol EncodableBoundWitness: EncodablePayload, BoundWitnessFields, Encodable {}
+
+public protocol BoundWitness: EncodableBoundWitness, EncodablePayload, Payload, Codable {}
+
+public class BoundWitnessInstance: PayloadInstance
+{
     public var signatures: [String]? = nil
 
     public var addresses: [String] = []
@@ -50,3 +61,7 @@ public class BoundWitness: Payload
         try super.encode(to: encoder)
     }
 }
+
+public typealias EncodableBoundWitnessWithMeta = EncodableWithCustomMeta<BoundWitnessInstance, BoundWitnessMeta>
+
+public typealias BoundWitnessWithMeta = WithCustomMeta<BoundWitnessInstance, BoundWitnessMeta>

@@ -6,7 +6,7 @@ public class TestPayload2SubObject: Encodable {
     var optional_field: String? = nil
 }
 
-public class TestPayload2: Payload {
+public class TestPayload2: EncodablePayloadInstance {
     var string_field = "there"
     var object_field = TestPayload2SubObject()
     var timestamp = 1_618_603_439_107

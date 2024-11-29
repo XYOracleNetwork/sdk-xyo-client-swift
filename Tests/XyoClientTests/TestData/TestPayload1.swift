@@ -6,7 +6,7 @@ public class TestPayload1SubObject: Encodable {
     var string_value = "yo"
 }
 
-public class TestPayload1: Payload {
+public class TestPayload1: EncodablePayloadInstance {
     var timestamp = 1_618_603_439_107
     var number_field = 1
     var object_field = TestPayload1SubObject()

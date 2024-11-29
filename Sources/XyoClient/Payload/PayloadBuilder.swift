@@ -4,24 +4,38 @@ public enum PayloadBuilderError: Error {
     case encodingError
 }
 
-struct EmptyMeta: Encodable {}
+public struct EncodableEmptyMeta: Encodable {}
 
-class EncodableWithMeta<T: Encodable>: EncodableWithCustomMeta<T, EmptyMeta> {
-    init(from: T) {
+public struct EmptyMeta: Codable {}
+
+public class EncodableWithMeta<T: EncodablePayload>: EncodableWithCustomMeta<T, EncodableEmptyMeta> {
+    public init(from: T) {
         super.init(from: from, meta: nil)
     }
 }
 
-class EncodableWithCustomMeta<T: Encodable, M: Encodable>: Encodable {
-    private var _meta: M? = nil
-    private var _payload: T
+public class EncodableWithCustomMeta<T: EncodablePayload, M: Encodable>: EncodablePayload {
+    var _meta: M? = nil
+    var _payload: T
+    
+    public var payload: T {
+        return self._payload
+    }
+    
+    public var meta: M? {
+        return self._meta
+    }
 
     enum CodingKeys: String, CodingKey {
         case _hash = "$hash"
         case _meta = "$meta"
     }
     
-    init(from: T, meta: M?) {
+    public var schema: String {
+        return _payload.schema
+    }
+    
+    public init(from: T, meta: M?) {
         _payload = from
         _meta = meta
     }
@@ -41,7 +55,28 @@ class EncodableWithCustomMeta<T: Encodable, M: Encodable>: Encodable {
     }
 }
 
-class PayloadBuilder {
+public class WithCustomMeta<T: Payload, M: Codable>: EncodableWithCustomMeta<T, M>, Decodable {
+    
+    override public init(from: T, meta: M?) {
+        super.init(from: from, meta: meta)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        super.init(from: try T(from: decoder), meta: try M(from: decoder))
+    }
+}
+
+public class WithMeta<T: Payload>: WithCustomMeta<T, EmptyMeta> {
+    public init(from: T) {
+        super.init(from: from, meta: nil)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        super.init(from: try T(from: decoder), meta: nil)
+    }
+}
+
+public class PayloadBuilder {
     private static func isHashableField(_ key: String) -> Bool {
         // Remove keys starting with "_"
         return !key.hasPrefix("_")
@@ -105,7 +140,7 @@ class PayloadBuilder {
     // NOTE: Temporary fix until we have a custom JSON Serializer
     // this method currently has issues with round tripping of floating
     // point numbers as precision doesn't round trip
-    static public func hash<T: Encodable>(from: T) throws -> Hash {
+    static public func hash<T: EncodablePayload>(from: T) throws -> Hash {
         let withMeta = EncodableWithMeta(from: from)
         let jsonString = try withMeta.toJson()
         return try jsonString.sha256()
@@ -119,7 +154,7 @@ class PayloadBuilder {
         return result
     }
     
-    static public func toJsonWithMeta<T: Encodable, M: Encodable>(from: T, meta: M?) throws -> String {
+    static public func toJsonWithMeta<T: EncodablePayload, M: Encodable>(from: T, meta: M?) throws -> String {
         let target = EncodableWithCustomMeta(from: from, meta: meta)
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
