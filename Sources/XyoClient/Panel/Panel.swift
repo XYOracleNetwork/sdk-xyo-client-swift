@@ -101,7 +101,7 @@ public class XyoPanel {
                 .build()
 
             // Insert signed results into Archivists
-            let signedResults: [EncodablePayloadInstance] = [bw.payload] + payloads
+            let signedResults: [EncodablePayloadInstance] = [bw.typedPayload] + payloads
             await storeWitnessedResults(payloads: signedResults)
 
             // Return signed results

@@ -66,7 +66,7 @@ public class XyoArchivistApiClient {
                         )
 
                         // Check if the response data matches the expected result
-                        if decodedResponse.data?.bw.payload.payload_hashes.count == payloads.count {
+                        if decodedResponse.data?.bw.typedPayload.payload_hashes.count == payloads.count {
                             // Return the payloads array in case of success
                             completion(payloads, nil)
                         } else {
@@ -116,7 +116,7 @@ public class XyoArchivistApiClient {
         // Attempt to decode the response data
         let decodedResponse = try JSONDecoder().decode(
             ApiResponseEnvelope<ModuleQueryResult>.self, from: responseData)
-        if decodedResponse.data?.bw.payload.payload_hashes.count == payloads.count {
+        if decodedResponse.data?.bw.typedPayload.payload_hashes.count == payloads.count {
             // TODO: Deeper guard checks like hash, etc.
             // TODO: Return Success
             return payloads

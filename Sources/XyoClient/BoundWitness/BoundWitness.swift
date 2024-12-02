@@ -62,6 +62,6 @@ public class BoundWitnessInstance: PayloadInstance
     }
 }
 
-public typealias EncodableBoundWitnessWithMeta = EncodableWithCustomMeta<BoundWitnessInstance, BoundWitnessMeta>
+public typealias EncodableBoundWitnessWithMeta = EncodableWithCustomMetaInstance<BoundWitnessInstance, BoundWitnessMeta>
 
-public typealias BoundWitnessWithMeta = WithCustomMeta<BoundWitnessInstance, BoundWitnessMeta>
+public typealias BoundWitnessWithMeta = WithCustomMetaInstance<BoundWitnessInstance, BoundWitnessMeta>

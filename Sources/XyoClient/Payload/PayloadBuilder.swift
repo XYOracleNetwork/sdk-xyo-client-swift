@@ -4,25 +4,69 @@ public enum PayloadBuilderError: Error {
     case encodingError
 }
 
-public struct EncodableEmptyMeta: Encodable {}
+public protocol EncodableWithMeta: Encodable {
+    var payload: EncodablePayload { get }
+    var meta: Encodable? { get }
+    func toJson() throws -> String
+}
 
-public struct EmptyMeta: Codable {}
+public struct AnyEncodableWithMeta<T: EncodableWithMeta>: EncodableWithMeta {
+    private let _item: T
+    
+    public init(_ from: T) {
+        self._item = from
+    }
+    
+    public var payload: EncodablePayload {
+        return self._item.payload
+    }
+    
+    public var meta: Encodable? {
+        return self._item.meta
+    }
+    
+    public func toJson() throws -> String {
+        return try self._item.toJson()
+    }
+    
+    public func encode(to: Encoder) throws {
+        return try self._item.encode(to: to)
+    }
+}
 
-public class EncodableWithMeta<T: EncodablePayload>: EncodableWithCustomMeta<T, EncodableEmptyMeta> {
+public struct EncodableInstance: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        fatalError("This method must be overridden in a subclass")
+    }
+}
+
+public class EncodableEmptyMeta: Encodable {}
+
+public class EmptyMeta: Codable {}
+
+public class EncodableWithMetaInstance<T: EncodablePayload>: EncodableWithCustomMetaInstance<T, EncodableEmptyMeta> {
     public init(from: T) {
         super.init(from: from, meta: nil)
     }
 }
 
-public class EncodableWithCustomMeta<T: EncodablePayload, M: Encodable>: EncodablePayload {
+public class EncodableWithCustomMetaInstance<T: EncodablePayload, M: Encodable>: EncodableWithMeta {
     var _meta: M? = nil
     var _payload: T
     
-    public var payload: T {
+    public var payload: EncodablePayload {
         return self._payload
     }
     
-    public var meta: M? {
+    public var typedPayload: T {
+        return self._payload
+    }
+    
+    public var meta: Encodable? {
+        return self._meta
+    }
+    
+    public var typedMeta: M? {
         return self._meta
     }
 
@@ -55,7 +99,7 @@ public class EncodableWithCustomMeta<T: EncodablePayload, M: Encodable>: Encodab
     }
 }
 
-public class WithCustomMeta<T: Payload, M: Codable>: EncodableWithCustomMeta<T, M>, Decodable {
+public class WithCustomMetaInstance<T: PayloadInstance, M: Codable>: EncodableWithCustomMetaInstance<T, M>, Decodable {
     
     override public init(from: T, meta: M?) {
         super.init(from: from, meta: meta)
@@ -66,7 +110,7 @@ public class WithCustomMeta<T: Payload, M: Codable>: EncodableWithCustomMeta<T, 
     }
 }
 
-public class WithMeta<T: Payload>: WithCustomMeta<T, EmptyMeta> {
+public class WithMetaInstance<T: PayloadInstance>: WithCustomMetaInstance<T, EmptyMeta> {
     public init(from: T) {
         super.init(from: from, meta: nil)
     }
@@ -128,20 +172,24 @@ public class PayloadBuilder {
         }
     }
     
-    // NOTE: Temporary fix until we have a custom JSON Serializer
-    // this method currently has issues with round tripping of floating
-    // point numbers as precision doesn't round trip
-    static public func dataHash<T: Encodable>(from: T) throws -> Hash {
-
+    static public func dataHash<T: EncodablePayload>(from: T) throws -> Hash {
         let jsonString = try PayloadBuilder.toJson(from: from)
         return try jsonString.sha256()
     }
     
-    // NOTE: Temporary fix until we have a custom JSON Serializer
-    // this method currently has issues with round tripping of floating
-    // point numbers as precision doesn't round trip
-    static public func hash<T: EncodablePayload>(from: T) throws -> Hash {
-        let withMeta = EncodableWithMeta(from: from)
+    static public func hash<T: EncodableWithMeta>(fromWithMeta: T) throws -> Hash {
+        let jsonString = try fromWithMeta.toJson()
+        return try jsonString.sha256()
+    }
+    
+    static public func hash<T: EncodablePayloadInstance, M: EncodableEmptyMeta>(from: T, meta: M) throws -> Hash {
+        let withMeta = EncodableWithCustomMetaInstance(from: from, meta: meta)
+        let jsonString = try withMeta.toJson()
+        return try jsonString.sha256()
+    }
+    
+    static public func hash<T: EncodablePayloadInstance>(from: T) throws -> Hash {
+        let withMeta = EncodableWithMetaInstance(from: from)
         let jsonString = try withMeta.toJson()
         return try jsonString.sha256()
     }
@@ -154,8 +202,8 @@ public class PayloadBuilder {
         return result
     }
     
-    static public func toJsonWithMeta<T: EncodablePayload, M: Encodable>(from: T, meta: M?) throws -> String {
-        let target = EncodableWithCustomMeta(from: from, meta: meta)
+    static public func toJsonWithMeta<T: EncodablePayloadInstance, M: Encodable>(from: T, meta: M?) throws -> String {
+        let target = EncodableWithCustomMetaInstance(from: from, meta: meta)
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
         let data = try encoder.encode(target)

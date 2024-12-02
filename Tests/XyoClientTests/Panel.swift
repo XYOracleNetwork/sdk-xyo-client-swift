@@ -27,8 +27,8 @@ final class PanelTests: XCTestCase {
     func testSimplePanelReport() async throws {
         let panel = XyoPanel()
         let result = try await panel.reportQuery()
-        XCTAssertEqual(result.bw.payload.addresses.count, 1)
-        XCTAssertEqual(result.bw.payload.addresses[0], panel.account.address?.toHex())
+        XCTAssertEqual(result.bw.typedPayload.addresses.count, 1)
+        XCTAssertEqual(result.bw.typedPayload.addresses[0], panel.account.address?.toHex())
         XCTAssertTrue(result.payloads.isEmpty, "Expected empty result from panel report")
     }
 
@@ -39,8 +39,8 @@ final class PanelTests: XCTestCase {
             witnesses: [basicWitness]
         )
         let result = try await panel.reportQuery()
-        XCTAssertEqual(result.bw.payload.addresses.count, 1)
-        XCTAssertEqual(result.bw.payload.addresses[0], panel.account.address?.toHex())
+        XCTAssertEqual(result.bw.typedPayload.addresses.count, 1)
+        XCTAssertEqual(result.bw.typedPayload.addresses[0], panel.account.address?.toHex())
         XCTAssertEqual(
             result.payloads.count, witnesses.count,
             "Expected \(witnesses.count) payloads in the panel report result")
@@ -53,8 +53,8 @@ final class PanelTests: XCTestCase {
             witnesses: witnesses
         )
         let result = try await panel.reportQuery()
-        XCTAssertEqual(result.bw.payload.addresses.count, 1)
-        XCTAssertEqual(result.bw.payload.addresses[0], panel.account.address?.toHex())
+        XCTAssertEqual(result.bw.typedPayload.addresses.count, 1)
+        XCTAssertEqual(result.bw.typedPayload.addresses[0], panel.account.address?.toHex())
         XCTAssertEqual(
             result.payloads.count, witnesses.count,
             "Expected \(witnesses.count) payloads in the panel report result")

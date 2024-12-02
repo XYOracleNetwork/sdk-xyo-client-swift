@@ -4,7 +4,7 @@ public protocol PayloadFields : Encodable {
     var schema: String { get }
 }
 
-public protocol EncodablePayload: PayloadFields {}
+public protocol EncodablePayload: PayloadFields, Encodable {}
 
 public protocol Payload: PayloadFields, EncodablePayload, Decodable {}
 

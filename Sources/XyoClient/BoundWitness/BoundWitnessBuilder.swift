@@ -32,7 +32,7 @@ public class BoundWitnessBuilder {
 
     public func payload<T: EncodablePayloadInstance>(_ schema: String, _ payload: T) throws -> BoundWitnessBuilder {
         _payloads.append(payload)
-        _payload_hashes.append(try PayloadBuilder.hash(from: payload))
+        _payload_hashes.append(try PayloadBuilder.dataHash(from: payload))
         _payload_schemas.append(schema)
         return self
     }
@@ -40,13 +40,13 @@ public class BoundWitnessBuilder {
     public func payloads(_ payloads: [EncodablePayloadInstance]) throws -> BoundWitnessBuilder {
         _payloads.append(contentsOf: payloads)
         _payload_hashes.append(
-            contentsOf: try payloads.map { payload in try PayloadBuilder.hash(from: payload) })
+            contentsOf: try payloads.map { payload in try PayloadBuilder.dataHash(from: payload) })
         _payload_schemas.append(contentsOf: payloads.map { payload in payload.schema })
         return self
     }
 
     public func query(_ payload: EncodablePayloadInstance) throws -> BoundWitnessBuilder {
-        self._query = try PayloadBuilder.hash(from: payload)
+        self._query = try PayloadBuilder.dataHash(from: payload)
         let _ = try self.payload(payload.schema, payload)
         return self
     }
@@ -69,7 +69,7 @@ public class BoundWitnessBuilder {
         let dataHash = try PayloadBuilder.dataHash(from: bw)
         let signatures = try self.sign(hash: dataHash).map {signature in signature.toHex()}
         let meta = BoundWitnessMeta(signatures)
-        let bwWithMeta = EncodableWithCustomMeta(from: bw, meta: meta)
+        let bwWithMeta = EncodableWithCustomMetaInstance(from: bw, meta: meta)
         return (bwWithMeta, _payloads)
     }
 }

@@ -69,7 +69,7 @@ class LocationPayloadTests: XCTestCase {
         print("\n")
         XCTAssertEqual(dataHash, Data("0c1f0c80481b0f391a677eab542a594a192081325b6416acc3dc99db23355ee2"))
         
-        let payloadWithMeta = EncodableWithMeta(from: payload)
+        let payloadWithMeta = EncodableWithMetaInstance(from: payload)
         
         let encoderMeta = JSONEncoder()
         encoderMeta.outputFormatting = [.sortedKeys, .prettyPrinted]  // Consistent output for tests
@@ -83,7 +83,7 @@ class LocationPayloadTests: XCTestCase {
         print(jsonWithMetaString2)
         print("\n")
         
-        let hash = try PayloadBuilder.hash(from: payloadWithMeta)
+        let hash = try PayloadBuilder.hash(fromWithMeta: payloadWithMeta)
         print("\n hash")
         print(hash.toHex())
         print("\n")
