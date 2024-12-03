@@ -21,6 +21,9 @@ public enum WalletError: Error {
 }
 
 public class Wallet: Account, WalletInstance {
+    
+    static let defaultPath = "m/44'/60'/0'/0/0"
+    
     public func derivePath(path: String) throws -> any WalletInstance {
         let key = try Wallet.deriveKey(from: self._key, path: path)
         return try Wallet(key: key)
@@ -28,34 +31,20 @@ public class Wallet: Account, WalletInstance {
     
     private var _key: Key
 
-    init(key: Key, path: String? = nil) throws {
-        let newKey = try Wallet.deriveKey(from: key, path: path!)
-        self._key = newKey
-        super.init(newKey.privateKey)
+    init(key: Key) throws {
+        self._key = key
+        super.init(key.privateKey)
     }
     
-    convenience init(phrase: String, path: String = "m/44'/60'/0'/0/0") throws {
+    convenience init(phrase: String, path: String = defaultPath) throws {
         let seed = try Bip39.mnemonicToSeed(phrase: phrase)
         try self.init(seed: seed, path: path)
     }
     
-    convenience init(seed: Data, path: String = "m/44'/60'/0'/0/0") throws {
+    convenience init(seed: Data, path: String = defaultPath) throws {
         let rootKey = try Bip39.rootPrivateKeyFromSeed(seed: seed)
-        try self.init(key: rootKey, path: path)
-    }
-    
-    static func generateMasterKey(seed: Data) throws -> Key {
-        // The Ethereum private key is the first 32 bytes of the seed
-        guard seed.count >= 32 else {
-            throw WalletError.invalidSeedLength
-        }
-
-        let privateKey = seed.prefix(32)
-
-        // Ethereum doesn't use a chain code, but you can return an empty Data if the Key struct requires it
-        let chainCode = Data() // Not used for Ethereum
-
-        return Key(privateKey: privateKey, chainCode: chainCode)
+        let derivedKey = try Wallet.deriveKey(from: rootKey, path: path)
+        try self.init(key: derivedKey)
     }
     
     static func deriveKey(from parentKey: Key, path: String) throws -> Key {
@@ -74,7 +63,7 @@ public class Wallet: Account, WalletInstance {
             }
 
             let derivedIndex = hardened ? index | 0x80000000 : index
-            let childKey = try deriveChildKey(parentKey: currentKey, index: derivedIndex)
+            let childKey = deriveChildKey(parentKey: currentKey, index: derivedIndex)
             currentKey = childKey
         }
 
@@ -82,7 +71,7 @@ public class Wallet: Account, WalletInstance {
     }
 
     /// Derives a child key given a parent key and an index
-    private static func deriveChildKey(parentKey: Key, index: UInt32) throws -> Key {
+    private static func deriveChildKey(parentKey: Key, index: UInt32) -> Key {
         var data = Data()
 
         if index >= 0x80000000 {
@@ -98,17 +87,12 @@ public class Wallet: Account, WalletInstance {
         // Append the index
         data.append(contentsOf: withUnsafeBytes(of: index.bigEndian, Array.init))
 
-        // HMAC-SHA512 with the parent chain code
-        do {
-            let hmac = try HMAC(key: Array(parentKey.chainCode), variant: .sha2(.sha512)).authenticate(Array(data))
-            let derivedKeyData = Data(hmac)
-            let derivedPrivateKey = derivedKeyData.prefix(32)
-            let derivedChainCode = derivedKeyData.suffix(32)
+        let hmac = Hmac.hmacSha512(key: parentKey.chainCode, data: data)
+        let derivedKeyData = Data(hmac)
+        let derivedPrivateKey = derivedKeyData.prefix(32)
+        let derivedChainCode = derivedKeyData.suffix(32)
 
-            return Key(privateKey: derivedPrivateKey, chainCode: derivedChainCode)
-        } catch {
-            throw WalletError.failedToGenerateHmac
-        }
+        return Key(privateKey: derivedPrivateKey, chainCode: derivedChainCode)
     }
     
     private static func getCompressedPublicKey(privateKey: Data) -> Data {
