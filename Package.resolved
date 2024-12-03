@@ -1,5 +1,5 @@
 {
-  "originHash" : "8f378ad9dcb7a2dd1f3124a7b6dd9fa1c07dd7d11376dd75dbb02aba94279031",
+  "originHash" : "81631fbeeb9ab7738775f727717d05616ef7c8f1dbe9c93d4e9c6855fe4abef4",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -11,21 +11,21 @@
       }
     },
     {
-      "identity" : "swift-asn1",
+      "identity" : "bigint",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-asn1.git",
+      "location" : "https://github.com/attaswift/BigInt.git",
       "state" : {
-        "revision" : "7faebca1ea4f9aaf0cda1cef7c43aecd2311ddf6",
-        "version" : "1.3.0"
+        "revision" : "114343a705df4725dfe7ab8a2a326b8883cfd79c",
+        "version" : "5.5.1"
       }
     },
     {
-      "identity" : "swift-crypto",
+      "identity" : "cryptoswift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-crypto.git",
+      "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
       "state" : {
-        "revision" : "ff0f781cf7c6a22d52957e50b104f5768b50c779",
-        "version" : "3.10.0"
+        "revision" : "678d442c6f7828def400a70ae15968aef67ef52d",
+        "version" : "1.8.3"
       }
     },
     {

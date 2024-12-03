@@ -52,7 +52,7 @@ enum AccountError: Error {
 }
 
 public class Account: AccountInstance, AccountStatic {
-    public let privateKey: Data?
+    private var _privateKey: Data?
     
     public var publicKey: Data? {
         guard let privateKey = self.privateKey else {return nil}
@@ -123,13 +123,17 @@ public class Account: AccountInstance, AccountStatic {
     public static func fromPrivateKey(_ key: Data) -> any AccountInstance {
         return Account(key)
     }
+    
+    public var privateKey: Data? {
+        return _privateKey
+    }
 
     public static func random() -> AccountInstance {
         return Account(generateRandomBytes())
     }
 
     init(_ privateKey: Data) {
-        self.privateKey = privateKey
+        self._privateKey = privateKey
     }
     
     public var previousHash: Hash? {
