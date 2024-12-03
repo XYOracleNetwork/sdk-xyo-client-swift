@@ -149,7 +149,6 @@ public class Bip39 {
         let privateKey = hmac.prefix(PRIVATE_KEY_SIZE)
         let chainCode = hmac.suffix(from: PRIVATE_KEY_SIZE)
 
-        // Convert to BigInt
         let ib = privateKey.toBigInt()
         if ib == 0 || ib >= Secp256k1CurveConstants.n {
             throw NSError(domain: "Invalid key", code: 0, userInfo: nil)

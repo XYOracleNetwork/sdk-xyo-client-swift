@@ -40,6 +40,9 @@ extension Data {
     func toBigInt() -> BigInt {
         return BigInt(self)
     }
+    func toBigUInt() -> BigUInt {
+        return BigUInt(self)
+    }
     func toBinaryString() -> String {
         return self.map { String($0, radix: 2).leftPad(toLength: 8, with: "0") }.joined()
     }
