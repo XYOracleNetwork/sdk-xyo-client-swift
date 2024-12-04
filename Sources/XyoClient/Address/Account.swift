@@ -111,12 +111,19 @@ public class Account: AccountInstance, AccountStatic {
     }
 
     public var keccakBytes: Data? {
-        return publicKey?.keccak256()
+
+        return publicKey?
+            // Drop the `0x04` from the beginning of the key
+            .dropFirst()
+            // Then take the keccak256 hash of the key
+            .keccak256()
     }
 
     public var address: Data? {
+        // Get the keccak hash of the public key
         guard let keccakBytes = keccakBytes else { return nil }
-        return keccakBytes.subdata(in: 12..<keccakBytes.count)
+        // Return the last 20 bytes of the keccak hash
+        return keccakBytes.suffix(20)
     }
 
     public static var previousHashStore: PreviousHashStore = CoreDataPreviousHashStore()
