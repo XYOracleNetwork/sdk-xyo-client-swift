@@ -67,14 +67,15 @@ class LocationPayloadTests: XCTestCase {
         print("\n dataHash")
         print(dataHash.toHex())
         print("\n")
-        XCTAssertEqual(dataHash, Data("0c1f0c80481b0f391a677eab542a594a192081325b6416acc3dc99db23355ee2"))
-        
+        XCTAssertEqual(
+            dataHash, Data("0c1f0c80481b0f391a677eab542a594a192081325b6416acc3dc99db23355ee2"))
+
         let payloadWithMeta = EncodableWithMetaInstance(from: payload)
-        
+
         let encoderMeta = JSONEncoder()
         encoderMeta.outputFormatting = [.sortedKeys, .prettyPrinted]  // Consistent output for tests
         let jsonWithMetaData = try encoder.encode(payloadWithMeta)
-        
+
         let jsonWithMetaString = String(data: jsonWithMetaData, encoding: .utf8)!
         let jsonWithMetaString2 = try payloadWithMeta.toJson()
         print("\n jsonWithMetaString")
@@ -82,12 +83,13 @@ class LocationPayloadTests: XCTestCase {
         print("\n jsonWithMetaString2")
         print(jsonWithMetaString2)
         print("\n")
-        
+
         let hash = try PayloadBuilder.hash(fromWithMeta: payloadWithMeta)
         print("\n hash")
         print(hash.toHex())
         print("\n")
-        XCTAssertEqual(hash, Data("5a4bb96eb1af7840321cb8a3503ab944957c06111869cc0746e985f49061e746"))
+        XCTAssertEqual(
+            hash, Data("5a4bb96eb1af7840321cb8a3503ab944957c06111869cc0746e985f49061e746"))
     }
 
     func testLocationPayloadEncodingHandlesNilValues() throws {
@@ -124,6 +126,7 @@ class LocationPayloadTests: XCTestCase {
             """
         XCTAssertEqual(jsonString, expectedJSON)
         let hash = try PayloadBuilder.dataHash(from: payload)
-        XCTAssertEqual(hash, Data("c1bd7396f998a50d20401efd4b5da0cf6670f9418c6f60b42f4c54f3663305c3"))
+        XCTAssertEqual(
+            hash, Data("c1bd7396f998a50d20401efd4b5da0cf6670f9418c6f60b42f4c54f3663305c3"))
     }
 }

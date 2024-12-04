@@ -56,7 +56,7 @@ extension BigInt {
     /// - Returns: A `Data` object representing the BigInt.
     func toData(length: Int? = nil) -> Data {
         var magnitudeBytes = self.magnitude.serialize()
-        
+
         // Adjust for desired length, if specified
         if let length = length {
             if magnitudeBytes.count < length {
@@ -68,7 +68,7 @@ extension BigInt {
                 magnitudeBytes = magnitudeBytes.suffix(length)
             }
         }
-        
+
         return Data(magnitudeBytes)
     }
 }

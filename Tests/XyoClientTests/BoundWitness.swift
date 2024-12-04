@@ -24,7 +24,8 @@ final class BoundWitnessTests: XCTestCase {
         let (bwJson, _) = try bw.build()
         let hash = try PayloadBuilder.hash(fromWithMeta: bwJson)
         let dataHash = try PayloadBuilder.dataHash(from: bwJson.typedPayload)
-        XCTAssertEqual(dataHash.toHex(), "6f731b3956114fd0d18820dbbe1116f9e36dc8d803b0bb049302f7109037468f")
+        XCTAssertEqual(
+            dataHash.toHex(), "6f731b3956114fd0d18820dbbe1116f9e36dc8d803b0bb049302f7109037468f")
         XCTAssertEqual(
             hash.toHex(), "c267291c8169e428aaedbbf52792f9378ee03910401ef882b653a75f85370722")
     }
@@ -37,7 +38,7 @@ final class BoundWitnessTests: XCTestCase {
         let (bwJson, _) = try bw.build()
         let bwJsonHash = try PayloadBuilder.dataHash(from: bwJson.typedPayload)
         let e = try? bwJson.toJson()
-        if (e != nil) {
+        if e != nil {
             print("\n")
             print(e!)
             print("\n")

@@ -2,7 +2,7 @@ import Foundation
 import secp256k1
 
 public func dataFromHex(_ hex: String) -> Data? {
-    let hex = hex.replacingOccurrences(of: " ", with: "") // Remove any spaces
+    let hex = hex.replacingOccurrences(of: " ", with: "")  // Remove any spaces
     let len = hex.count
 
     // Ensure even length (hex must be in pairs)
@@ -21,9 +21,9 @@ public func dataFromHex(_ hex: String) -> Data? {
     return data
 }
 
-public extension Data {
-    init?(_ hex: String) {
-        let hex = hex.replacingOccurrences(of: " ", with: "") // Remove any spaces
+extension Data {
+    public init?(_ hex: String) {
+        let hex = hex.replacingOccurrences(of: " ", with: "")  // Remove any spaces
         let len = hex.count
 
         // Ensure even length (hex must be in pairs)
@@ -38,7 +38,7 @@ public extension Data {
             data.append(byte)
             index = nextIndex
         }
-        
+
         guard let result = dataFromHex(hex) else { return nil }
 
         self = result
@@ -53,17 +53,17 @@ enum AccountError: Error {
 
 public class Account: AccountInstance, AccountStatic {
     private var _privateKey: Data?
-    
+
     public var publicKey: Data? {
-        guard let privateKey = self.privateKey else {return nil}
+        guard let privateKey = self.privateKey else { return nil }
         return try? Account.privateKeyObjectFromKey(privateKey).publicKey.dataRepresentation
     }
-    
+
     public static func fromPrivateKey(_ key: String) throws -> AccountInstance {
         guard let data = Data(key) else { throw AccountError.invalidPrivateKey }
         return Account(data)
     }
-    
+
     public func sign(hash: String) throws -> Signature {
         guard let message = hash.hexToData() else { throw AccountError.invalidMessage }
         return try self.sign(message)
@@ -71,7 +71,7 @@ public class Account: AccountInstance, AccountStatic {
 
     public func sign(_ hash: Hash) throws -> Signature {
         let context = try secp256k1.Context.create()
-        guard let privateKey = self.privateKey else {throw AccountError.invalidPrivateKey}
+        guard let privateKey = self.privateKey else { throw AccountError.invalidPrivateKey }
 
         defer { secp256k1_context_destroy(context) }
 
@@ -100,30 +100,31 @@ public class Account: AccountInstance, AccountStatic {
             count: MemoryLayout.size(ofValue: signature2.data)
         )
 
-        let result = try secp256k1.Signing.ECDSASignature(dataRepresentation: rawRepresentation).dataRepresentation
+        let result = try secp256k1.Signing.ECDSASignature(dataRepresentation: rawRepresentation)
+            .dataRepresentation
         try self.storePreviousHash(hash)
         return result
     }
-    
+
     public func verify(_ msg: Data, _ signature: Signature) -> Bool {
         return false
     }
-    
+
     public var keccakBytes: Data? {
         return publicKey?.keccak256()
     }
-    
+
     public var address: Data? {
-        guard let keccakBytes = keccakBytes else {return nil}
+        guard let keccakBytes = keccakBytes else { return nil }
         return keccakBytes.subdata(in: 12..<keccakBytes.count)
     }
-    
+
     public static var previousHashStore: PreviousHashStore = CoreDataPreviousHashStore()
 
     public static func fromPrivateKey(_ key: Data) -> any AccountInstance {
         return Account(key)
     }
-    
+
     public var privateKey: Data? {
         return _privateKey
     }
@@ -135,11 +136,11 @@ public class Account: AccountInstance, AccountStatic {
     init(_ privateKey: Data) {
         self._privateKey = privateKey
     }
-    
+
     public var previousHash: Hash? {
         return try? retreivePreviousHash()
     }
-    
+
     public static func privateKeyObjectFromKey(_ key: Data) throws -> secp256k1.Signing.PrivateKey {
         return try secp256k1.Signing.PrivateKey(
             dataRepresentation: key, format: .uncompressed)
@@ -151,7 +152,7 @@ public class Account: AccountInstance, AccountStatic {
             Account.previousHashStore.setItem(address: address, previousHash: previousHash)
         }
     }
-    
+
     internal func retreivePreviousHash() throws -> Hash? {
         guard let address = self.address else { throw AccountError.invalidAddress }
         return Account.previousHashStore.getItem(address: address)

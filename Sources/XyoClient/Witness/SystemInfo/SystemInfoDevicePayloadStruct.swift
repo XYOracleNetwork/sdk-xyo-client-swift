@@ -6,11 +6,11 @@ class SystemInfoDevicePayloadStruct: Encodable, Decodable {
     var release: String?
     var sysname: String?
     var version: String?
-    
+
     init() {
-        
+
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         self.model = try values.decode(String.self, forKey: .model)
@@ -27,7 +27,7 @@ class SystemInfoDevicePayloadStruct: Encodable, Decodable {
         case sysname
         case version
     }
-    
+
     static func load() -> SystemInfoDevicePayloadStruct {
         var result = SystemInfoDevicePayloadStruct()
         var systemInfo = utsname()
