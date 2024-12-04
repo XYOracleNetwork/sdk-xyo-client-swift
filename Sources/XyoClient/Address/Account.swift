@@ -74,7 +74,7 @@ public class Account: AccountInstance, AccountStatic {
     }
 
     public var previousHash: Hash? {
-        return try? retreivePreviousHash()
+        return try? retrievePreviousHash()
     }
 
     public var privateKey: Data? {
@@ -158,7 +158,7 @@ public class Account: AccountInstance, AccountStatic {
         return false
     }
 
-    internal func retreivePreviousHash() throws -> Hash? {
+    internal func retrievePreviousHash() throws -> Hash? {
         guard let address = self.address else { throw AccountError.invalidAddress }
         return Account.previousHashStore.getItem(address: address)
     }
