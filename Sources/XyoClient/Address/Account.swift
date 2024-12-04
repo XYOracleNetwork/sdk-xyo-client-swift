@@ -1,3 +1,4 @@
+import BigInt
 import Foundation
 import secp256k1
 
@@ -52,9 +53,19 @@ enum AccountError: Error {
 }
 
 public class Account: AccountInstance, AccountStatic {
+
     private var _privateKey: Data?
 
     public var publicKey: Data? {
+        guard
+            let publicKeyUncompressed = publicKeyUncompressed?
+                // Drop the `0x04` from the beginning of the key
+                .dropFirst()
+        else { return nil }
+        return try? Account.getCompressedKeyFrom(uncompressedPublicKey: publicKeyUncompressed)
+    }
+
+    public var publicKeyUncompressed: Data? {
         guard let privateKey = self.privateKey else { return nil }
         return try? Account.privateKeyObjectFromKey(privateKey).publicKey.dataRepresentation
     }
@@ -112,7 +123,7 @@ public class Account: AccountInstance, AccountStatic {
 
     public var keccakBytes: Data? {
 
-        return publicKey?
+        return publicKeyUncompressed?
             // Drop the `0x04` from the beginning of the key
             .dropFirst()
             // Then take the keccak256 hash of the key
@@ -120,7 +131,7 @@ public class Account: AccountInstance, AccountStatic {
     }
 
     public var address: Data? {
-        // Get the keccak hash of the public key
+        // Get the keccak hash ofthe public key
         guard let keccakBytes = keccakBytes else { return nil }
         // Return the last 20 bytes of the keccak hash
         return keccakBytes.suffix(20)
@@ -163,5 +174,29 @@ public class Account: AccountInstance, AccountStatic {
     internal func retreivePreviousHash() throws -> Hash? {
         guard let address = self.address else { throw AccountError.invalidAddress }
         return Account.previousHashStore.getItem(address: address)
+    }
+
+    public static func getCompressedKeyFrom(uncompressedPublicKey: Data) throws -> Data {
+        // Ensure the input key is exactly 64 bytes
+        guard uncompressedPublicKey.count == 64 else {
+            throw WalletError.invalidPrivateKeyLength
+        }
+
+        // Extract x and y coordinates
+        let x = uncompressedPublicKey.prefix(32)  // First 32 bytes are x
+        let y = uncompressedPublicKey.suffix(32)  // Last 32 bytes are y
+
+        // Convert y to an integer to determine parity
+        let yInt = BigInt(y.toHex(), radix: 16)!
+        let isEven = yInt % 2 == 0
+
+        // Determine the prefix based on the parity of y
+        let prefix: UInt8 = isEven ? 0x02 : 0x03
+
+        // Construct the compressed key: prefix + x
+        var compressedKey = Data([prefix])  // Start with the prefix
+        compressedKey.append(x)  // Append the x-coordinate
+
+        return compressedKey
     }
 }

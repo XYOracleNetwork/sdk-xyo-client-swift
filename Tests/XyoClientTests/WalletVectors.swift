@@ -31,7 +31,6 @@ class WalletVectorTests: XCTestCase {
 
             let wallet = try Wallet(phrase: vector.phrase, path: vector.path)
             XCTAssertEqual(wallet.privateKey?.toHex(), vector.privateKey)
-            let pubKey = wallet.publicKey?.toHex()
             XCTAssertEqual(wallet.address?.toHex(), vector.address)
             XCTAssertEqual(wallet.publicKey?.toHex(), vector.publicKey)
 

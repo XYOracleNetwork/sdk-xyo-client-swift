@@ -15,5 +15,6 @@ public protocol AccountInstance: PrivateKeyInstance {
     var previousHash: Hash? { get }
     var privateKey: Data? { get }
     var publicKey: Data? { get }
+    var publicKeyUncompressed: Data? { get }
 
 }
