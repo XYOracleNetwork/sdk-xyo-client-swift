@@ -87,32 +87,67 @@ public class Wallet: Account, WalletInstance {
             }
             data.append(0x00)
             data.append(parentKey.privateKey)
+            print("Hardened Derivation: Prepended Private Key")
         } else {
             // Normal key: use the compressed public key
             guard let publicKey = try? getCompressedPublicKey(privateKey: parentKey.privateKey) else {
                 throw WalletError.failedToGetPublicKey
             }
-            let val = publicKey.toHex()
             data.append(publicKey)
+            print("Non-Hardened Derivation: Appended Public Key")
         }
 
         // Append the index
         data.append(contentsOf: withUnsafeBytes(of: index.bigEndian, Array.init))
+        print("Data for HMAC: \(data.toHex())")
         
         // Perform HMAC-SHA512
         guard data.count == 37 else {
             throw WalletError.failedToGenerateHmac
         }
         let hmac = Hmac.hmacSha512(key: parentKey.chainCode, data: data)
-        let derivedPrivateKey = hmac.prefix(32)
-        let derivedChainCode = hmac.suffix(32)
+        let derivedPrivateKeyBytes = hmac.prefix(32) // Left 32 bytes (L)
+        let derivedChainCode = hmac.suffix(32) // Right 32 bytes (R)
+        
+        print("HMAC Output: \(Data(hmac).toHex())")
+        print("Derived Private Key Bytes (L): \(derivedPrivateKeyBytes.toHex())")
+        print("Derived Chain Code (R): \(derivedChainCode.toHex())")
 
-        // Validate the derived private key
-        guard BigInt(Data(derivedPrivateKey)) < secp256k1CurveOrder else {
+        // Convert L to an integer
+        let L = BigInt(derivedPrivateKeyBytes.toHex(), radix: 16)!
+//        let curveOrder = BigInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
+        print("Curve Order: \(secp256k1CurveOrder)")
+        print("L as BigInt: \(L)")
+        
+        // Validate L
+        guard L < secp256k1CurveOrder else {
             throw WalletError.invalidChildKey
         }
 
-        return Key(privateKey: derivedPrivateKey, chainCode: derivedChainCode)
+        // Compute the child private key: (L + parentPrivateKey) % curveOrder
+//        let parentPrivateKeyInt = BigInt(Data(parentKey.privateKey))
+        let parentPrivateKeyInt = BigInt(parentKey.privateKey.toHex(), radix: 16)!
+        let childPrivateKeyInt = (L + parentPrivateKeyInt) % secp256k1CurveOrder
+        print("Parent Private Key as Hex: \(parentKey.privateKey.toHexString())")
+        print("Parent Private Key as BigInt: \(parentPrivateKeyInt)")
+        print("Child Private Key as BigInt: \(childPrivateKeyInt)")
+
+        // Ensure the child private key is valid
+        guard childPrivateKeyInt != 0 else {
+            throw WalletError.invalidChildKey
+        }
+
+        // Convert the child private key back to Data
+        var childPrivateKey = childPrivateKeyInt.toData()
+        if childPrivateKey.count < 32 {
+                // Pad with leading zeros to make it 32 bytes
+                let padding = Data(repeating: 0, count: 32 - data.count)
+                childPrivateKey = padding + data
+        }
+        let test = childPrivateKey.toHexString()
+
+        // Return the new child key
+        return Key(privateKey: childPrivateKey, chainCode: Data(derivedChainCode))
     }
     
     private static func getCompressedPublicKey(privateKey: Data) throws -> Data {
@@ -130,7 +165,7 @@ public class Wallet: Account, WalletInstance {
         let y = uncompressedKey.suffix(32) // Last 32 bytes are y
         
         // Convert y to an integer to determine parity
-        let yInt = BigInt(Data(y))
+        let yInt = BigInt(y.toHex(), radix: 16)!
         let isEven = yInt % 2 == 0
         
         // Determine the prefix based on the parity of y
@@ -139,8 +174,7 @@ public class Wallet: Account, WalletInstance {
         // Construct the compressed key: prefix + x
         var compressedKey = Data([prefix]) // Start with the prefix
         compressedKey.append(x)            // Append the x-coordinate
-        
-        let test = compressedKey.toHexString()
+
         return compressedKey
     }
 }
