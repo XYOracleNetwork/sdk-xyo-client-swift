@@ -19,6 +19,8 @@ final class BoundWitnessTests: XCTestCase {
         let payloadDataHash = try PayloadBuilder.dataHash(from: testPayload1)
         XCTAssertEqual(payloadDataHash, testPayload1Hash)
         let address = Account.fromPrivateKey(testVectorPrivateKey.hexToData()!)
+        XCTAssertEqual(testVectorPrivateKey, address.privateKey!.toHex())
+        XCTAssertEqual(testVectorAddress, address.address!.toHex())
         let bw = try BoundWitnessBuilder().signer(address).payload(
             "network.xyo.test", TestPayload1("network.xyo.test"))
         let (bwJson, _) = try bw.build()
