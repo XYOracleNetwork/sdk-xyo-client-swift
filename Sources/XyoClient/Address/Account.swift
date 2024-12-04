@@ -48,13 +48,38 @@ extension Data {
 
 enum AccountError: Error {
     case invalidAddress
-    case invalidPrivateKey
     case invalidMessage
+    case invalidPrivateKey
 }
 
 public class Account: AccountInstance, AccountStatic {
 
+    public static var previousHashStore: PreviousHashStore = CoreDataPreviousHashStore()
+
     private var _privateKey: Data?
+
+    public var address: Data? {
+        // Get the keccak hash of the public key
+        guard let keccakBytes = keccakBytes else { return nil }
+        // Return the last 20 bytes of the keccak hash
+        return keccakBytes.suffix(20)
+    }
+
+    public var keccakBytes: Data? {
+        return publicKeyUncompressed?
+            // Drop the `0x04` from the beginning of the key
+            .dropFirst()
+            // Then take the keccak256 hash of the key
+            .keccak256()
+    }
+
+    public var previousHash: Hash? {
+        return try? retreivePreviousHash()
+    }
+
+    public var privateKey: Data? {
+        return _privateKey
+    }
 
     public var publicKey: Data? {
         guard
@@ -70,14 +95,21 @@ public class Account: AccountInstance, AccountStatic {
         return try? Account.privateKeyObjectFromKey(privateKey).publicKey.dataRepresentation
     }
 
+    public static func fromPrivateKey(_ key: Data) -> any AccountInstance {
+        return Account(key)
+    }
+
     public static func fromPrivateKey(_ key: String) throws -> AccountInstance {
         guard let data = Data(key) else { throw AccountError.invalidPrivateKey }
         return Account(data)
     }
 
-    public func sign(hash: String) throws -> Signature {
-        guard let message = hash.hexToData() else { throw AccountError.invalidMessage }
-        return try self.sign(message)
+    public static func random() -> AccountInstance {
+        return Account(generateRandomBytes())
+    }
+
+    init(_ privateKey: Data) {
+        self._privateKey = privateKey
     }
 
     public func sign(_ hash: Hash) throws -> Signature {
@@ -117,51 +149,18 @@ public class Account: AccountInstance, AccountStatic {
         return result
     }
 
+    public func sign(hash: String) throws -> Signature {
+        guard let message = hash.hexToData() else { throw AccountError.invalidMessage }
+        return try self.sign(message)
+    }
+
     public func verify(_ msg: Data, _ signature: Signature) -> Bool {
         return false
     }
 
-    public var keccakBytes: Data? {
-
-        return publicKeyUncompressed?
-            // Drop the `0x04` from the beginning of the key
-            .dropFirst()
-            // Then take the keccak256 hash of the key
-            .keccak256()
-    }
-
-    public var address: Data? {
-        // Get the keccak hash ofthe public key
-        guard let keccakBytes = keccakBytes else { return nil }
-        // Return the last 20 bytes of the keccak hash
-        return keccakBytes.suffix(20)
-    }
-
-    public static var previousHashStore: PreviousHashStore = CoreDataPreviousHashStore()
-
-    public static func fromPrivateKey(_ key: Data) -> any AccountInstance {
-        return Account(key)
-    }
-
-    public var privateKey: Data? {
-        return _privateKey
-    }
-
-    public static func random() -> AccountInstance {
-        return Account(generateRandomBytes())
-    }
-
-    init(_ privateKey: Data) {
-        self._privateKey = privateKey
-    }
-
-    public var previousHash: Hash? {
-        return try? retreivePreviousHash()
-    }
-
-    public static func privateKeyObjectFromKey(_ key: Data) throws -> secp256k1.Signing.PrivateKey {
-        return try secp256k1.Signing.PrivateKey(
-            dataRepresentation: key, format: .uncompressed)
+    internal func retreivePreviousHash() throws -> Hash? {
+        guard let address = self.address else { throw AccountError.invalidAddress }
+        return Account.previousHashStore.getItem(address: address)
     }
 
     internal func storePreviousHash(_ newValue: Hash?) throws {
@@ -171,15 +170,10 @@ public class Account: AccountInstance, AccountStatic {
         }
     }
 
-    internal func retreivePreviousHash() throws -> Hash? {
-        guard let address = self.address else { throw AccountError.invalidAddress }
-        return Account.previousHashStore.getItem(address: address)
-    }
-
     public static func getCompressedKeyFrom(uncompressedPublicKey: Data) throws -> Data {
         // Ensure the input key is exactly 64 bytes
         guard uncompressedPublicKey.count == 64 else {
-            throw WalletError.invalidPrivateKeyLength
+            throw AccountError.invalidPrivateKey
         }
 
         // Extract x and y coordinates
@@ -198,5 +192,10 @@ public class Account: AccountInstance, AccountStatic {
         compressedKey.append(x)  // Append the x-coordinate
 
         return compressedKey
+    }
+
+    public static func privateKeyObjectFromKey(_ key: Data) throws -> secp256k1.Signing.PrivateKey {
+        return try secp256k1.Signing.PrivateKey(
+            dataRepresentation: key, format: .uncompressed)
     }
 }
