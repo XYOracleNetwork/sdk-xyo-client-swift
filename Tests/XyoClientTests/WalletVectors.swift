@@ -18,7 +18,8 @@ let testCases: [TestVector] = [
         phrase: "later puppy sound rebuild rebuild noise ozone amazing hope broccoli crystal grief",
         privateKey: "96a7705eedbb701a03ee235911253fd3eb80e48a06106c0bf957d42b72bd8efa",
         publicKey: "03a9f10779cb44e73a1983b8225ce9de96ff63cbc8a2900db102fa55a38a14b206",
-        publicKeyUncompressed: "04a9f10779cb44e73a1983b8225ce9de96ff63cbc8a2900db102fa55a38a14b206f850a6decf0d0277c8ea237d865a06b6237f07eaf4273217ed6b2ed830161bef"
+        publicKeyUncompressed:
+            "04a9f10779cb44e73a1983b8225ce9de96ff63cbc8a2900db102fa55a38a14b206f850a6decf0d0277c8ea237d865a06b6237f07eaf4273217ed6b2ed830161bef"
     )
 ]
 
@@ -57,5 +58,4 @@ class WalletVectorTests: XCTestCase {
             }
         }
     }
-
 }
