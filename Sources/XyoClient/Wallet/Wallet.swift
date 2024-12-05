@@ -83,7 +83,6 @@ public class Wallet: Account, WalletInstance {
             }
             data.append(0x00)
             data.append(parentKey.privateKey)
-            print("Hardened Derivation: Prepended Private Key")
         } else {
             // Normal key: use the compressed public key
             guard let publicKey = try? getCompressedPublicKey(privateKey: parentKey.privateKey)
@@ -91,12 +90,10 @@ public class Wallet: Account, WalletInstance {
                 throw WalletError.failedToGetPublicKey
             }
             data.append(publicKey)
-            print("Non-Hardened Derivation: Appended Public Key")
         }
 
         // Append the index
         data.append(contentsOf: withUnsafeBytes(of: index.bigEndian, Array.init))
-        print("Data for HMAC: \(data.toHex())")
 
         // Perform HMAC-SHA512
         guard data.count == 37 else {
