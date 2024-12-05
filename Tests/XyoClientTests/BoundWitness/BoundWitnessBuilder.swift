@@ -44,13 +44,16 @@ final class BoundWitnessBuilderTests: XCTestCase {
             let (bwJson, _) = try bw.build()
             let hash = try PayloadBuilder.dataHash(from: bwJson.typedPayload)
 
-//            // Ensure the BW is correct
-//            XCTAssertEqual(hash.toHex(), testCase.dataHash)
-//
-//            // Ensure correct ending account state
-//            for signer in signers {
-//                XCTAssertEqual(signer.previousHash, hash)
-//            }
+            // Ensure the BW is correct
+            XCTAssertEqual(hash.toHex(), testCase.dataHash)
+
+            // Ensure correct ending account state
+            for signer in signers {
+                XCTAssertEqual(signer.previousHash, hash)
+            }
+            
+            // TODO: Ensure previous hash is correct
+            
         }
     }
 }

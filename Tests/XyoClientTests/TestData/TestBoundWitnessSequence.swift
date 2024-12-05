@@ -39,7 +39,7 @@ let boundWitnessSequenceTestCase1: BoundWitnessSequenceTestCase = .init(
     payloads: payloadSequences[0].payloads,
     payloadHashes: payloadSequences[0].payloadHashes,
     previousHashes: [nil, nil],
-    dataHash: ""
+    dataHash: "750113b9826ba94b622667b06cd8467f1330837581c28907c16160fec20d0a4b"
 )
 
 let boundWitnessSequenceTestCase2: BoundWitnessSequenceTestCase = .init(
@@ -49,7 +49,7 @@ let boundWitnessSequenceTestCase2: BoundWitnessSequenceTestCase = .init(
     payloads: payloadSequences[1].payloads,
     payloadHashes: payloadSequences[1].payloadHashes,
     previousHashes: [],
-    dataHash: ""
+    dataHash: "bacd010d79126a154339e59c11c5b46be032c3bef65626f83bcafe968dc6dd1b"
 )
 
 let boundWitnessSequenceTestCase3: BoundWitnessSequenceTestCase = .init(
@@ -58,7 +58,10 @@ let boundWitnessSequenceTestCase3: BoundWitnessSequenceTestCase = .init(
     addresses: [wallet1Address, wallet2Address],
     payloads: payloadSequences[2].payloads,
     payloadHashes: payloadSequences[2].payloadHashes,
-    previousHashes: [],
+    previousHashes: [
+        "750113b9826ba94b622667b06cd8467f1330837581c28907c16160fec20d0a4b",
+        "bacd010d79126a154339e59c11c5b46be032c3bef65626f83bcafe968dc6dd1b"
+    ],
     dataHash: ""
 )
 
