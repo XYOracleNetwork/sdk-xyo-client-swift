@@ -6,6 +6,7 @@ public struct BoundWitnessSequenceTestCase {
     public var payloads: [EncodablePayloadInstance]
     public var payloadHashes: [String]
     public var previousHashes: [String?]
+    public var dataHash: String
 }
 
 public struct PayloadsWithHashes {
@@ -25,7 +26,8 @@ let boundWitnessSequenceTestCase1: BoundWitnessSequenceTestCase = .init(
     addresses: [],
     payloads: payloadSequences[0].payloads,
     payloadHashes: payloadSequences[0].payloadHashes,
-    previousHashes: []
+    previousHashes: [nil , nil],
+    dataHash: ""
 )
 
 let boundWitnessSequenceTestCase2: BoundWitnessSequenceTestCase = .init(
@@ -33,7 +35,8 @@ let boundWitnessSequenceTestCase2: BoundWitnessSequenceTestCase = .init(
     addresses: [],
     payloads: payloadSequences[1].payloads,
     payloadHashes: payloadSequences[1].payloadHashes,
-    previousHashes: []
+    previousHashes: [],
+    dataHash: ""
 )
 
 let boundWitnessSequenceTestCase3: BoundWitnessSequenceTestCase = .init(
@@ -41,7 +44,8 @@ let boundWitnessSequenceTestCase3: BoundWitnessSequenceTestCase = .init(
     addresses: [],
     payloads: payloadSequences[2].payloads,
     payloadHashes: payloadSequences[2].payloadHashes,
-    previousHashes: []
+    previousHashes: [],
+    dataHash: ""
 )
 
 let boundWitnessSequenceTestCases = [
