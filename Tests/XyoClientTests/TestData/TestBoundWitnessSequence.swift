@@ -1,7 +1,8 @@
 import XyoClient
 
 public struct BoundWitnessSequenceTestCase {
-    public var privateKeys: [String]
+    public var mnemonics: [String]
+    public var paths: [String]
     public var addresses: [Address]
     public var payloads: [EncodablePayloadInstance]
     public var payloadHashes: [String]
@@ -21,8 +22,17 @@ let payloadSequences: [PayloadsWithHashes] = [
 
 ]
 
+let wallet1Mnemonic = "report door cry include salad horn recipe luxury access pledge husband maple busy double olive"
+let wallet1Path = "m/44'/0'/0'/0"
+let wallet1Address = "25524Ca99764D76CA27604Bb9727f6e2f27C4533"
+
+let wallet2Mnemonic = "turn you orphan sauce act patient village entire lava transfer height sense enroll quit idle"
+let wallet2Path = "m/44'/0'/0'/0"
+let wallet2Address = "e85c88A9943a2fF541865981b1DB8D2A8bF6bb78"
+
 let boundWitnessSequenceTestCase1: BoundWitnessSequenceTestCase = .init(
-    privateKeys: [],
+    mnemonics: [wallet1Mnemonic],
+    paths: [wallet1Path],
     addresses: [],
     payloads: payloadSequences[0].payloads,
     payloadHashes: payloadSequences[0].payloadHashes,
@@ -31,7 +41,8 @@ let boundWitnessSequenceTestCase1: BoundWitnessSequenceTestCase = .init(
 )
 
 let boundWitnessSequenceTestCase2: BoundWitnessSequenceTestCase = .init(
-    privateKeys: [],
+    mnemonics: [wallet2Mnemonic],
+    paths: [wallet2Path],
     addresses: [],
     payloads: payloadSequences[1].payloads,
     payloadHashes: payloadSequences[1].payloadHashes,
@@ -40,7 +51,8 @@ let boundWitnessSequenceTestCase2: BoundWitnessSequenceTestCase = .init(
 )
 
 let boundWitnessSequenceTestCase3: BoundWitnessSequenceTestCase = .init(
-    privateKeys: [],
+    mnemonics: [wallet1Mnemonic, wallet2Mnemonic],
+    paths: [wallet1Path, wallet2Path],
     addresses: [],
     payloads: payloadSequences[2].payloads,
     payloadHashes: payloadSequences[2].payloadHashes,
