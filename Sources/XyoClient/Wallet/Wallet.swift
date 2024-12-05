@@ -100,7 +100,6 @@ public class Wallet: Account, WalletInstance {
             throw WalletError.failedToGenerateHmac
         }
         let hmac = Hmac.hmacSha512(key: parentKey.chainCode, data: data)
-        let derivedChainCode = hmac.suffix(32)  // Right 32 bytes (R)
 
         // Convert L to an integer
         let L = BigInt(hmac.prefix(32).toHex(), radix: 16)!
@@ -108,6 +107,7 @@ public class Wallet: Account, WalletInstance {
         guard L < Secp256k1CurveConstants.n else {
             throw WalletError.invalidChildKey
         }
+        let R = hmac.suffix(32)  // Right 32 bytes (R)
 
         // Compute the child private key: (L + parentPrivateKey) % curveOrder
         let parentPrivateKeyInt = BigInt(parentKey.privateKey.toHex(), radix: 16)!
@@ -131,7 +131,7 @@ public class Wallet: Account, WalletInstance {
         }
 
         // Return the new child key
-        return Key(privateKey: childPrivateKey, chainCode: Data(derivedChainCode))
+        return Key(privateKey: childPrivateKey, chainCode: Data(R))
     }
 
     private static func getCompressedPublicKey(privateKey: Data) throws -> Data {
@@ -139,7 +139,7 @@ public class Wallet: Account, WalletInstance {
         else {
             throw WalletError.failedToGetPublicKey
         }
-        //        return publicKeyBytes
+
         // Ensure the input key is exactly 64 bytes
         guard uncompressedKey.count == 64 else {
             throw WalletError.invalidPrivateKeyLength
