@@ -27,10 +27,6 @@ public class Wallet: Account, WalletInstance {
 
     static let defaultPath = "m/44'/60'/0'/0/0"
 
-    // Define the secp256k1 curve order
-    static let secp256k1CurveOrder = BigInt(
-        "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
-
     public func derivePath(path: String) throws -> any WalletInstance {
         let key = try Wallet.deriveKey(from: self._key, path: path)
         return try Wallet(key: key)
@@ -112,13 +108,13 @@ public class Wallet: Account, WalletInstance {
         // Convert L to an integer
         let L = BigInt(hmac.prefix(32).toHex(), radix: 16)!
         // Validate L
-        guard L < secp256k1CurveOrder else {
+        guard L < Secp256k1CurveConstants.n else {
             throw WalletError.invalidChildKey
         }
 
         // Compute the child private key: (L + parentPrivateKey) % curveOrder
         let parentPrivateKeyInt = BigInt(parentKey.privateKey.toHex(), radix: 16)!
-        let childPrivateKeyInt = (L + parentPrivateKeyInt) % secp256k1CurveOrder
+        let childPrivateKeyInt = (L + parentPrivateKeyInt) % Secp256k1CurveConstants.n
 
         // Ensure the child private key is valid
         guard childPrivateKeyInt != 0 else {
