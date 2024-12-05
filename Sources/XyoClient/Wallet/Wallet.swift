@@ -23,14 +23,9 @@ public enum WalletError: Error {
     case missingPublicKey
 }
 
-public class Wallet: Account, WalletInstance {
+public class Wallet: Account, WalletInstance, WalletStatic {
 
     static let defaultPath = "m/44'/60'/0'/0/0"
-
-    public func derivePath(path: String) throws -> any WalletInstance {
-        let key = try Wallet.deriveKey(from: self._key, path: path)
-        return try Wallet(key: key)
-    }
 
     private var _key: Key
 
@@ -48,6 +43,10 @@ public class Wallet: Account, WalletInstance {
         let rootKey = try Bip39.rootPrivateKeyFromSeed(seed: seed)
         let derivedKey = try Wallet.deriveKey(from: rootKey, path: path)
         try self.init(key: derivedKey)
+    }
+    
+    public static func fromMnemonic(mnemonic: String, path: String?) throws -> any WalletInstance {
+        return try Wallet(phrase: mnemonic, path: path ?? Wallet.defaultPath)
     }
 
     static func deriveKey(from parentKey: Key, path: String) throws -> Key {
@@ -134,5 +133,10 @@ public class Wallet: Account, WalletInstance {
 
         // Return the new child key
         return Key(privateKey: childPrivateKey, chainCode: Data(R))
+    }
+    
+    public func derivePath(path: String) throws -> any WalletInstance {
+        let key = try Wallet.deriveKey(from: self._key, path: path)
+        return try Wallet(key: key)
     }
 }
