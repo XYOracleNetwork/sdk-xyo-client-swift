@@ -87,7 +87,7 @@ public class Account: AccountInstance, AccountStatic {
                 // Drop the `0x04` from the beginning of the key
                 .dropFirst()
         else { return nil }
-        return try? Account.getCompressedKeyFrom(uncompressedPublicKey: publicKeyUncompressed)
+        return try? Account.getCompressedPublicKeyFrom(uncompressedPublicKey: publicKeyUncompressed)
     }
 
     public var publicKeyUncompressed: Data? {
@@ -170,7 +170,17 @@ public class Account: AccountInstance, AccountStatic {
         }
     }
 
-    public static func getCompressedKeyFrom(uncompressedPublicKey: Data) throws -> Data {
+    public static func getCompressedPublicKeyFrom(privateKey: Data) throws -> Data {
+        guard
+            let uncompressedPublicKey = XyoAddress(privateKey: privateKey.toHexString())
+                .publicKeyBytes
+        else {
+            throw WalletError.failedToGetPublicKey
+        }
+        return try Account.getCompressedPublicKeyFrom(uncompressedPublicKey: uncompressedPublicKey)
+    }
+
+    public static func getCompressedPublicKeyFrom(uncompressedPublicKey: Data) throws -> Data {
         // Ensure the input key is exactly 64 bytes
         guard uncompressedPublicKey.count == 64 else {
             throw AccountError.invalidPrivateKey

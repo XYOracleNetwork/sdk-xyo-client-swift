@@ -85,7 +85,9 @@ public class Wallet: Account, WalletInstance {
             data.append(parentKey.privateKey)
         } else {
             // Append the compressed public key
-            guard let publicKey = try? getCompressedPublicKey(privateKey: parentKey.privateKey)
+            guard
+                let publicKey = try? Wallet.getCompressedPublicKeyFrom(
+                    privateKey: parentKey.privateKey)
             else {
                 throw WalletError.failedToGetPublicKey
             }
@@ -132,13 +134,5 @@ public class Wallet: Account, WalletInstance {
 
         // Return the new child key
         return Key(privateKey: childPrivateKey, chainCode: Data(R))
-    }
-
-    private static func getCompressedPublicKey(privateKey: Data) throws -> Data {
-        guard let uncompressedPublicKey = XyoAddress(privateKey: privateKey.toHexString()).publicKeyBytes
-        else {
-            throw WalletError.failedToGetPublicKey
-        }
-        return try Account.getCompressedKeyFrom(uncompressedPublicKey: uncompressedPublicKey)
     }
 }
