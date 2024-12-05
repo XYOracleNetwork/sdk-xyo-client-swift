@@ -59,4 +59,28 @@ final class BoundWitnessTests: XCTestCase {
         XCTAssertEqual(
             bwJsonHash.toHex(), "6f731b3956114fd0d18820dbbe1116f9e36dc8d803b0bb049302f7109037468f")
     }
+    
+    func testSequence_hash_returnsExpectedHash() throws {
+        for testCase in boundWitnessSequenceTestCases {
+            // Create accounts
+            let signers = testCase.addresses.map { Account.fromPrivateKey($0) }
+            // Ensure correct initial account state
+            for (i, previousHash) in testCase.previousHashes.enumerated() {
+                XCTAssertEqual(testCase.previousHashes[i], previousHash)
+            }
+            
+            // Build the BW
+            let bw = try BoundWitnessBuilder().signers(signers).payloads(testCase.payloads)
+            let (bwJson, _) = try bw.build()
+            let hash = try PayloadBuilder.dataHash(from: bwJson.typedPayload)
+            
+            // Ensure the BW is correct
+            XCTAssertEqual(hash.toHex(), testCase.dataHash)
+            
+            // Ensure correct ending account state
+            for signer in signers {
+                XCTAssertEqual(signer.previousHash, hash)
+            }
+        }
+    }
 }
