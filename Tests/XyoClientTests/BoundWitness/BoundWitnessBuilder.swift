@@ -20,15 +20,17 @@ final class BoundWitnessBuilderTests: XCTestCase {
             var signers: [AccountInstance] = []
             for (i, mnemonic) in testCase.mnemonics.enumerated() {
                 let path = testCase.paths[i]
-                if let account = try? Wallet.fromMnemonic(mnemonic: mnemonic, path:path){
+                if let account = try? Wallet.fromMnemonic(mnemonic: mnemonic, path: path) {
                     signers.append(account)
                 } else {
                     XCTAssertTrue(false, "Error creating account from mnemonic")
                 }
-                
             }
             XCTAssertEqual(
-                testCase.addresses.count, signers.count, "Incorrect number of accounts created.")
+                testCase.addresses.count,
+                signers.count,
+                "Incorrect number of accounts created."
+            )
             XCTAssertEqual(
                 testCase.addresses.compactMap { $0.lowercased() },
                 signers.compactMap { $0.address?.toHex().lowercased() },
@@ -36,7 +38,11 @@ final class BoundWitnessBuilderTests: XCTestCase {
             )
             // Ensure correct initial account state
             for (i, previousHash) in testCase.previousHashes.enumerated() {
-                XCTAssertEqual(testCase.previousHashes[i], previousHash)
+                XCTAssertEqual(
+                    testCase.previousHashes[i],
+                    previousHash,
+                    "Incorrect previous hash for account"
+                )
             }
 
             // Build the BW
@@ -45,15 +51,23 @@ final class BoundWitnessBuilderTests: XCTestCase {
             let hash = try PayloadBuilder.dataHash(from: bwJson.typedPayload)
 
             // Ensure the BW is correct
-            XCTAssertEqual(hash.toHex(), testCase.dataHash)
+            XCTAssertEqual(hash.toHex(), testCase.dataHash, "Incorrect data hash in BW")
+            for (i, expectedPayloadHash) in testCase.payloadHashes.enumerated() {
+                let actualPayloadHash = bwJson.typedPayload.payload_hashes[i]
+                // Ensure payload hash is correct
+                XCTAssertEqual(expectedPayloadHash, actualPayloadHash, "Incorrect payload hash in BW")
+            }
+            for (i, payload) in testCase.payloads.enumerated() {
+                let actualSchema = bwJson.typedPayload.payload_schemas[i]
+                // Ensure payload hash is correct
+                XCTAssertEqual(payload.schema, actualSchema, "Incorrect payload schema in BW")
+            }
 
             // Ensure correct ending account state
             for signer in signers {
-                XCTAssertEqual(signer.previousHash, hash)
+                // Ensure previous hash is correct
+                XCTAssertEqual(signer.previousHash, hash, "Incorrect previous hash for account")
             }
-            
-            // TODO: Ensure previous hash is correct
-            
         }
     }
 }

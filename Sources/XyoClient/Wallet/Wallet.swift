@@ -44,7 +44,7 @@ public class Wallet: Account, WalletInstance, WalletStatic {
         let derivedKey = try Wallet.deriveKey(from: rootKey, path: path)
         try self.init(key: derivedKey)
     }
-    
+
     public static func fromMnemonic(mnemonic: String, path: String?) throws -> any WalletInstance {
         return try Wallet(phrase: mnemonic, path: path ?? Wallet.defaultPath)
     }
@@ -134,7 +134,7 @@ public class Wallet: Account, WalletInstance, WalletStatic {
         // Return the new child key
         return Key(privateKey: childPrivateKey, chainCode: Data(R))
     }
-    
+
     public func derivePath(path: String) throws -> any WalletInstance {
         let key = try Wallet.deriveKey(from: self._key, path: path)
         return try Wallet(key: key)
