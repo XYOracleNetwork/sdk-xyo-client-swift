@@ -4,9 +4,14 @@ open class IdPayload: EncodablePayloadInstance {
 
     var salt: String
 
-    public init(salt: String) {
+    public override init(_ salt: String) {
         self.salt = salt
         super.init(IdPayload.schema)
+    }
+
+    public convenience init(_ salt: UInt) {
+        let s = "\(salt)"
+        self.init(s)
     }
 
     enum CodingKeys: String, CodingKey {
@@ -20,4 +25,3 @@ open class IdPayload: EncodablePayloadInstance {
         try container.encode(self.salt, forKey: .salt)
     }
 }
-
