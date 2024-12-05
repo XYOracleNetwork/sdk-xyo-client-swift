@@ -84,7 +84,7 @@ public class Wallet: Account, WalletInstance {
             data.append(0x00)
             data.append(parentKey.privateKey)
         } else {
-            // Normal key: use the compressed public key
+            // Append the compressed public key
             guard let publicKey = try? getCompressedPublicKey(privateKey: parentKey.privateKey)
             else {
                 throw WalletError.failedToGetPublicKey
@@ -135,31 +135,10 @@ public class Wallet: Account, WalletInstance {
     }
 
     private static func getCompressedPublicKey(privateKey: Data) throws -> Data {
-        guard let uncompressedKey = XyoAddress(privateKey: privateKey.toHexString()).publicKeyBytes
+        guard let uncompressedPublicKey = XyoAddress(privateKey: privateKey.toHexString()).publicKeyBytes
         else {
             throw WalletError.failedToGetPublicKey
         }
-
-        // Ensure the input key is exactly 64 bytes
-        guard uncompressedKey.count == 64 else {
-            throw WalletError.invalidPrivateKeyLength
-        }
-
-        // Extract x and y coordinates
-        let x = uncompressedKey.prefix(32)  // First 32 bytes are x
-        let y = uncompressedKey.suffix(32)  // Last 32 bytes are y
-
-        // Convert y to an integer to determine parity
-        let yInt = BigInt(y.toHex(), radix: 16)!
-        let isEven = yInt % 2 == 0
-
-        // Determine the prefix based on the parity of y
-        let prefix: UInt8 = isEven ? 0x02 : 0x03
-
-        // Construct the compressed key: prefix + x
-        var compressedKey = Data([prefix])  // Start with the prefix
-        compressedKey.append(x)  // Append the x-coordinate
-
-        return compressedKey
+        return try Account.getCompressedKeyFrom(uncompressedPublicKey: uncompressedPublicKey)
     }
 }
