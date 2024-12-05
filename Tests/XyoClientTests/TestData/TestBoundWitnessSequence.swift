@@ -26,7 +26,7 @@ let boundWitnessSequenceTestCase1: BoundWitnessSequenceTestCase = .init(
     addresses: [],
     payloads: payloadSequences[0].payloads,
     payloadHashes: payloadSequences[0].payloadHashes,
-    previousHashes: [nil , nil],
+    previousHashes: [nil, nil],
     dataHash: ""
 )
 
