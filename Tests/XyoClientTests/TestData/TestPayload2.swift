@@ -6,7 +6,7 @@ public class TestPayload2SubObject: Encodable {
     var optional_field: String? = nil
 }
 
-public class TestPayload2: Payload {
+public class TestPayload2: EncodablePayloadInstance {
     var string_field = "there"
     var object_field = TestPayload2SubObject()
     var timestamp = 1_618_603_439_107
@@ -32,4 +32,5 @@ public class TestPayload2: Payload {
 }
 
 let testPayload2 = TestPayload2("network.xyo.test")
-let testPayload2Hash: Hash = "c915c56dd93b5e0db509d1a63ca540cfb211e11f03039b05e19712267bb8b6db"
+let testPayload2Hash: Hash = Hash(
+    "c915c56dd93b5e0db509d1a63ca540cfb211e11f03039b05e19712267bb8b6db")!

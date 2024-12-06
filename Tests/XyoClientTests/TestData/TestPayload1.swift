@@ -1,3 +1,4 @@
+import Foundation
 import XyoClient
 
 public class TestPayload1SubObject: Encodable {
@@ -5,7 +6,7 @@ public class TestPayload1SubObject: Encodable {
     var string_value = "yo"
 }
 
-public class TestPayload1: Payload {
+public class TestPayload1: EncodablePayloadInstance {
     var timestamp = 1_618_603_439_107
     var number_field = 1
     var object_field = TestPayload1SubObject()
@@ -30,4 +31,5 @@ public class TestPayload1: Payload {
 }
 
 let testPayload1 = TestPayload1("network.xyo.test")
-let testPayload1Hash: Hash = "c915c56dd93b5e0db509d1a63ca540cfb211e11f03039b05e19712267bb8b6db"
+let testPayload1Hash: Hash = Hash(
+    "c915c56dd93b5e0db509d1a63ca540cfb211e11f03039b05e19712267bb8b6db")!

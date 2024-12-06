@@ -1,10 +1,10 @@
 public protocol WitnessSync {
-    func observe() -> [Payload]
+    func observe() -> [EncodablePayloadInstance]
 }
 
 public protocol WitnessAsync {
-    func observe(completion: @escaping ([Payload]?, Error?) -> Void)
+    func observe(completion: @escaping ([EncodablePayloadInstance]?, Error?) -> Void)
 
     @available(iOS 15, *)
-    func observe() async throws -> [Payload]
+    func observe() async throws -> [EncodablePayloadInstance]
 }

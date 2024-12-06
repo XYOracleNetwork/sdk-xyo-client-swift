@@ -1,6 +1,6 @@
 import CoreLocation
 
-open class IosLocationPayload: Payload {
+open class IosLocationPayload: EncodablePayloadInstance {
 
     public static let schema: String = "network.xyo.location.ios"
 

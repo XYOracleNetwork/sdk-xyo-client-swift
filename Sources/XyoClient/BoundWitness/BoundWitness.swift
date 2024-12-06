@@ -2,14 +2,18 @@ import Foundation
 
 let BoundWitnessSchema = "network.xyo.boundwitness"
 
-public class BoundWitness: Payload, BoundWitnessBody, BoundWitnessMeta,
-    Decodable
-{
+public protocol BoundWitnessFields {
+    var addresses: [String] { get }
+    var payload_hashes: [String] { get }
+    var payload_schemas: [String] { get }
+    var previous_hashes: [String?] { get }
+}
 
-    public var _client: String? = "swift"
+public protocol EncodableBoundWitness: EncodablePayload, BoundWitnessFields, Encodable {}
 
-    public var _hash: String? = nil
+public protocol BoundWitness: EncodableBoundWitness, EncodablePayload, Payload, Codable {}
 
+public class BoundWitnessInstance: PayloadInstance {
     public var signatures: [String]? = nil
 
     public var addresses: [String] = []
@@ -27,15 +31,13 @@ public class BoundWitness: Payload, BoundWitnessBody, BoundWitnessMeta,
     }
 
     enum CodingKeys: String, CodingKey {
-        case _client
-        case _hash
         case addresses
-        case meta = "$meta"
+        case _hash = "$hash"
+        case _meta = "$meta"
         case payload_hashes
         case payload_schemas
         case previous_hashes
         case query
-        case schema
     }
 
     public required init(from decoder: Decoder) throws {
@@ -48,27 +50,21 @@ public class BoundWitness: Payload, BoundWitnessBody, BoundWitnessMeta,
         super.init(BoundWitnessSchema)
     }
 
-    func encodeMetaFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
-        try container.encodeIfPresent(_client, forKey: ._client)
-        try container.encodeIfPresent(_hash, forKey: ._hash)
-        let meta = [
-            "signatures": signatures
-        ]
-        try container.encode(meta, forKey: .meta)
-    }
-
-    func encodeBodyFields(_ container: inout KeyedEncodingContainer<CodingKeys>) throws {
+    override public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(addresses, forKey: .addresses)
         try container.encode(payload_hashes, forKey: .payload_hashes)
         try container.encode(payload_schemas, forKey: .payload_schemas)
         try container.encode(previous_hashes, forKey: .previous_hashes)
         try container.encodeIfPresent(query, forKey: .query)
-        try container.encode(schema, forKey: .schema)
-    }
-
-    override public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try encodeMetaFields(&container)
-        try encodeBodyFields(&container)
+        try super.encode(to: encoder)
     }
 }
+
+public typealias EncodableBoundWitnessWithMeta = EncodableWithCustomMetaInstance<
+    BoundWitnessInstance, BoundWitnessMeta
+>
+
+public typealias BoundWitnessWithMeta = WithCustomMetaInstance<
+    BoundWitnessInstance, BoundWitnessMeta
+>

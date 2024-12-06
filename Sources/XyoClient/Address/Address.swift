@@ -1,1 +1,3 @@
-public typealias Address = String
+import Foundation
+
+public typealias Address = Data

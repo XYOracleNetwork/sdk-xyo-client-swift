@@ -1,5 +1,9 @@
 import Foundation
 
+public enum XyoPanelError: Error {
+    case failedToBuildBoundWitness
+}
+
 public class XyoPanel {
 
     public typealias XyoPanelReportCallback = (([String]) -> Void)
@@ -35,8 +39,8 @@ public class XyoPanel {
     }
 
     @available(iOS 15, *)
-    private func witnessAll() async -> [Payload] {
-        var payloads: [Payload] = []
+    private func witnessAll() async -> [EncodablePayloadInstance] {
+        var payloads: [EncodablePayloadInstance] = []
         // Collect payloads from both synchronous and asynchronous witnesses
         for witness in _witnesses {
             if let syncWitness = witness as? WitnessSync {
@@ -57,9 +61,9 @@ public class XyoPanel {
     }
 
     @available(iOS 15, *)
-    public func storeWitnessedResults(payloads: [Payload]) async {
+    public func storeWitnessedResults(payloads: [EncodablePayloadInstance]) async {
         // Insert witnessed results into archivists
-        await withTaskGroup(of: [Payload]?.self) { group in
+        await withTaskGroup(of: [EncodablePayload]?.self) { group in
             for instance in _archivists {
                 group.addTask {
                     do {
@@ -75,7 +79,7 @@ public class XyoPanel {
     }
 
     @available(iOS 15, *)
-    public func report() async -> [Payload] {
+    public func report() async -> [EncodablePayload] {
         // Report
         let results = await witnessAll()
         // Insert results into Archivists
@@ -85,7 +89,7 @@ public class XyoPanel {
     }
 
     @available(iOS 15, *)
-    public func reportQuery() async -> ModuleQueryResult {
+    public func reportQuery() async throws -> ModuleQueryResult {
         do {
             // Report
             let results = await witnessAll()
@@ -97,7 +101,7 @@ public class XyoPanel {
                 .build()
 
             // Insert signed results into Archivists
-            let signedResults = [bw] + payloads
+            let signedResults: [EncodablePayloadInstance] = [bw.typedPayload] + payloads
             await storeWitnessedResults(payloads: signedResults)
 
             // Return signed results
@@ -105,7 +109,13 @@ public class XyoPanel {
         } catch {
             print("Error in reportQuery: \(error)")
             // Return an empty ModuleQueryResult in case of an error
-            return ModuleQueryResult(bw: BoundWitness(), payloads: [], errors: [])
+            do {
+                let (bw, payloads) = try BoundWitnessBuilder().build()
+                return ModuleQueryResult(bw: bw, payloads: payloads, errors: [])
+            } catch {
+
+            }
         }
+        throw XyoPanelError.failedToBuildBoundWitness
     }
 }
