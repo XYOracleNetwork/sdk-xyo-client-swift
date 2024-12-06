@@ -3,6 +3,7 @@
     "Alamofire",
     "Arie",
     "boundwitness",
+    "hmac",
     "keccak",
     "Keychain",
     "Protobuf",

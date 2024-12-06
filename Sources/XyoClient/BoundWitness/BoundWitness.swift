@@ -13,8 +13,7 @@ public protocol EncodableBoundWitness: EncodablePayload, BoundWitnessFields, Enc
 
 public protocol BoundWitness: EncodableBoundWitness, EncodablePayload, Payload, Codable {}
 
-public class BoundWitnessInstance: PayloadInstance
-{
+public class BoundWitnessInstance: PayloadInstance {
     public var signatures: [String]? = nil
 
     public var addresses: [String] = []
@@ -62,6 +61,10 @@ public class BoundWitnessInstance: PayloadInstance
     }
 }
 
-public typealias EncodableBoundWitnessWithMeta = EncodableWithCustomMetaInstance<BoundWitnessInstance, BoundWitnessMeta>
+public typealias EncodableBoundWitnessWithMeta = EncodableWithCustomMetaInstance<
+    BoundWitnessInstance, BoundWitnessMeta
+>
 
-public typealias BoundWitnessWithMeta = WithCustomMetaInstance<BoundWitnessInstance, BoundWitnessMeta>
+public typealias BoundWitnessWithMeta = WithCustomMetaInstance<
+    BoundWitnessInstance, BoundWitnessMeta
+>

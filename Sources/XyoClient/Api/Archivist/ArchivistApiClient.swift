@@ -9,7 +9,8 @@ public class XyoArchivistApiClient {
         ProcessInfo.processInfo.environment["XYO_API_MODULE"] ?? "Archivist"
 
     private static let ArchivistInsertQuerySchema = "network.xyo.query.archivist.insert"
-    private static let ArchivistInsertQuery: EncodablePayloadInstance = EncodablePayloadInstance(ArchivistInsertQuerySchema)
+    private static let ArchivistInsertQuery: EncodablePayloadInstance = EncodablePayloadInstance(
+        ArchivistInsertQuerySchema)
 
     let config: XyoArchivistApiConfig
     let queryAccount: AccountInstance
@@ -66,7 +67,9 @@ public class XyoArchivistApiClient {
                         )
 
                         // Check if the response data matches the expected result
-                        if decodedResponse.data?.bw.typedPayload.payload_hashes.count == payloads.count {
+                        if decodedResponse.data?.bw.typedPayload.payload_hashes.count
+                            == payloads.count
+                        {
                             // Return the payloads array in case of success
                             completion(payloads, nil)
                         } else {
@@ -91,7 +94,9 @@ public class XyoArchivistApiClient {
     }
 
     @available(iOS 15, *)
-    public func insert(payloads: [EncodablePayloadInstance]) async throws -> [EncodablePayloadInstance] {
+    public func insert(payloads: [EncodablePayloadInstance]) async throws
+        -> [EncodablePayloadInstance]
+    {
         // Build QueryBoundWitness
         let (bw, signed) = try BoundWitnessBuilder()
             .payloads(payloads)

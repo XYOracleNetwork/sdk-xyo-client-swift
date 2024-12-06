@@ -1,7 +1,7 @@
-import Foundation
+import BigInt
 import CryptoKit
 import CryptoSwift
-import BigInt
+import Foundation
 
 public enum Bip39Error: Error {
     case invalidSeedLength
@@ -27,12 +27,12 @@ let CHAINCODE_SIZE = 32
 
 public class Bip39 {
     static let wordList: [String] = Bip39Words
-    
+
     static func mnemonicToSeed(phrase: String) throws -> Data {
         let entropy = try mnemonicToEntropy(phrase: phrase)
         return try entropyToSeed(entropy: entropy)
     }
-    
+
     static func generateEntropy(bits: Int) -> Data {
         precondition(bits % 32 == 0, "Entropy must be a multiple of 32")
         let byteCount = bits / 8
@@ -42,7 +42,7 @@ public class Bip39 {
         }
         return entropy
     }
-    
+
     static func mnemonicToEntropy(phrase: String) throws -> Data {
         let words = phrase.lowercased().split(separator: " ").map(String.init)
 
@@ -58,7 +58,8 @@ public class Bip39 {
         }
 
         // Step 3: Reconstruct combined bits from indices
-        let combinedBits = indices
+        let combinedBits =
+            indices
             .map { String($0, radix: 2).leftPad(toLength: 11, with: "0") }
             .joined()
 
@@ -80,7 +81,7 @@ public class Bip39 {
 
         return entropy
     }
-    
+
     static func entropyToMnemonic(entropy: Data) throws -> String {
         // Step 1: Validate entropy length
         guard [16, 20, 24, 28, 32].contains(entropy.count) else {
@@ -92,7 +93,8 @@ public class Bip39 {
         let checksum = calculateChecksum(entropy: entropy, bits: checksumBits)
 
         // Step 3: Combine entropy and checksum into a binary string
-        let entropyBits = entropy.map { String($0, radix: 2).leftPad(toLength: 8, with: "0") }.joined()
+        let entropyBits = entropy.map { String($0, radix: 2).leftPad(toLength: 8, with: "0") }
+            .joined()
         let combinedBits = entropyBits + checksum
 
         // Step 4: Split combined bits into 11-bit chunks
@@ -117,14 +119,15 @@ public class Bip39 {
 
         return mnemonicWords.joined(separator: " ")
     }
-    
+
     static func entropyToSeed(entropy: Data, passphrase: String = "") throws -> Data {
         // Step 1: Convert entropy to mnemonic
         let mnemonic = try entropyToMnemonic(entropy: entropy)
         // Step 2: Apply PBKDF2 to derive the seed
         let salt = "mnemonic" + passphrase
         guard let mnemonicData = mnemonic.data(using: .utf8),
-              let saltData = salt.data(using: .utf8) else {
+            let saltData = salt.data(using: .utf8)
+        else {
             throw Bip39Error.failedToEncode
         }
 
@@ -142,9 +145,9 @@ public class Bip39 {
             throw Bip39Error.failedToGenerateSeed
         }
     }
-    
+
     static func rootPrivateKeyFromSeed(seed: Data) throws -> Key {
-        
+
         let hmac = Hmac.hmacSha512(key: BITCOIN_SEED, data: seed)
         let privateKey = hmac.prefix(PRIVATE_KEY_SIZE)
         let chainCode = hmac.suffix(from: PRIVATE_KEY_SIZE)
@@ -156,7 +159,7 @@ public class Bip39 {
 
         return Key(privateKey: privateKey, chainCode: chainCode)
     }
-    
+
     private static func calculateChecksum(entropy: Data, bits: Int) -> String {
         let hash = Data(SHA256.hash(data: entropy))
         let hashBits = hash.toBinaryString()

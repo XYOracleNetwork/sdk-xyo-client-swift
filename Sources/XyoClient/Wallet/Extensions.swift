@@ -29,13 +29,6 @@ extension String {
     }
 }
 
-extension BigUInt {
-    static let secp256k1CurveOrder = BigUInt(
-        "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141",
-        radix: 16
-    )!
-}
-
 extension Data {
     func toBigInt() -> BigInt {
         return BigInt(self)
@@ -56,7 +49,7 @@ extension BigInt {
     /// - Returns: A `Data` object representing the BigInt.
     func toData(length: Int? = nil) -> Data {
         var magnitudeBytes = self.magnitude.serialize()
-        
+
         // Adjust for desired length, if specified
         if let length = length {
             if magnitudeBytes.count < length {
@@ -68,7 +61,7 @@ extension BigInt {
                 magnitudeBytes = magnitudeBytes.suffix(length)
             }
         }
-        
+
         return Data(magnitudeBytes)
     }
 }
