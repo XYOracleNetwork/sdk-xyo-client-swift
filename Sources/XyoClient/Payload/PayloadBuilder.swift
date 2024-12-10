@@ -105,10 +105,6 @@ public class EncodableWithCustomMetaInstance<T: EncodablePayload, M: Encodable>:
         return self._meta
     }
 
-   enum CodingKeys: String, CodingKey {
-       case _meta = "$meta"
-   }
-
     public var schema: String {
         return _payload.schema
     }
@@ -119,9 +115,8 @@ public class EncodableWithCustomMetaInstance<T: EncodablePayload, M: Encodable>:
     }
 
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
         if let meta = _meta {
-            try container.encode(meta, forKey: ._meta)
+            try meta.encode(to: encoder)
         }
         try self._payload.encode(to: encoder)
     }
