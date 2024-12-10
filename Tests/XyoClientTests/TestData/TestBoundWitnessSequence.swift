@@ -8,6 +8,7 @@ public struct BoundWitnessSequenceTestCase {
     public var payloadHashes: [String]
     public var previousHashes: [String?]
     public var dataHash: String
+    public var rootHash: String
 }
 
 public struct PayloadsWithHashes {
@@ -61,7 +62,8 @@ let boundWitnessSequenceTestCase1: BoundWitnessSequenceTestCase = .init(
     payloads: payloadSequences[0].payloads,
     payloadHashes: payloadSequences[0].payloadHashes,
     previousHashes: [nil],
-    dataHash: "750113b9826ba94b622667b06cd8467f1330837581c28907c16160fec20d0a4b"
+    dataHash: "750113b9826ba94b622667b06cd8467f1330837581c28907c16160fec20d0a4b",
+    rootHash: "d8c29f77505e5da7479de1aa6474b247b348004a90bf7048e60581592deac1e7"
 )
 
 let boundWitnessSequenceTestCase2: BoundWitnessSequenceTestCase = .init(
@@ -71,7 +73,8 @@ let boundWitnessSequenceTestCase2: BoundWitnessSequenceTestCase = .init(
     payloads: payloadSequences[1].payloads,
     payloadHashes: payloadSequences[1].payloadHashes,
     previousHashes: [nil],
-    dataHash: "bacd010d79126a154339e59c11c5b46be032c3bef65626f83bcafe968dc6dd1b"
+    dataHash: "bacd010d79126a154339e59c11c5b46be032c3bef65626f83bcafe968dc6dd1b",
+    rootHash: "ea1d3dd28daea3df2c7d50ffcecec3be95c8011636a6590598a4aab0ce2b6971"
 )
 
 let boundWitnessSequenceTestCase3: BoundWitnessSequenceTestCase = .init(
@@ -84,7 +87,8 @@ let boundWitnessSequenceTestCase3: BoundWitnessSequenceTestCase = .init(
         "750113b9826ba94b622667b06cd8467f1330837581c28907c16160fec20d0a4b",
         "bacd010d79126a154339e59c11c5b46be032c3bef65626f83bcafe968dc6dd1b",
     ],
-    dataHash: "73245ef73517913f4b57c12d56d81199968ecd8fbefea9ddc474f43dd6cfa8c8"
+    dataHash: "73245ef73517913f4b57c12d56d81199968ecd8fbefea9ddc474f43dd6cfa8c8",
+    rootHash: "02caf1f81905ec9311b3b4793309f462567b35516d7dee7ce62d1e4759b7022a"
 )
 
 let boundWitnessSequenceTestCase4: BoundWitnessSequenceTestCase = .init(
@@ -97,7 +101,8 @@ let boundWitnessSequenceTestCase4: BoundWitnessSequenceTestCase = .init(
         "73245ef73517913f4b57c12d56d81199968ecd8fbefea9ddc474f43dd6cfa8c8",
         "73245ef73517913f4b57c12d56d81199968ecd8fbefea9ddc474f43dd6cfa8c8",
     ],
-    dataHash: "210d86ea43d82b85a49b77959a8ee4e6016ff7036254cfa39953befc66073010"
+    dataHash: "210d86ea43d82b85a49b77959a8ee4e6016ff7036254cfa39953befc66073010",
+    rootHash: "a99467084abb2d7812f4d529a2e84d566716aca9443c4b4800e016572cf91416"
 )
 
 let boundWitnessSequenceTestCases = [

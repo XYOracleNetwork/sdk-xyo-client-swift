@@ -32,8 +32,6 @@ public class BoundWitnessInstance: PayloadInstance {
 
     enum CodingKeys: String, CodingKey {
         case addresses
-        case _hash = "$hash"
-        case _meta = "$meta"
         case payload_hashes
         case payload_schemas
         case previous_hashes

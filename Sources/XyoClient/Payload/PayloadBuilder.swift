@@ -4,6 +4,40 @@ public enum PayloadBuilderError: Error {
     case encodingError
 }
 
+/// Merges multiple `Encodable` objects into a single JSON object.
+///
+/// This method accepts a variable number of `Encodable` objects, encodes each into JSON, converts them into dictionaries, and merges the dictionaries into one. In case of key conflicts, the value from the latter object will overwrite the earlier value. The final merged dictionary is then serialized back into JSON data.
+///
+/// - Parameters:
+///   - encodables: A variadic list of objects conforming to the `Encodable` protocol.
+///
+/// - Returns: A `Data` object representing the merged JSON of all provided `Encodable` objects.
+///
+/// - Throws:
+///   - An error if any of the `Encodable` objects fail to encode.
+///   - An error if the JSON data cannot be converted to a dictionary or serialized.
+func mergeToJsonObject(_ encodables: (any Encodable)...) throws -> Data {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = .sortedKeys
+
+    // Initialize an empty dictionary to store merged data
+    var mergedDict: [String: Any] = [:]
+
+    for encodable in encodables {
+        // Encode the current object into JSON data
+        let data = try encoder.encode(encodable)
+
+        // Decode the JSON into a dictionary
+        if let dict = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+            // Merge the current dictionary with the existing merged dictionary
+            mergedDict.merge(dict) { (_, new) in new }
+        }
+    }
+
+    // Serialize the merged dictionary back into JSON
+    return try JSONSerialization.data(withJSONObject: mergedDict, options: .sortedKeys)
+}
+
 public protocol EncodableWithMeta: Encodable {
     var payload: EncodablePayload { get }
     var meta: Encodable? { get }
@@ -31,12 +65,6 @@ public struct AnyEncodableWithMeta<T: EncodableWithMeta>: EncodableWithMeta {
 
     public func encode(to: Encoder) throws {
         return try self._item.encode(to: to)
-    }
-}
-
-public struct EncodableInstance: Encodable {
-    public func encode(to encoder: Encoder) throws {
-        fatalError("This method must be overridden in a subclass")
     }
 }
 
@@ -73,11 +101,6 @@ public class EncodableWithCustomMetaInstance<T: EncodablePayload, M: Encodable>:
         return self._meta
     }
 
-    enum CodingKeys: String, CodingKey {
-        case _hash = "$hash"
-        case _meta = "$meta"
-    }
-
     public var schema: String {
         return _payload.schema
     }
@@ -88,11 +111,8 @@ public class EncodableWithCustomMetaInstance<T: EncodablePayload, M: Encodable>:
     }
 
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        let hash = try PayloadBuilder.dataHash(from: _payload).toHex()
-        try container.encode(hash, forKey: ._hash)
-        if _meta != nil {
-            try container.encode(_meta, forKey: ._meta)
+        if let meta = _meta {
+            try meta.encode(to: encoder)
         }
         try self._payload.encode(to: encoder)
     }
@@ -187,7 +207,7 @@ public class PayloadBuilder {
         return try jsonString.sha256()
     }
 
-    static public func hash<T: EncodablePayloadInstance, M: EncodableEmptyMeta>(from: T, meta: M)
+    static public func hash<T: EncodablePayloadInstance, M: EncodableEmptyMeta>(from: T, meta: M?)
         throws -> Hash
     {
         let withMeta = EncodableWithCustomMetaInstance(from: from, meta: meta)
@@ -211,13 +231,13 @@ public class PayloadBuilder {
         return result
     }
 
-    static public func toJsonWithMeta<T: EncodablePayloadInstance, M: Encodable>(from: T, meta: M?)
+    static public func toJsonWithMeta<T: EncodablePayloadInstance>(from: T, meta: (any Encodable)?)
         throws -> String
     {
-        let target = EncodableWithCustomMetaInstance(from: from, meta: meta)
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .sortedKeys
-        let data = try encoder.encode(target)
+        guard let m = meta else {
+            return try PayloadBuilder.toJson(from: from)
+        }
+        let data = try mergeToJsonObject(from, m)
         guard let result = String(data: data, encoding: .utf8) else {
             throw PayloadBuilderError.encodingError
         }
