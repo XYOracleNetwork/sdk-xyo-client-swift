@@ -49,7 +49,10 @@ final class BoundWitnessBuilderTests: XCTestCase {
             let builder = try BoundWitnessBuilder().signers(signers).payloads(testCase.payloads)
             let (bw, payloads) = try builder.build()
             let dataHash = try PayloadBuilder.dataHash(from: bw.typedPayload)
-            let rootHash = try PayloadBuilder.hash(from: bw.typedPayload)
+            let bwJsonWithMeta = try PayloadBuilder.toJsonWithMeta(
+                from: bw.typedPayload, meta: bw.meta)
+            print(bwJsonWithMeta)
+            let rootHash = try PayloadBuilder.hash(from: bw.typedPayload, meta: bw.typedMeta)
 
             // Ensure the BW is correct
             XCTAssertEqual(dataHash.toHex(), testCase.dataHash, "Incorrect data hash in BW")
