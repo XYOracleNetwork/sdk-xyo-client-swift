@@ -5,13 +5,13 @@ public protocol BoundWitnessMetaProtocol: Decodable {
     var signatures: [String]? { get set }
 }
 
-public class BoundWitnessMeta: BoundWitnessMetaProtocol, Decodable, Encodable {
+public class BoundWitnessMeta: EncodableEmptyMeta, BoundWitnessMetaProtocol, Decodable {
     public var client: String?
     public var signatures: [String]?
 
     enum CodingKeys: String, CodingKey {
-        case client
-        case signatures
+        case client = "_client"
+        case signatures = "$signatures"
     }
 
     public init(_ signatures: [String] = []) {
