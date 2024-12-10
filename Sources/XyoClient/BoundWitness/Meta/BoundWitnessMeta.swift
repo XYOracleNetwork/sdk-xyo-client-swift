@@ -10,7 +10,7 @@ public class BoundWitnessMeta: EncodableEmptyMeta, BoundWitnessMetaProtocol, Dec
     public var signatures: [String]?
 
     enum CodingKeys: String, CodingKey {
-        case client = "_client"
+        case client = "$client"
         case signatures = "$signatures"
     }
 
