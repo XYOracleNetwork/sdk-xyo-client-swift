@@ -4,20 +4,18 @@ public enum PayloadBuilderError: Error {
     case encodingError
 }
 
-/**
- Merges multiple `Encodable` objects into a single JSON object.
-
- This method accepts a variable number of `Encodable` objects, encodes each into JSON, converts them into dictionaries, and merges the dictionaries into one. In case of key conflicts, the value from the latter object will overwrite the earlier value. The final merged dictionary is then serialized back into JSON data.
-
- - Parameters:
-   - encodables: A variadic list of objects conforming to the `Encodable` protocol.
-
- - Returns: A `Data` object representing the merged JSON of all provided `Encodable` objects.
-
- - Throws:
-   - An error if any of the `Encodable` objects fail to encode.
-   - An error if the JSON data cannot be converted to a dictionary or serialized.
- **/
+/// Merges multiple `Encodable` objects into a single JSON object.
+///
+/// This method accepts a variable number of `Encodable` objects, encodes each into JSON, converts them into dictionaries, and merges the dictionaries into one. In case of key conflicts, the value from the latter object will overwrite the earlier value. The final merged dictionary is then serialized back into JSON data.
+///
+/// - Parameters:
+///   - encodables: A variadic list of objects conforming to the `Encodable` protocol.
+///
+/// - Returns: A `Data` object representing the merged JSON of all provided `Encodable` objects.
+///
+/// - Throws:
+///   - An error if any of the `Encodable` objects fail to encode.
+///   - An error if the JSON data cannot be converted to a dictionary or serialized.
 func mergeToJsonObject(_ encodables: (any Encodable)...) throws -> Data {
     let encoder = JSONEncoder()
     encoder.outputFormatting = .sortedKeys
@@ -39,8 +37,6 @@ func mergeToJsonObject(_ encodables: (any Encodable)...) throws -> Data {
     // Serialize the merged dictionary back into JSON
     return try JSONSerialization.data(withJSONObject: mergedDict, options: .sortedKeys)
 }
-
-
 
 public protocol EncodableWithMeta: Encodable {
     var payload: EncodablePayload { get }
@@ -211,7 +207,7 @@ public class PayloadBuilder {
         return try jsonString.sha256()
     }
 
-    static public func hash<T: EncodablePayloadInstance, M: EncodableEmptyMeta>(from: T, meta: M)
+    static public func hash<T: EncodablePayloadInstance, M: EncodableEmptyMeta>(from: T, meta: M?)
         throws -> Hash
     {
         let withMeta = EncodableWithCustomMetaInstance(from: from, meta: meta)
