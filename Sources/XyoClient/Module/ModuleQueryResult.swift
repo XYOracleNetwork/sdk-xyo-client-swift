@@ -5,7 +5,8 @@ public class ModuleQueryResult: Codable {
     public let payloads: [EncodablePayloadInstance]
     public let errors: [EncodablePayloadInstance]
     init(
-        bw: EncodableBoundWitnessWithMeta, payloads: [EncodablePayloadInstance] = [],
+        bw: EncodableBoundWitnessWithMeta,
+        payloads: [EncodablePayloadInstance] = [],
         errors: [EncodablePayloadInstance] = []
     ) {
         self.bw = bw
