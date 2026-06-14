@@ -4,12 +4,7 @@ public class TestPersistentContainerProvider: PersistentContainerProvider {
     public let persistentContainer: NSPersistentContainer
 
     init() {
-        // Load the Core Data model
-        guard let modelURL = Bundle.module.url(forResource: "Model", withExtension: "momd"),
-            let model = NSManagedObjectModel(contentsOf: modelURL)
-        else {
-            fatalError("Failed to load Core Data model.")
-        }
+        let model = loadHashStoreModel()
 
         persistentContainer = NSPersistentContainer(name: "TestModel", managedObjectModel: model)
 
