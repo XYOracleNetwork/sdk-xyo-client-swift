@@ -14,7 +14,11 @@ let package = Package(
         .library(
             name: "XyoClient",
             targets: ["XyoClient"]
-        )
+        ),
+        .library(
+            name: "XyoChainProtocol",
+            targets: ["XyoChainProtocol"]
+        ),
     ],
     dependencies: [
         .package(
@@ -33,11 +37,30 @@ let package = Package(
                 "keccak",
                 "CryptoSwift",
                 "BigInt",
+            ],
+            resources: [
+                .process("Model.xcdatamodeld")
             ]
         ),
         .testTarget(
             name: "XyoClientTests",
-            dependencies: ["XyoClient"]),
+            dependencies: ["XyoClient"],
+            resources: [
+                .copy("Resources/jsCompatVectors.json")
+            ]),
+        .target(
+            name: "XyoChainProtocol",
+            dependencies: [
+                "XyoClient",
+                "BigInt",
+            ]
+        ),
+        .testTarget(
+            name: "XyoChainProtocolTests",
+            dependencies: ["XyoChainProtocol"],
+            resources: [
+                .copy("Resources/jsCompatVectors.json")
+            ]),
     ],
 
     swiftLanguageModes: [.v5]
