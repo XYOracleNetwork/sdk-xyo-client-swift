@@ -146,79 +146,33 @@ public class WithMetaInstance<T: PayloadInstance>: WithCustomMetaInstance<T, Emp
 }
 
 public class PayloadBuilder {
-    private static func isHashableField(_ key: String) -> Bool {
-        // Remove keys starting with "_"
-        return !key.hasPrefix("_")
-    }
 
-    private static func isDataHashableField(_ key: String) -> Bool {
-        // Remove keys starting with "_"
-        return isHashableField(key)
-            // Remove keys starting with "$"
-            && !key.hasPrefix("$")
-    }
-
-    private static func dataHashableFields(_ jsonObject: Any) -> Any {
-        if let dictionary = jsonObject as? [String: Any] {
-            // Process dictionaries: filter keys, sort, and recurse
-            let filteredDictionary =
-                dictionary
-                .filter { isDataHashableField($0.key) }  // Filter meta fields
-                .sorted { $0.key < $1.key }  // Sort keys lexicographically
-                .reduce(into: [String: Any]()) { result, pair in
-                    result[pair.key] = dataHashableFields(pair.value)  // Recurse on values
-                }
-            return filteredDictionary
-        } else if let array = jsonObject as? [Any] {
-            // Process arrays: recursively process each element
-            return array.map { dataHashableFields($0) }
-        } else {
-            // Return primitives (String, Number, etc.)
-            return jsonObject
-        }
-    }
-
-    private static func hashableFields(_ jsonObject: Any) -> Any {
-        if let dictionary = jsonObject as? [String: Any] {
-            // Process dictionaries: filter keys, sort, and recurse
-            let filteredDictionary =
-                dictionary
-                .sorted { $0.key < $1.key }  // Sort keys lexicographically
-                .reduce(into: [String: Any]()) { result, pair in
-                    result[pair.key] = hashableFields(pair.value)  // Recurse on values
-                }
-            return filteredDictionary
-        } else if let array = jsonObject as? [Any] {
-            // Process arrays: recursively process each element
-            return array.map { dataHashableFields($0) }
-        } else {
-            // Return primitives (String, Number, etc.)
-            return jsonObject
-        }
-    }
-
+    /// The data hash excludes both storage (`_`) and client (`$`) meta fields, at the top
+    /// level only. This is the value that gets signed and referenced in `payload_hashes`.
     static public func dataHash<T: EncodablePayload>(from: T) throws -> Hash {
-        let jsonString = try PayloadBuilder.toJson(from: from)
-        return try jsonString.sha256()
+        let data = try JSONEncoder().encode(from)
+        let canonical = try Canonicalizer.canonicalJson(from: data, exclusion: .allMeta)
+        return try canonical.sha256()
     }
 
+    /// The root hash keeps client (`$`) meta fields (e.g. `$signatures`) and strips only
+    /// storage (`_`) meta, at the top level only.
     static public func hash<T: EncodableWithMeta>(fromWithMeta: T) throws -> Hash {
-        let jsonString = try fromWithMeta.toJson()
-        return try jsonString.sha256()
+        let data = try JSONEncoder().encode(fromWithMeta)
+        let canonical = try Canonicalizer.canonicalJson(from: data, exclusion: .storageMeta)
+        return try canonical.sha256()
     }
 
     static public func hash<T: EncodablePayloadInstance, M: EncodableEmptyMeta>(from: T, meta: M?)
         throws -> Hash
     {
         let withMeta = EncodableWithCustomMetaInstance(from: from, meta: meta)
-        let jsonString = try withMeta.toJson()
-        return try jsonString.sha256()
+        return try hash(fromWithMeta: withMeta)
     }
 
     static public func hash<T: EncodablePayloadInstance>(from: T) throws -> Hash {
         let withMeta = EncodableWithMetaInstance(from: from)
-        let jsonString = try withMeta.toJson()
-        return try jsonString.sha256()
+        return try hash(fromWithMeta: withMeta)
     }
 
     static public func toJson<T: Encodable>(from: T) throws -> String {

@@ -54,7 +54,20 @@ enum AccountError: Error {
 
 public class Account: AccountInstance, AccountStatic {
 
-    public static var previousHashStore: PreviousHashStore = CoreDataPreviousHashStore()
+    private static var _previousHashStore: PreviousHashStore?
+
+    /// The default store is Core Data, constructed lazily on first read. Assigning a store
+    /// never triggers the Core Data default — so tests (and consumers) can swap in another
+    /// store (e.g. `MemoryPreviousHashStore`) without the Core Data model needing to load.
+    public static var previousHashStore: PreviousHashStore {
+        get {
+            if let store = _previousHashStore { return store }
+            let store = CoreDataPreviousHashStore()
+            _previousHashStore = store
+            return store
+        }
+        set { _previousHashStore = newValue }
+    }
 
     private var _privateKey: Data?
 
@@ -155,7 +168,29 @@ public class Account: AccountInstance, AccountStatic {
     }
 
     public func verify(_ msg: Data, _ signature: Signature) -> Bool {
-        return false
+        // A 32-byte message hash and a 64-byte compact (r || s) signature are required.
+        guard msg.count == 32, signature.count == 64 else { return false }
+        guard let publicKeyUncompressed = self.publicKeyUncompressed else { return false }
+
+        guard let context = try? secp256k1.Context.create() else { return false }
+        defer { secp256k1_context_destroy(context) }
+
+        // Parse the uncompressed public key (0x04 prefix + 64 bytes).
+        var pubKey = secp256k1_pubkey()
+        let pubKeyBytes = Array(publicKeyUncompressed)
+        guard
+            secp256k1_ec_pubkey_parse(context, &pubKey, pubKeyBytes, pubKeyBytes.count) == 1
+        else { return false }
+
+        // Parse the compact signature (32-byte big-endian r || 32-byte big-endian s).
+        var parsedSignature = secp256k1_ecdsa_signature()
+        let signatureBytes = Array(signature)
+        guard
+            secp256k1_ecdsa_signature_parse_compact(context, &parsedSignature, signatureBytes) == 1
+        else { return false }
+
+        let messageBytes = Array(msg)
+        return secp256k1_ecdsa_verify(context, &parsedSignature, messageBytes, &pubKey) == 1
     }
 
     internal func retrievePreviousHash() throws -> Hash? {
