@@ -93,8 +93,7 @@ enum Canonicalizer {
         }
         let doubleValue = number.doubleValue
         if doubleValue.truncatingRemainder(dividingBy: 1) == 0
-            && abs(doubleValue) < 9.223372036854775e18
-        {
+            && abs(doubleValue) < 9.223372036854775e18 {
             return String(Int64(doubleValue))
         }
         return shortestDouble(doubleValue)

@@ -11,9 +11,9 @@ public class BoundWitnessBuilder {
     private var _payload_hashes: [Hash] = []
     private var _payload_schemas: [String] = []
     private var _payloads: [EncodablePayloadInstance] = []
-    private var _query: Hash? = nil
-    private var _sourceQuery: String? = nil
-    private var _destination: String? = nil
+    private var _query: Hash?
+    private var _sourceQuery: String?
+    private var _destination: String?
 
     public init() {
     }
@@ -33,8 +33,7 @@ public class BoundWitnessBuilder {
     }
 
     public func signer(_ account: AccountInstance)
-        -> BoundWitnessBuilder
-    {
+        -> BoundWitnessBuilder {
         _accounts.append(account)
         _previous_hashes.append(account.previousHash)
         return self
@@ -47,8 +46,7 @@ public class BoundWitnessBuilder {
     }
 
     public func payload<T: EncodablePayloadInstance>(_ schema: String, _ payload: T) throws
-        -> BoundWitnessBuilder
-    {
+        -> BoundWitnessBuilder {
         _payloads.append(payload)
         _payload_hashes.append(try PayloadBuilder.dataHash(from: payload))
         _payload_schemas.append(schema)
@@ -65,7 +63,7 @@ public class BoundWitnessBuilder {
 
     public func query(_ payload: EncodablePayloadInstance) throws -> BoundWitnessBuilder {
         self._query = try PayloadBuilder.dataHash(from: payload)
-        let _ = try self.payload(payload.schema, payload)
+        _ = try self.payload(payload.schema, payload)
         return self
     }
 

@@ -14,7 +14,7 @@ public protocol EncodableBoundWitness: EncodablePayload, BoundWitnessFields, Enc
 public protocol BoundWitness: EncodableBoundWitness, EncodablePayload, Payload, Codable {}
 
 public class BoundWitnessInstance: PayloadInstance {
-    public var signatures: [String]? = nil
+    public var signatures: [String]?
 
     public var addresses: [String] = []
 
@@ -25,10 +25,10 @@ public class BoundWitnessInstance: PayloadInstance {
     public var previous_hashes: [String?] = []
 
     /// The dataHash of the query payload (query bound witnesses only). Data-hashable (signed).
-    public var query: String? = nil
+    public var query: String?
 
     /// Hashes of error payloads, if any. Data-hashable (signed).
-    public var error_hashes: [String]? = nil
+    public var error_hashes: [String]?
 
     init() {
         super.init(BoundWitnessSchema)

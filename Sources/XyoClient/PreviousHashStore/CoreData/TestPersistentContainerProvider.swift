@@ -13,7 +13,7 @@ public class TestPersistentContainerProvider: PersistentContainerProvider {
         description.type = NSInMemoryStoreType
         persistentContainer.persistentStoreDescriptions = [description]
 
-        persistentContainer.loadPersistentStores { description, error in
+        persistentContainer.loadPersistentStores { _, error in
             if let error = error {
                 fatalError("Error setting up in-memory store: \(error)")
             }

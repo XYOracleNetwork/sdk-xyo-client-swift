@@ -27,7 +27,7 @@ final class JsVectorPluginPayloadTest: XCTestCase {
         try assertPlugin(
             "plugin-config",
             ConfigPayload(config: [
-                "timeout": 30, "retries": 3, "enabled": true, "label": "test-config",
+                "timeout": 30, "retries": 3, "enabled": true, "label": "test-config"
             ]))
 
         try assertPlugin(

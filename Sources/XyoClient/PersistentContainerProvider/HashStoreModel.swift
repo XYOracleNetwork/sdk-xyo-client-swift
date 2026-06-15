@@ -9,8 +9,7 @@ import Foundation
 /// programmatically. Both paths yield the same `HashStore` entity, so behavior is identical.
 func loadHashStoreModel() -> NSManagedObjectModel {
     if let modelURL = Bundle.module.url(forResource: "Model", withExtension: "momd"),
-        let model = NSManagedObjectModel(contentsOf: modelURL)
-    {
+        let model = NSManagedObjectModel(contentsOf: modelURL) {
         return model
     }
     return makeHashStoreModel()

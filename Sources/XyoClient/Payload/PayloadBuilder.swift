@@ -74,15 +74,14 @@ public class EmptyMeta: Codable {}
 
 public class EncodableWithMetaInstance<T: EncodablePayload>: EncodableWithCustomMetaInstance<
     T, EncodableEmptyMeta
->
-{
+> {
     public init(from: T) {
         super.init(from: from, meta: nil)
     }
 }
 
 public class EncodableWithCustomMetaInstance<T: EncodablePayload, M: Encodable>: EncodableWithMeta {
-    var _meta: M? = nil
+    var _meta: M?
     var _payload: T
 
     public var payload: EncodablePayload {
@@ -123,8 +122,7 @@ public class EncodableWithCustomMetaInstance<T: EncodablePayload, M: Encodable>:
 }
 
 public class WithCustomMetaInstance<T: PayloadInstance, M: Codable>:
-    EncodableWithCustomMetaInstance<T, M>, Decodable
-{
+    EncodableWithCustomMetaInstance<T, M>, Decodable {
 
     override public init(from: T, meta: M?) {
         super.init(from: from, meta: meta)
@@ -164,8 +162,7 @@ public class PayloadBuilder {
     }
 
     static public func hash<T: EncodablePayloadInstance, M: EncodableEmptyMeta>(from: T, meta: M?)
-        throws -> Hash
-    {
+        throws -> Hash {
         let withMeta = EncodableWithCustomMetaInstance(from: from, meta: meta)
         return try hash(fromWithMeta: withMeta)
     }
@@ -186,8 +183,7 @@ public class PayloadBuilder {
     }
 
     static public func toJsonWithMeta<T: EncodablePayloadInstance>(from: T, meta: (any Encodable)?)
-        throws -> String
-    {
+        throws -> String {
         guard let m = meta else {
             return try PayloadBuilder.toJson(from: from)
         }
