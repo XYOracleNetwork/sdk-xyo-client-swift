@@ -52,6 +52,7 @@ let package = Package(
             name: "XyoChainProtocol",
             dependencies: [
                 "XyoClient",
+                "Alamofire",
                 "BigInt",
             ]
         ),
