@@ -29,7 +29,7 @@ class SystemInfoDevicePayloadStruct: Encodable, Decodable {
     }
 
     static func load() -> SystemInfoDevicePayloadStruct {
-        var result = SystemInfoDevicePayloadStruct()
+        let result = SystemInfoDevicePayloadStruct()
         var systemInfo = utsname()
         uname(&systemInfo)
         result.model = withUnsafePointer(to: &systemInfo.machine) {

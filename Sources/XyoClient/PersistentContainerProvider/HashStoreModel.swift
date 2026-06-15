@@ -7,12 +7,20 @@ import Foundation
 /// the compiled model is loaded from the resource bundle. Under plain SwiftPM
 /// (`swift build`/`swift test`) the model is not compiled, so an equivalent model is built
 /// programmatically. Both paths yield the same `HashStore` entity, so behavior is identical.
-func loadHashStoreModel() -> NSManagedObjectModel {
+///
+/// The model is loaded once and shared: Core Data emits "Multiple NSEntityDescriptions claim
+/// the NSManagedObject subclass" warnings when several model instances each define `HashStore`,
+/// and a single immutable model is safely reusable across persistent containers.
+private let sharedHashStoreModel: NSManagedObjectModel = {
     if let modelURL = Bundle.module.url(forResource: "Model", withExtension: "momd"),
         let model = NSManagedObjectModel(contentsOf: modelURL) {
         return model
     }
     return makeHashStoreModel()
+}()
+
+func loadHashStoreModel() -> NSManagedObjectModel {
+    sharedHashStoreModel
 }
 
 private func makeHashStoreModel() -> NSManagedObjectModel {

@@ -39,14 +39,6 @@ class WalletTests: XCTestCase {
         let phrase =
             "later puppy sound rebuild rebuild noise ozone amazing hope broccoli crystal grief"
         let rootEntropy = "7d55c33f59ab352ba7a03e6d638cd533"
-        let paths = [
-            "0/4", "44'/0'/0'", "44'/60'/0'/0/0", "44'/60'/0'/0/1", "49'/0'/0'", "84'/0'/0'",
-            "84'/0'/0'/0",
-        ]
-        let pathAddresses = [
-            "0/4", "44'/0'/0'", "44'/60'/0'/0/0", "44'/60'/0'/0/1", "49'/0'/0'", "84'/0'/0'",
-            "84'/0'/0'/0",
-        ]
 
         do {
 
