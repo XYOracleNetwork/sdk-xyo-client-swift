@@ -27,7 +27,7 @@ extension Data {
         return NSData(bytes: hash, length: digestLength)
     }
 
-    func toHex(_ expectedLength: Int? = nil) -> String {
+    public func toHex(_ expectedLength: Int? = nil) -> String {
         return Data.hexStringFromData(input: self as NSData).padding(
             toLength: expectedLength ?? self.count * 2, withPad: "0", startingAt: 0
         ).lowercased()

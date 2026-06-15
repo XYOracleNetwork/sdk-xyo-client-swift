@@ -1,6 +1,8 @@
 public class MemoryPreviousHashStore: PreviousHashStore {
     private var store: [Address: Hash] = [:]
 
+    public init() {}
+
     public func getItem(address: Address) -> Hash? {
         return store[address]
     }

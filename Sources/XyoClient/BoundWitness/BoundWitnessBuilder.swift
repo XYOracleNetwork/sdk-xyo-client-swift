@@ -12,8 +12,24 @@ public class BoundWitnessBuilder {
     private var _payload_schemas: [String] = []
     private var _payloads: [EncodablePayloadInstance] = []
     private var _query: Hash? = nil
+    private var _sourceQuery: String? = nil
+    private var _destination: String? = nil
 
     public init() {
+    }
+
+    /// Sets the `$sourceQuery` client-meta field (excluded from the data hash).
+    @discardableResult
+    public func sourceQuery(_ hash: String) -> BoundWitnessBuilder {
+        _sourceQuery = hash
+        return self
+    }
+
+    /// Sets the `$destination` client-meta field (excluded from the data hash).
+    @discardableResult
+    public func destination(_ address: String) -> BoundWitnessBuilder {
+        _destination = address
+        return self
     }
 
     public func signer(_ account: AccountInstance)
@@ -71,7 +87,18 @@ public class BoundWitnessBuilder {
         let dataHash = try PayloadBuilder.dataHash(from: bw)
         let signatures = try self.sign(hash: dataHash).map { signature in signature.toHex() }
         let meta = BoundWitnessMeta(signatures)
+        meta.sourceQuery = _sourceQuery
+        meta.destination = _destination
         let bwWithMeta = EncodableWithCustomMetaInstance(from: bw, meta: meta)
         return (bwWithMeta, _payloads)
+    }
+}
+
+/// A `BoundWitnessBuilder` specialized for module queries. The query hash is set via
+/// ``BoundWitnessBuilder/query(_:)`` (the `query` field is data-hashable and signed),
+/// matching the Android `QueryBoundWitnessBuilder` and the authoritative JS semantics.
+public class QueryBoundWitnessBuilder: BoundWitnessBuilder {
+    public override init() {
+        super.init()
     }
 }

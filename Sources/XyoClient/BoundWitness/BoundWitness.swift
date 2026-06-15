@@ -24,7 +24,11 @@ public class BoundWitnessInstance: PayloadInstance {
 
     public var previous_hashes: [String?] = []
 
+    /// The dataHash of the query payload (query bound witnesses only). Data-hashable (signed).
     public var query: String? = nil
+
+    /// Hashes of error payloads, if any. Data-hashable (signed).
+    public var error_hashes: [String]? = nil
 
     init() {
         super.init(BoundWitnessSchema)
@@ -36,6 +40,7 @@ public class BoundWitnessInstance: PayloadInstance {
         case payload_schemas
         case previous_hashes
         case query
+        case error_hashes
     }
 
     public required init(from decoder: Decoder) throws {
@@ -45,6 +50,7 @@ public class BoundWitnessInstance: PayloadInstance {
         payload_schemas = try values.decode([String].self, forKey: .payload_schemas)
         previous_hashes = try values.decode([String?].self, forKey: .previous_hashes)
         query = try values.decodeIfPresent(String.self, forKey: .query)
+        error_hashes = try values.decodeIfPresent([String].self, forKey: .error_hashes)
         super.init(BoundWitnessSchema)
     }
 
@@ -55,6 +61,7 @@ public class BoundWitnessInstance: PayloadInstance {
         try container.encode(payload_schemas, forKey: .payload_schemas)
         try container.encode(previous_hashes, forKey: .previous_hashes)
         try container.encodeIfPresent(query, forKey: .query)
+        try container.encodeIfPresent(error_hashes, forKey: .error_hashes)
         try super.encode(to: encoder)
     }
 }

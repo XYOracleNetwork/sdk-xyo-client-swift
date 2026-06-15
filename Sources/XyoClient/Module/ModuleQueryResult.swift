@@ -25,12 +25,10 @@ public class ModuleQueryResult: Codable {
     }
     public required init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
-        // Decode elements in the expected order from the array
+        // Decode elements in the expected order from the array: [bw, payloads, errors].
         bw = try container.decode(BoundWitnessWithMeta.self)
-        // TODO: Decodable Payloads
-        // payloads = try container.decode([XyoPayload].self)
-        // errors = try container.decode([XyoPayload].self)
-        payloads = []
-        errors = []
+        // Payloads and errors are heterogeneous — decode into type-erased AnyPayload.
+        payloads = (try? container.decode([AnyPayload].self)) ?? []
+        errors = (try? container.decode([AnyPayload].self)) ?? []
     }
 }
