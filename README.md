@@ -103,12 +103,12 @@ See the [LICENSE](LICENSE) file for license details
 
 ## Credits
 
-Made with 🔥 and ❄️ by [XYO](https://xyo.network)
+[Made with 🔥 and ❄️ by XYO Foundation](https://xyo.network)
 
-[logo]: https://cdn.xy.company/img/brand/XYO_full_colored.png
 [main-build]: https://github.com/XYOracleNetwork/sdk-xyo-client-swift/actions/workflows/build-main.yml/badge.svg
 [main-build-link]: https://github.com/XYOracleNetwork/sdk-xyo-client-swift/actions/workflows/build-main.yml
 [codacy-badge]: https://app.codacy.com/project/badge/Grade/c0ba3913b706492f99077eb5e6b4760c
 [codacy-link]: https://www.codacy.com/gh/XYOracleNetwork/sdk-xyo-client-swift/dashboard?utm_source=github.com&utm_medium=referral&utm_content=XYOracleNetwork/sdk-xyo-client-swift&utm_campaign=Badge_Grade
 [codeclimate-badge]: https://api.codeclimate.com/v1/badges/d051b36c73cd52e4030a/maintainability
 [codeclimate-link]: https://codeclimate.com/github/XYOracleNetwork/sdk-xyo-client-swift/maintainability
+[logo]: https://cdn.xy.company/img/brand/XYO_full_colored.png
