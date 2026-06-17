@@ -28,12 +28,12 @@ let CHAINCODE_SIZE = 32
 public class Bip39 {
     static let wordList: [String] = Bip39Words
 
-    static func mnemonicToSeed(phrase: String) throws -> Data {
+    public static func mnemonicToSeed(phrase: String) throws -> Data {
         let entropy = try mnemonicToEntropy(phrase: phrase)
         return try entropyToSeed(entropy: entropy)
     }
 
-    static func generateEntropy(bits: Int) -> Data {
+    public static func generateEntropy(bits: Int) -> Data {
         precondition(bits % 32 == 0, "Entropy must be a multiple of 32")
         let byteCount = bits / 8
         var entropy = Data(count: byteCount)
@@ -43,7 +43,7 @@ public class Bip39 {
         return entropy
     }
 
-    static func mnemonicToEntropy(phrase: String) throws -> Data {
+    public static func mnemonicToEntropy(phrase: String) throws -> Data {
         let words = phrase.lowercased().split(separator: " ").map(String.init)
 
         // Step 1: Validate word count
@@ -82,7 +82,7 @@ public class Bip39 {
         return entropy
     }
 
-    static func entropyToMnemonic(entropy: Data) throws -> String {
+    public static func entropyToMnemonic(entropy: Data) throws -> String {
         // Step 1: Validate entropy length
         guard [16, 20, 24, 28, 32].contains(entropy.count) else {
             throw Bip39Error.invalidEntropyLength

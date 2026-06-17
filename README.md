@@ -33,8 +33,20 @@ Primary SDK for using the XYO Protocol 2.0 from Swift. Designed to work in both 
 
 ```swift
 dependencies: [
-.package(url: "https://github.com/XYOracleNetwork/app-ios-witness-demo-swiftui.git", .upToNextMajor(from: "3.0.0")),
+    .package(url: "https://github.com/XYOracleNetwork/sdk-xyo-client-swift.git", .upToNextMajor(from: "3.0.0")),
 ],
+```
+
+Then add the SDK product you need to your target dependencies:
+
+```swift
+.product(name: "XyoClient", package: "sdk-xyo-client-swift")
+```
+
+or, for chain protocol support:
+
+```swift
+.product(name: "XyoChainProtocol", package: "sdk-xyo-client-swift")
 ```
 
 ### Configure API

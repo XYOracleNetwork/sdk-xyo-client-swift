@@ -19,6 +19,11 @@ public class WifiInformation {
 
     #if os(iOS)
         func ssid() -> String? {
+            #if targetEnvironment(macCatalyst)
+                guard #available(macCatalyst 14.0, *) else {
+                    return nil
+                }
+            #endif
             guard let interfaceNames = CNCopySupportedInterfaces() as? [String] else {
                 return nil
             }
